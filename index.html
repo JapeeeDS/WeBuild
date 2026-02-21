@@ -25,7 +25,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 #appPage{display:none;height:100vh;overflow:hidden}
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:#3a3a3a;border-bottom:1px solid #555}
 .app-header .dev-name{font-size:20px;font-weight:800;display:flex;align-items:center;gap:12px}
-.app-header .dev-name .avatar{width:48px;height:48px;background:#00C310;border-radius:8px}
+.app-header .dev-name .avatar{width:48px;height:48px;background:#00C310;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .2s}
+.app-header .dev-name .avatar:hover{opacity:0.8}
+.app-header .dev-name .avatar svg{opacity:0.9}
+/* Confirm Modal */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:flex;align-items:center;justify-content:center}
+.confirm-box{background:#1a1a1a;border:1px solid #555;border-radius:12px;padding:28px 32px;min-width:320px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.5)}
+.confirm-box p{font-size:16px;margin-bottom:20px;color:#fff}
+.confirm-box .confirm-btns{display:flex;gap:12px;justify-content:center}
+.confirm-box .confirm-btns button{border:none;border-radius:8px;padding:10px 28px;font-size:14px;font-weight:700;cursor:pointer;color:#fff}
+.confirm-box .btn-confirm-yes{background:#dc3545}
+.confirm-box .btn-confirm-yes:hover{background:#b02a37}
+.confirm-box .btn-confirm-no{background:#555}
+.confirm-box .btn-confirm-no:hover{background:#444}
 .app-header .biz-name{font-size:22px;font-weight:700;color:#00C310;font-style:italic}
 
 .app-body{display:flex;height:calc(100vh - 72px);overflow:hidden}
@@ -76,13 +88,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 .copy-sc-btn:hover{background:#00C310;border-color:#00C310}
 
 /* Final Note */
-.final-note{background:#fff;border-radius:8px;overflow:hidden;height:fit-content}
+.final-note{background:#fff;border-radius:8px;overflow:hidden;height:fit-content;transition:background .3s,color .3s}
+.final-note.editing{background:#1a1a1a;color:#fff}
 .final-note-header{background:#00C310;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px}
 .final-note-header .fn-actions{display:flex;gap:8px}
 .final-note-header .fn-actions button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px;transition:opacity .2s}
 .final-note-header .fn-actions button:hover{opacity:0.7}
-.final-note-body{padding:16px;color:#333;font-size:13px;min-height:400px;white-space:pre-wrap;line-height:1.6;max-height:60vh;overflow-y:auto}
-.final-note-body[contenteditable=true]{outline:2px solid #00C310;background:#f0fff0}
+.final-note-body{padding:16px;color:#333;font-size:13px;min-height:400px;white-space:pre-wrap;line-height:1.6;max-height:60vh;overflow-y:auto;transition:background .3s,color .3s}
+.final-note.editing .final-note-body{color:#e0e0e0;background:#1a1a1a;outline:2px solid #00C310}
+.final-note-body[contenteditable=true]{outline:2px solid #00C310}
 
 /* ===== CHECKLIST PAGES (Pages 2 & 3) ===== */
 .checklist-page{min-height:100%}
@@ -155,14 +169,18 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 
 /* ===== PARSE TIME & SEND FOR QC ===== */
 .pt-qc-bar{display:flex;gap:24px;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap}
-.send-qc-box{background:transparent;border:none;padding:0;min-width:180px;max-width:200px}
-.send-qc-box h3{font-size:16px;font-weight:800;margin-bottom:8px}
-.send-qc-output{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:8px 10px;font-size:12px;min-height:80px;color:#ccc;white-space:pre-wrap;position:relative;text-align:left}
-.send-qc-output .copy-qc-btn{position:absolute;top:4px;right:4px;background:#00C310;border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:11px;z-index:1}
 .parse-time-box{flex:1;min-width:300px}
 .parse-time-box h3{font-size:16px;font-weight:800;margin-bottom:8px}
 .pt-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.pt-textarea{background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:10px;color:#fff;font-size:13px;font-family:inherit;outline:none;resize:vertical;width:420px;height:80px}
+.pt-textarea{background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:10px;color:#fff;font-size:13px;font-family:inherit;outline:none;resize:vertical;width:520px;height:80px}
+.send-qc-box{background:transparent;border:none;padding:0;min-width:200px;max-width:240px;margin-left:auto}
+.send-qc-box h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.send-qc-output{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:8px 10px;font-size:12px;min-height:80px;color:#ccc;white-space:pre-wrap;position:relative;text-align:left}
+.send-qc-output .copy-qc-btn{position:absolute;top:4px;right:4px;background:#00C310;border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:11px;z-index:1}
+.pt-add-sla-btn{background:#FF7700;color:#fff;border:none;border-radius:4px;padding:4px 14px;font-size:12px;font-weight:700;cursor:pointer}
+.pt-add-sla-btn:hover{background:#e06600}
+.clear-all-btn{background:#dc3545;color:#fff;border:none;border-radius:24px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
+.clear-all-btn:hover{background:#b02a37}
 .pt-textarea:focus{border-color:#00C310}
 .pt-fields{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
 .pt-field{display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -183,6 +201,17 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 /* ===== RESPONSIVE - MOBILE HAMBURGER ===== */
 .mobile-menu-btn{display:none;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;padding:4px 8px;line-height:1}
 
+/* ===== TABLET (max-width: 1024px) ===== */
+@media(max-width:1024px){
+  .reworks-layout{grid-template-columns:1fr;gap:20px}
+  .pt-textarea{width:100%}
+  .pt-qc-bar{flex-direction:column}
+  .send-qc-box{max-width:100%;margin-left:0;min-width:auto}
+  .pt-row{flex-direction:column}
+  .pt-fields{width:100%;justify-content:flex-start}
+  .pt-actions{justify-content:flex-start}
+}
+
 @media(max-width:768px){
   /* Login */
   #loginPage h1{font-size:30px;margin-bottom:20px}
@@ -191,9 +220,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
   .login-card button{padding:10px 28px;font-size:15px}
 
   /* Header */
-  .app-header{padding:8px 12px;flex-wrap:wrap;gap:8px}
+  .app-header{padding:10px 16px;flex-wrap:wrap;gap:8px}
   .app-header .dev-name{font-size:16px;gap:8px}
-  .app-header .dev-name .avatar{width:36px;height:36px}
+  .app-header .dev-name .avatar{width:40px;height:40px}
   .app-header .biz-name{font-size:16px}
   .mobile-menu-btn{display:block}
 
@@ -204,13 +233,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
   .sidebar{width:100%;flex-direction:row;padding:8px 12px;gap:0;border-right:none;border-bottom:1px solid #555;overflow-x:auto;display:none}
   .sidebar.open{display:flex}
   .sidebar-icons{flex-direction:row;border-radius:8px;padding:8px 12px;gap:8px;width:100%;justify-content:center}
-  .sidebar-icons .nav-icon{width:40px;height:40px}
+  .sidebar-icons .nav-icon{width:44px;height:44px}
 
   /* Main content */
-  .main-content{padding:16px 12px;overflow-y:visible}
+  .main-content{padding:16px 14px;overflow-y:visible}
 
   /* Reworks layout */
   .reworks-layout{grid-template-columns:1fr;gap:16px}
+
+  /* Parse Time responsive */
+  .pt-textarea{width:100%;height:80px}
+  .pt-fields{width:100%}
+  .pt-field input{width:80px}
+  .pt-result-row{flex-direction:column;gap:8px;align-items:flex-start}
 
   /* Final note */
   .final-note-body{min-height:200px;max-height:50vh}
@@ -220,7 +255,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
   .parser-controls{flex-direction:column;align-items:stretch}
   .parser-controls input{margin-left:0;width:100%}
   .parser-controls button{width:100%}
+  .parser-table{display:block;overflow-x:auto}
   .parser-table th,.parser-table td{padding:6px 8px;font-size:12px}
+  #parserNewPages table{display:block;overflow-x:auto}
   #parserNewPages th,#parserNewPages td{padding:6px;font-size:12px}
 
   /* Checklist grids */
@@ -242,8 +279,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
   .item span{white-space:normal;font-size:12px}
   .status-btn{font-size:10px;padding:4px 8px}
 
+  /* Confirm modal */
+  .confirm-box{min-width:auto;width:90vw;max-width:380px;padding:20px}
+
   /* Toast */
-  .toast{top:auto;bottom:20px;right:12px;left:12px;text-align:center}
+  .toast{top:auto;bottom:20px;right:12px;left:12px;text-align:center;border-radius:12px}
+
+  /* Workflow & Clear All */
+  .workflow-btn{font-size:14px;padding:8px 18px}
+  .clear-all-btn{padding:8px 16px;font-size:13px}
 }
 
 @media(max-width:480px){
@@ -252,9 +296,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
   .app-header .dev-name{font-size:14px}
   .app-header .biz-name{font-size:14px}
   .field-label{font-size:13px}
-  .workflow-btn{font-size:14px;padding:8px 18px}
+  .workflow-btn{font-size:13px;padding:8px 14px}
   .site-comment-row{flex-direction:column;gap:6px}
   .sc-no{width:100%}
+  .pt-field{width:calc(33% - 8px)}
+  .pt-field input{width:100%}
+  .pt-field label{min-width:auto;font-size:11px;padding:3px 8px}
+  .sidebar-icons .nav-icon{width:38px;height:38px}
+  .final-note-header{padding:8px 12px;font-size:13px}
+  .section-header{font-size:13px;padding:6px 12px}
+  .dev-note-text,.sc-text{min-height:60px;font-size:13px}
 }
 </style>
 </head>
@@ -277,7 +328,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 <div id="appPage">
   <div class="app-header">
     <div class="dev-name">
-      <div class="avatar"></div>
+      <div class="avatar" onclick="goBackToLogin()" title="Back to Login"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
       <span id="headerName">ENTERED NAME</span>
     </div>
     <div class="biz-name" id="headerBiz" style="color:#66FF70">Business Name</div>
@@ -298,26 +349,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
     <div class="main-content" id="mainContent">
       <!-- Page 0: Reworks -->
       <div id="page0">
-        <div class="workflow-dropdown">
-          <button class="workflow-btn" onclick="toggleWorkflowMenu()" id="workflowBtn">Select Workflow</button>
-          <div class="workflow-menu" id="workflowMenu">
-            <button onclick="selectWorkflow('New Build')">New Build</button>
-            <button onclick="selectWorkflow('Rebuild')">Rebuild</button>
-            <button onclick="selectWorkflow('Website Upgrade')">Website Upgrade</button>
-            <button onclick="selectWorkflow('Reworks')">Reworks</button>
-            <button onclick="selectWorkflow('Change Request')">Change Request</button>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+          <button class="clear-all-btn" onclick="confirmClearAll()" style="padding:8px 20px;width:fit-content">Clear All</button>
+          <div class="workflow-dropdown">
+            <button class="workflow-btn" onclick="toggleWorkflowMenu()" id="workflowBtn">Select Workflow</button>
+            <div class="workflow-menu" id="workflowMenu">
+              <button onclick="selectWorkflow('New Build')">New Build</button>
+              <button onclick="selectWorkflow('Rebuild')">Rebuild</button>
+              <button onclick="selectWorkflow('Website Upgrade')">Website Upgrade</button>
+              <button onclick="selectWorkflow('Reworks')">Reworks</button>
+              <button onclick="selectWorkflow('Change Request')">Change Request</button>
+            </div>
           </div>
         </div>
 
         <!-- Parse Time & Send for QC Bar -->
         <div class="pt-qc-bar" id="ptQcBar">
-          <div class="send-qc-box">
-            <h3>Send for QC</h3>
-            <div class="send-qc-output" id="sendQcOutput">
-              <button class="copy-qc-btn" onclick="copyQcOutput()" title="Copy">📋</button>
-              <span id="sendQcText" style="display:block;padding-top:0"></span>
-            </div>
-          </div>
           <div class="parse-time-box">
             <h3>Parse Time</h3>
             <div class="pt-row">
@@ -333,11 +380,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
               <div class="pt-actions">
                 <button class="pt-start-btn" onclick="ptStart()">Start</button>
                 <button class="pt-reset-btn" onclick="ptReset()">Reset</button>
+                <button class="pt-add-sla-btn" onclick="ptAddSLA()">Add SLA</button>
               </div>
             </div>
             <div class="pt-result-row" id="ptResultRow" style="display:none">
               <span>Remaining Time:</span><input type="text" id="ptRemaining" readonly/>
               <span>End Time:</span><input type="text" id="ptEndTime" readonly/>
+            </div>
+          </div>
+          <div class="send-qc-box">
+            <h3>Send for QC</h3>
+            <div class="send-qc-output" id="sendQcOutput">
+              <button class="copy-qc-btn" onclick="copyQcOutput()" title="Copy">📋</button>
+              <span id="sendQcText" style="display:block;padding-top:0"></span>
             </div>
           </div>
         </div>
@@ -424,6 +479,166 @@ let appState = {
   devNotes: [],
   finalNoteContent: ''
 };
+let finalNoteWasEdited = false;
+
+// ===== LOCAL STORAGE PERSISTENCE =====
+function saveToStorage() {
+  const data = {
+    appState: appState,
+    previewLink: document.getElementById('previewLink') ? document.getElementById('previewLink').value : '',
+    finalNoteHTML: document.getElementById('finalNoteBody') ? document.getElementById('finalNoteBody').innerHTML : '',
+    finalNoteWasEdited: finalNoteWasEdited,
+    loggedIn: document.getElementById('appPage').style.display === 'block',
+    // Parse Time fields
+    ptInput: document.getElementById('ptInput') ? document.getElementById('ptInput').value : '',
+    ptStartTime: document.getElementById('ptStartTime') ? document.getElementById('ptStartTime').value : '',
+    ptSlaAgreed: document.getElementById('ptSlaAgreed') ? document.getElementById('ptSlaAgreed').value : '',
+    ptTimeTaken: document.getElementById('ptTimeTaken') ? document.getElementById('ptTimeTaken').value : '',
+    ptRemaining: document.getElementById('ptRemaining') ? document.getElementById('ptRemaining').value : '',
+    ptEndTime: document.getElementById('ptEndTime') ? document.getElementById('ptEndTime').value : '',
+    ptResultRowVisible: document.getElementById('ptResultRow') ? document.getElementById('ptResultRow').style.display : 'none',
+    ptSlaSeconds: ptSlaSeconds,
+    ptRemainingSeconds: ptRemainingSeconds,
+    ptStartTimeStr: ptStartTimeStr,
+    // Parser fields
+    parserInput: document.getElementById('parserInput') ? document.getElementById('parserInput').value : '',
+    // Site comment & dev note input fields
+    scNo: document.getElementById('scNo') ? document.getElementById('scNo').value : '',
+    scText: document.getElementById('scText') ? document.getElementById('scText').value : '',
+    devNoteText: document.getElementById('devNoteText') ? document.getElementById('devNoteText').value : '',
+    // Checklist state - New Build
+    nb_data_state: Object.fromEntries(Object.entries(nb_data).map(([k,v])=>([k, v.items.map(i=>i.status)]))),
+    nb_blogsYes_state: nb_blogsYes.map(i=>i.status),
+    nb_blogsNo_state: nb_blogsNo.map(i=>i.status),
+    nb_dynamicYes_state: nb_dynamicYes.map(i=>i.status),
+    nb_dynamicNo_state: nb_dynamicNo.map(i=>i.status),
+    nb_devNotes: nb_devNotes.map(i=>({name:i.name,status:i.status})),
+    nb_blogsAnswer: nb_blogsAnswer,
+    nb_dynamicAnswer: nb_dynamicAnswer,
+    // Checklist state - Website Upgrade
+    up_data_state: Object.fromEntries(Object.entries(up_data).map(([k,v])=>([k, v.items.map(i=>i.status)]))),
+    up_manualNo_state: up_manualNo.map(i=>i.status),
+    up_devNotes: up_devNotes.map(i=>({name:i.name,status:i.status})),
+    up_manualAnswer: up_manualAnswer
+  };
+  localStorage.setItem('webuild_data', JSON.stringify(data));
+}
+
+function loadFromStorage() {
+  const raw = localStorage.getItem('webuild_data');
+  if (!raw) return false;
+  try {
+    const data = JSON.parse(raw);
+    if (!data.loggedIn) return false;
+    appState = data.appState;
+    finalNoteWasEdited = data.finalNoteWasEdited || false;
+    document.getElementById('headerName').textContent = appState.devName.toUpperCase();
+    document.getElementById('headerBiz').textContent = appState.bizName;
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('appPage').style.display = 'block';
+    if (data.previewLink) document.getElementById('previewLink').value = data.previewLink;
+    if (data.finalNoteHTML) document.getElementById('finalNoteBody').innerHTML = data.finalNoteHTML;
+    if (appState.workflow) {
+      document.getElementById('workflowBtn').textContent = appState.workflow;
+      selectWorkflow(appState.workflow);
+    }
+    // Restore parse time fields
+    if (data.ptInput) document.getElementById('ptInput').value = data.ptInput;
+    if (data.ptStartTime) document.getElementById('ptStartTime').value = data.ptStartTime;
+    if (data.ptSlaAgreed) document.getElementById('ptSlaAgreed').value = data.ptSlaAgreed;
+    if (data.ptTimeTaken) document.getElementById('ptTimeTaken').value = data.ptTimeTaken;
+    if (data.ptRemaining) document.getElementById('ptRemaining').value = data.ptRemaining;
+    if (data.ptEndTime) document.getElementById('ptEndTime').value = data.ptEndTime;
+    if (data.ptResultRowVisible === 'flex') document.getElementById('ptResultRow').style.display = 'flex';
+    if (data.ptSlaSeconds) ptSlaSeconds = data.ptSlaSeconds;
+    if (data.ptRemainingSeconds) ptRemainingSeconds = data.ptRemainingSeconds;
+    if (data.ptStartTimeStr) ptStartTimeStr = data.ptStartTimeStr;
+    // Restore parser input
+    if (data.parserInput) document.getElementById('parserInput').value = data.parserInput;
+    // Restore site comment & dev note inputs
+    if (data.scNo) document.getElementById('scNo').value = data.scNo;
+    if (data.scText) document.getElementById('scText').value = data.scText;
+    if (data.devNoteText) document.getElementById('devNoteText').value = data.devNoteText;
+    // Restore checklist state - New Build
+    if (data.nb_data_state) {
+      Object.entries(data.nb_data_state).forEach(([k, statuses]) => {
+        if (nb_data[k]) statuses.forEach((s, i) => { if (nb_data[k].items[i]) nb_data[k].items[i].status = s; });
+      });
+    }
+    if (data.nb_blogsYes_state) data.nb_blogsYes_state.forEach((s, i) => { if (nb_blogsYes[i]) nb_blogsYes[i].status = s; });
+    if (data.nb_blogsNo_state) data.nb_blogsNo_state.forEach((s, i) => { if (nb_blogsNo[i]) nb_blogsNo[i].status = s; });
+    if (data.nb_dynamicYes_state) data.nb_dynamicYes_state.forEach((s, i) => { if (nb_dynamicYes[i]) nb_dynamicYes[i].status = s; });
+    if (data.nb_dynamicNo_state) data.nb_dynamicNo_state.forEach((s, i) => { if (nb_dynamicNo[i]) nb_dynamicNo[i].status = s; });
+    if (data.nb_devNotes) nb_devNotes = data.nb_devNotes.map(n => ({name: n.name, status: n.status}));
+    if (data.nb_blogsAnswer !== undefined) nb_blogsAnswer = data.nb_blogsAnswer;
+    if (data.nb_dynamicAnswer !== undefined) nb_dynamicAnswer = data.nb_dynamicAnswer;
+    // Restore checklist state - Website Upgrade
+    if (data.up_data_state) {
+      Object.entries(data.up_data_state).forEach(([k, statuses]) => {
+        if (up_data[k]) statuses.forEach((s, i) => { if (up_data[k].items[i]) up_data[k].items[i].status = s; });
+      });
+    }
+    if (data.up_manualNo_state) data.up_manualNo_state.forEach((s, i) => { if (up_manualNo[i]) up_manualNo[i].status = s; });
+    if (data.up_devNotes) up_devNotes = data.up_devNotes.map(n => ({name: n.name, status: n.status}));
+    if (data.up_manualAnswer !== undefined) up_manualAnswer = data.up_manualAnswer;
+    // Re-render checklists if they had been rendered
+    if (nb_blogsAnswer !== null || nb_dynamicAnswer !== null || nb_devNotes.length > 0 || Object.values(nb_data).some(c => c.items.some(i => i.status === 'Done'))) {
+      renderNewBuildChecklist();
+    }
+    if (up_manualAnswer !== null || up_devNotes.length > 0 || Object.values(up_data).some(c => c.items.some(i => i.status === 'Done'))) {
+      renderUpgradeChecklist();
+    }
+    // Don't call updateFinalNote since we restored finalNoteHTML directly
+    updateSendQcOutput();
+    return true;
+  } catch(e) { return false; }
+}
+
+function showConfirmModal(message, onConfirm) {
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.innerHTML = `<div class="confirm-box"><p>${message}</p><div class="confirm-btns"><button class="btn-confirm-yes">Yes, Clear All</button><button class="btn-confirm-no">Cancel</button></div></div>`;
+  overlay.querySelector('.btn-confirm-yes').onclick = () => { document.body.removeChild(overlay); onConfirm(); };
+  overlay.querySelector('.btn-confirm-no').onclick = () => { document.body.removeChild(overlay); };
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) document.body.removeChild(overlay); });
+  document.body.appendChild(overlay);
+}
+
+function confirmClearAll() {
+  showConfirmModal('Are you sure you want to clear all data? This cannot be undone.', clearAllData);
+}
+
+function clearAllData() {
+  localStorage.removeItem('webuild_data');
+  appState = { devName: '', bizName: '', workflow: '', previewLink: '', siteComments: [], devNotes: [], finalNoteContent: '' };
+  finalNoteWasEdited = false;
+  document.getElementById('previewLink').value = '';
+  document.getElementById('finalNoteBody').innerHTML = '';
+  document.getElementById('workflowBtn').textContent = 'Select Workflow';
+  document.getElementById('scNo').value = '';
+  document.getElementById('scText').value = '';
+  document.getElementById('devNoteText').value = '';
+  document.getElementById('parserInput').value = '';
+  document.getElementById('parserBody').innerHTML = '';
+  document.getElementById('parserNewPages').innerHTML = '';
+  ptReset();
+  updateFinalNote();
+  updateSendQcOutput();
+  showToast('All data cleared!');
+}
+
+function goBackToLogin() {
+  showConfirmModal('Return to login? All data will be cleared.', function() {
+    clearAllData();
+    document.getElementById('appPage').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('loginName').value = '';
+    document.getElementById('loginBiz').value = '';
+  });
+}
+
+// Auto-save on changes
+setInterval(saveToStorage, 2000);
 
 // ===== LOGIN =====
 function doLogin() {
@@ -535,9 +750,65 @@ function addSiteComment() {
   const text = document.getElementById('scText').value.trim();
   if (!no || !text) return;
   appState.siteComments.push({ no, text });
+  appState.siteComments.sort((a, b) => parseInt(a.no) - parseInt(b.no));
   document.getElementById('scNo').value = '';
   document.getElementById('scText').value = '';
-  updateFinalNote();
+  if (finalNoteWasEdited) {
+    const el = document.getElementById('finalNoteBody');
+    // Find last site comment node or insert after dev notes section
+    const allNodes = Array.from(el.childNodes);
+    let lastScIndex = -1;
+    for (let i = 0; i < allNodes.length; i++) {
+      if (allNodes[i].nodeName === 'B' && allNodes[i].textContent.startsWith('Site Comment #')) {
+        // find the <br> after this site comment's text
+        let j = i + 1;
+        while (j < allNodes.length && allNodes[j].nodeName !== 'BR' && allNodes[j].nodeName !== 'B') j++;
+        lastScIndex = j < allNodes.length && allNodes[j].nodeName === 'BR' ? j : j - 1;
+      }
+    }
+    const scBold = document.createElement('b');
+    scBold.textContent = 'Site Comment #' + no + ':';
+    const scText = document.createTextNode(' ' + text);
+    const scBr = document.createElement('br');
+    if (lastScIndex >= 0 && allNodes[lastScIndex]) {
+      const refNode = allNodes[lastScIndex].nextSibling;
+      el.insertBefore(scBold, refNode);
+      el.insertBefore(scText, refNode);
+      el.insertBefore(scBr, refNode);
+    } else {
+      // No existing site comments - add heading first, then the comment
+      let devNotesEnd = -1;
+      for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].nodeType === 3 && allNodes[i].textContent.startsWith('• ')) {
+          let j = i + 1;
+          while (j < allNodes.length && allNodes[j].nodeName === 'BR') j++;
+          devNotesEnd = j - 1;
+        }
+      }
+      const scHeading = document.createElement('b');
+      scHeading.textContent = 'Site Comments:';
+      const scHeadingBr = document.createElement('br');
+      if (devNotesEnd >= 0 && allNodes[devNotesEnd]) {
+        const refNode = allNodes[devNotesEnd].nextSibling;
+        el.insertBefore(document.createElement('br'), refNode);
+        el.insertBefore(scHeading, refNode);
+        el.insertBefore(scHeadingBr, refNode);
+        el.insertBefore(scBold, refNode);
+        el.insertBefore(scText, refNode);
+        el.insertBefore(scBr, refNode);
+      } else {
+        el.appendChild(scHeading);
+        el.appendChild(scHeadingBr);
+        el.appendChild(scBold);
+        el.appendChild(scText);
+        el.appendChild(scBr);
+      }
+    }
+    appState.finalNoteContent = el.textContent;
+    updateSendQcOutput();
+  } else {
+    updateFinalNote();
+  }
   showToast('Site comment added!');
 }
 
@@ -552,7 +823,49 @@ function addDevNote() {
   if (!text) return;
   appState.devNotes.push(text);
   document.getElementById('devNoteText').value = '';
-  updateFinalNote();
+  if (finalNoteWasEdited) {
+    const el = document.getElementById('finalNoteBody');
+    // Find last dev note bullet and insert after it
+    const allNodes = Array.from(el.childNodes);
+    let lastDevNoteIndex = -1;
+    for (let i = 0; i < allNodes.length; i++) {
+      if (allNodes[i].nodeType === 3 && allNodes[i].textContent.trim().startsWith('•')) {
+        let j = i + 1;
+        while (j < allNodes.length && allNodes[j].nodeName === 'BR') { lastDevNoteIndex = j; break; }
+        if (lastDevNoteIndex === -1) lastDevNoteIndex = i;
+      }
+    }
+    const noteText = document.createTextNode('• ' + text);
+    const noteBr = document.createElement('br');
+    if (lastDevNoteIndex >= 0 && allNodes[lastDevNoteIndex]) {
+      const refNode = allNodes[lastDevNoteIndex].nextSibling;
+      el.insertBefore(noteText, refNode);
+      el.insertBefore(noteBr, refNode);
+    } else {
+      // No existing dev notes, find "Dev Notes:" header
+      let headerIndex = -1;
+      for (let i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].nodeName === 'B' && allNodes[i].textContent === 'Dev Notes:') {
+          let j = i + 1;
+          while (j < allNodes.length && allNodes[j].nodeName === 'BR') j++;
+          headerIndex = j - 1;
+          break;
+        }
+      }
+      if (headerIndex >= 0 && allNodes[headerIndex]) {
+        const refNode = allNodes[headerIndex].nextSibling;
+        el.insertBefore(noteText, refNode);
+        el.insertBefore(noteBr, refNode);
+      } else {
+        el.appendChild(noteText);
+        el.appendChild(noteBr);
+      }
+    }
+    appState.finalNoteContent = el.textContent;
+    updateSendQcOutput();
+  } else {
+    updateFinalNote();
+  }
   showToast('Developer note added!');
 }
 
@@ -562,11 +875,15 @@ function updateFinalNote() {
   const wfLabel = 'Dev Completed ' + wfType;
 
   const el = document.getElementById('finalNoteBody');
-  // Save cursor position if editing
-  const wasEditing = el.isContentEditable;
-  if (wasEditing) {
+  // Don't overwrite while user is actively editing
+  if (el.isContentEditable) {
     appState.finalNoteContent = el.textContent;
-    return; // Don't overwrite while user is actively editing
+    return;
+  }
+  // Don't rebuild if user has manually edited the final note
+  if (finalNoteWasEdited) {
+    updateSendQcOutput();
+    return;
   }
 
   el.innerHTML = '';
@@ -576,12 +893,22 @@ function updateFinalNote() {
   el.appendChild(document.createElement('br'));
   el.appendChild(document.createElement('br'));
 
+  // Preview Link
+  const link = document.getElementById('previewLink').value.trim();
+  if (link) {
+    const plBold = document.createElement('b');
+    plBold.textContent = 'Preview Link:';
+    el.appendChild(plBold);
+    el.appendChild(document.createTextNode(' ' + link));
+    el.appendChild(document.createElement('br'));
+    el.appendChild(document.createElement('br'));
+  }
+
   // Dev Notes
   const dnBold = document.createElement('b');
   dnBold.textContent = 'Dev Notes:';
   el.appendChild(dnBold);
   el.appendChild(document.createElement('br'));
-
   appState.devNotes.forEach(n => {
     el.appendChild(document.createTextNode('• ' + n));
     el.appendChild(document.createElement('br'));
@@ -589,23 +916,19 @@ function updateFinalNote() {
 
   el.appendChild(document.createElement('br'));
 
-  // Site Comments - single line break between them
-  appState.siteComments.forEach((sc, i) => {
-    const scBold = document.createElement('b');
-    scBold.textContent = 'Site Comment #' + sc.no + ':';
-    el.appendChild(scBold);
-    el.appendChild(document.createTextNode(' ' + sc.text));
+  // Site Comments heading + items
+  if (appState.siteComments.length > 0) {
+    const scHeading = document.createElement('b');
+    scHeading.textContent = 'Site Comments:';
+    el.appendChild(scHeading);
     el.appendChild(document.createElement('br'));
-  });
-
-  // Preview Link
-  const link = document.getElementById('previewLink').value.trim();
-  if (link) {
-    el.appendChild(document.createElement('br'));
-    const plBold = document.createElement('b');
-    plBold.textContent = 'Preview Link:';
-    el.appendChild(plBold);
-    el.appendChild(document.createTextNode(' ' + link));
+    appState.siteComments.forEach((sc, i) => {
+      const scBold = document.createElement('b');
+      scBold.textContent = 'Site Comment #' + sc.no + ':';
+      el.appendChild(scBold);
+      el.appendChild(document.createTextNode(' ' + sc.text));
+      el.appendChild(document.createElement('br'));
+    });
   }
 
   appState.finalNoteContent = el.textContent;
@@ -614,12 +937,16 @@ function updateFinalNote() {
 
 function toggleEditFinalNote() {
   const el = document.getElementById('finalNoteBody');
+  const fnContainer = el.closest('.final-note');
   if (el.isContentEditable) {
     el.contentEditable = false;
+    fnContainer.classList.remove('editing');
+    finalNoteWasEdited = true;
     appState.finalNoteContent = el.textContent;
     showToast('Final note saved!');
   } else {
     el.contentEditable = true;
+    fnContainer.classList.add('editing');
     el.focus();
   }
 }
@@ -650,7 +977,11 @@ function copyFinalNote() {
 
 // Listen for preview link changes
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('previewLink').addEventListener('input', updateFinalNote);
+  document.getElementById('previewLink').addEventListener('input', function() {
+    finalNoteWasEdited = false;
+    updateFinalNote();
+  });
+  loadFromStorage();
 });
 
 // ===========================
@@ -684,9 +1015,11 @@ function renderNewBuildChecklist() {
   </div>`;
   page.appendChild(banner);
 
-  const h1 = document.createElement('h1');
-  h1.textContent = 'NEW BUILD CHECKLIST';
-  page.appendChild(h1);
+  const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:28px';
+  const h1 = document.createElement('h1'); h1.textContent = 'NEW BUILD CHECKLIST'; h1.style.marginBottom = '0';
+  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { if(confirm('Reset all checklist items?')){Object.values(nb_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));nb_blogsYes.forEach(i=>i.status='Ongoing');nb_blogsNo.forEach(i=>i.status='Ongoing');nb_dynamicYes.forEach(i=>i.status='Ongoing');nb_dynamicNo.forEach(i=>i.status='Ongoing');nb_devNotes=[];nb_blogsAnswer=null;nb_dynamicAnswer=null;renderNewBuildChecklist();showToast('Checklist cleared!')} };
+  h1Wrap.append(h1, clrBtn);
+  page.appendChild(h1Wrap);
 
   // Top grid
   const tg = document.createElement('div'); tg.className = 'grid3';
@@ -821,9 +1154,11 @@ function renderUpgradeChecklist() {
   </div>`;
   page.appendChild(banner);
 
-  const h1 = document.createElement('h1');
-  h1.textContent = 'WEB UPGRADE CHECKLIST';
-  page.appendChild(h1);
+  const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:28px';
+  const h1 = document.createElement('h1'); h1.textContent = 'WEB UPGRADE CHECKLIST'; h1.style.marginBottom = '0';
+  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { if(confirm('Reset all checklist items?')){Object.values(up_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));up_manualNo.forEach(i=>i.status='Ongoing');up_devNotes=[];up_manualAnswer=null;renderUpgradeChecklist();showToast('Checklist cleared!')} };
+  h1Wrap.append(h1, clrBtn);
+  page.appendChild(h1Wrap);
 
   const tg = document.createElement('div'); tg.className = 'grid3';
   ['onboarding','website','mobile'].forEach(k => tg.appendChild(clMakeSection(up_data[k], up_data[k].items, renderUpgradeChecklist)));
@@ -954,6 +1289,15 @@ function saveChecklistPDF(mode) {
     doc.text('Dev Notes:', 14, y); y += 5;
     const lines = doc.splitTextToSize(devNotesText, 180);
     doc.text(lines, 14, y); y += lines.length * 5;
+  }
+
+  if (appState.siteComments.length > 0) {
+    doc.text('Site Comments:', 14, y); y += 5;
+    appState.siteComments.forEach(sc => {
+      const scText = 'Site Comment #' + sc.no + ': ' + sc.text;
+      const scLines = doc.splitTextToSize(scText, 180);
+      doc.text(scLines, 14, y); y += scLines.length * 5;
+    });
   }
 
   const link = document.getElementById('previewLink').value.trim();
@@ -1381,6 +1725,60 @@ function ptReset() {
   ptRemainingSeconds = 0;
   ptStartTimeStr = '';
   showToast('Parse time reset!');
+}
+
+function ptAddSLA() {
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.innerHTML = `<div class="confirm-box" style="text-align:left">
+    <p style="font-size:18px;font-weight:800;margin-bottom:16px;text-align:center;color:#FF7700">Add SLA Time</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <label style="font-size:12px;color:#888;font-weight:700">Hours</label>
+        <input type="number" id="slaHours" min="0" max="99" value="0" style="background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:12px;color:#fff;font-size:20px;text-align:center;width:70px;outline:none"/>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <label style="font-size:12px;color:#888;font-weight:700">Minutes</label>
+        <input type="number" id="slaMinutes" min="0" max="59" value="30" style="background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:12px;color:#fff;font-size:20px;text-align:center;width:70px;outline:none"/>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <label style="font-size:12px;color:#888;font-weight:700">Seconds</label>
+        <input type="number" id="slaSeconds" min="0" max="59" value="0" style="background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:12px;color:#fff;font-size:20px;text-align:center;width:70px;outline:none"/>
+      </div>
+    </div>
+    <div class="confirm-btns">
+      <button class="btn-confirm-yes" style="background:#FF7700" id="slaConfirmBtn">Add Time</button>
+      <button class="btn-confirm-no" id="slaCancelBtn">Cancel</button>
+    </div>
+  </div>`;
+  overlay.querySelector('#slaConfirmBtn').onclick = () => {
+    const h = parseInt(document.getElementById('slaHours').value) || 0;
+    const m = parseInt(document.getElementById('slaMinutes').value) || 0;
+    const s = parseInt(document.getElementById('slaSeconds').value) || 0;
+    const addSeconds = h * 3600 + m * 60 + s;
+    if (addSeconds <= 0) { showToast('Please enter a valid time'); return; }
+    document.body.removeChild(overlay);
+    const currentSLA = document.getElementById('ptSlaAgreed').value.trim();
+    const currentSeconds = parseTimeToSeconds(currentSLA);
+    const newTotal = currentSeconds + addSeconds;
+    document.getElementById('ptSlaAgreed').value = formatSecondsToHHMMSS(newTotal);
+    ptSlaSeconds = newTotal;
+    const timeTaken = document.getElementById('ptTimeTaken').value.trim();
+    const takenSeconds = parseTimeToSeconds(timeTaken);
+    ptRemainingSeconds = newTotal - takenSeconds;
+    if (ptRemainingSeconds < 0) ptRemainingSeconds = 0;
+    document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+    document.getElementById('ptResultRow').style.display = 'flex';
+    const endTime = calculateEndTime(new Date(), ptRemainingSeconds);
+    document.getElementById('ptEndTime').value = formatDateTo12h(endTime);
+    updateSendQcOutput();
+    showToast('SLA updated: +' + formatSecondsToHHMMSS(addSeconds));
+  };
+  overlay.querySelector('#slaCancelBtn').onclick = () => { document.body.removeChild(overlay); };
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) document.body.removeChild(overlay); });
+  document.body.appendChild(overlay);
+  // Focus hours input
+  setTimeout(() => document.getElementById('slaHours').focus(), 100);
 }
 
 // ===== SEND FOR QC =====
