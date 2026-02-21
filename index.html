@@ -153,6 +153,33 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 .toast{position:fixed;top:20px;right:20px;background:#00C310;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 
+/* ===== PARSE TIME & SEND FOR QC ===== */
+.pt-qc-bar{display:flex;gap:24px;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap}
+.send-qc-box{background:transparent;border:none;padding:0;min-width:180px;max-width:200px}
+.send-qc-box h3{font-size:16px;font-weight:800;margin-bottom:8px}
+.send-qc-output{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:8px 10px;font-size:12px;min-height:80px;color:#ccc;white-space:pre-wrap;position:relative;text-align:left}
+.send-qc-output .copy-qc-btn{position:absolute;top:4px;right:4px;background:#00C310;border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:11px;z-index:1}
+.parse-time-box{flex:1;min-width:300px}
+.parse-time-box h3{font-size:16px;font-weight:800;margin-bottom:8px}
+.pt-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.pt-textarea{background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:10px;color:#fff;font-size:13px;font-family:inherit;outline:none;resize:vertical;width:220px;height:80px}
+.pt-textarea:focus{border-color:#00C310}
+.pt-fields{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.pt-field{display:flex;flex-direction:column;align-items:center;gap:4px}
+.pt-field label{background:#00C310;color:#fff;font-weight:700;font-size:12px;padding:4px 14px;border-radius:4px;text-align:center;min-width:90px}
+.pt-field input{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:6px 8px;color:#fff;font-size:13px;text-align:center;width:100px;outline:none}
+.pt-field input:focus{border-color:#00C310}
+.pt-actions{display:flex;gap:6px;align-items:center;margin-top:4px;justify-content:flex-end}
+.pt-actions button{border:none;border-radius:4px;padding:4px 14px;font-size:12px;font-weight:700;color:#fff;cursor:pointer}
+.pt-start-btn{background:#00C310}
+.pt-start-btn:hover{background:#00a00d}
+.pt-reset-btn{background:#dc3545}
+.pt-reset-btn:hover{background:#b02a37}
+.pt-parse-btn{background:#aaa;color:#333;border:none;border-radius:12px;padding:5px 16px;font-size:12px;font-weight:700;cursor:pointer}
+.pt-result-row{display:flex;gap:16px;align-items:center;margin-top:8px;font-size:13px;flex-wrap:wrap}
+.pt-result-row span{font-weight:700}
+.pt-result-row input{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:4px 8px;color:#fff;font-size:13px;text-align:center;width:110px;outline:none}
+
 /* ===== RESPONSIVE - MOBILE HAMBURGER ===== */
 .mobile-menu-btn{display:none;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;padding:4px 8px;line-height:1}
 
@@ -279,6 +306,39 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
             <button onclick="selectWorkflow('Website Upgrade')">Website Upgrade</button>
             <button onclick="selectWorkflow('Reworks')">Reworks</button>
             <button onclick="selectWorkflow('Change Request')">Change Request</button>
+          </div>
+        </div>
+
+        <!-- Parse Time & Send for QC Bar -->
+        <div class="pt-qc-bar" id="ptQcBar">
+          <div class="send-qc-box">
+            <h3>Send for QC</h3>
+            <div class="send-qc-output" id="sendQcOutput">
+              <button class="copy-qc-btn" onclick="copyQcOutput()" title="Copy">📋</button>
+              <span id="sendQcText" style="display:block;padding-top:0"></span>
+            </div>
+          </div>
+          <div class="parse-time-box">
+            <h3>Parse Time</h3>
+            <div class="pt-row">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <textarea class="pt-textarea" id="ptInput" placeholder="Paste time data here..."></textarea>
+                <button class="pt-parse-btn" onclick="ptParse()">Parse</button>
+              </div>
+              <div class="pt-fields">
+                <div class="pt-field"><label>Start Time</label><input type="text" id="ptStartTime" readonly/></div>
+                <div class="pt-field"><label>SLA Agreed</label><input type="text" id="ptSlaAgreed" readonly/></div>
+                <div class="pt-field"><label>Time Taken</label><input type="text" id="ptTimeTaken" readonly/></div>
+              </div>
+              <div class="pt-actions">
+                <button class="pt-start-btn" onclick="ptStart()">Start</button>
+                <button class="pt-reset-btn" onclick="ptReset()">Reset</button>
+              </div>
+            </div>
+            <div class="pt-result-row" id="ptResultRow" style="display:none">
+              <span>Remaining Time:</span><input type="text" id="ptRemaining" readonly/>
+              <span>End Time:</span><input type="text" id="ptEndTime" readonly/>
+            </div>
           </div>
         </div>
 
@@ -436,6 +496,7 @@ function selectWorkflow(wf) {
     if (currentPage === 1 || currentPage === 2) switchPage(0);
   }
   updateFinalNote();
+  updateSendQcOutput();
   renderWorkflowCharts();
 }
 
@@ -501,7 +562,12 @@ function updateFinalNote() {
   const wfLabel = 'Dev Completed ' + wfType;
 
   const el = document.getElementById('finalNoteBody');
-  if (el.isContentEditable) return;
+  // Save cursor position if editing
+  const wasEditing = el.isContentEditable;
+  if (wasEditing) {
+    appState.finalNoteContent = el.textContent;
+    return; // Don't overwrite while user is actively editing
+  }
 
   el.innerHTML = '';
 
@@ -523,13 +589,12 @@ function updateFinalNote() {
 
   el.appendChild(document.createElement('br'));
 
-  // Site Comments
-  appState.siteComments.forEach(sc => {
+  // Site Comments - single line break between them
+  appState.siteComments.forEach((sc, i) => {
     const scBold = document.createElement('b');
     scBold.textContent = 'Site Comment #' + sc.no + ':';
     el.appendChild(scBold);
     el.appendChild(document.createTextNode(' ' + sc.text));
-    el.appendChild(document.createElement('br'));
     el.appendChild(document.createElement('br'));
   });
 
@@ -544,6 +609,7 @@ function updateFinalNote() {
   }
 
   appState.finalNoteContent = el.textContent;
+  updateSendQcOutput();
 }
 
 function toggleEditFinalNote() {
@@ -560,8 +626,26 @@ function toggleEditFinalNote() {
 
 function copyFinalNote() {
   const el = document.getElementById('finalNoteBody');
-  const text = el.textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('Final note copied!'));
+  // Copy with formatting using Selection API
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  // Use clipboard API with HTML
+  const htmlContent = el.innerHTML;
+  const textContent = el.textContent;
+  if (navigator.clipboard && navigator.clipboard.write) {
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const textBlob = new Blob([textContent], { type: 'text/plain' });
+    navigator.clipboard.write([
+      new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob })
+    ]).then(() => showToast('Final note copied with formatting!'));
+  } else {
+    document.execCommand('copy');
+    showToast('Final note copied!');
+  }
+  selection.removeAllRanges();
 }
 
 // Listen for preview link changes
@@ -1113,6 +1197,218 @@ switchPage = function(idx){
   origSwitchPage(idx);
   if(window.innerWidth <= 768) document.querySelector('.sidebar').classList.remove('open');
 };
+// ===== PARSE TIME & SEND FOR QC =====
+let ptTimerInterval = null;
+let ptSlaSeconds = 0;
+let ptStartTimeStr = '';
+let ptRemainingSeconds = 0;
+
+function ptParse() {
+  const raw = document.getElementById('ptInput').value.trim();
+  if (!raw) return;
+  
+  // Try to extract time patterns from pasted data
+  // Expected format includes times like: 03:12:59 pm, 03:45:00, 00:47:00
+  const timePatterns = raw.match(/\d{1,2}:\d{2}:\d{2}(?:\s*[ap]m)?/gi);
+  
+  if (timePatterns && timePatterns.length >= 3) {
+    // Look for the start time (with am/pm), SLA, and time taken
+    let startTime = '', slaAgreed = '', timeTaken = '';
+    
+    for (const t of timePatterns) {
+      if (/[ap]m/i.test(t)) {
+        startTime = t.trim();
+      }
+    }
+    
+    // Get non-am/pm times for SLA and Time Taken
+    const nonAmPm = timePatterns.filter(t => !/[ap]m/i.test(t));
+    if (nonAmPm.length >= 2) {
+      slaAgreed = nonAmPm[nonAmPm.length - 2].trim();
+      timeTaken = nonAmPm[nonAmPm.length - 1].trim();
+    } else if (nonAmPm.length === 1) {
+      slaAgreed = nonAmPm[0].trim();
+    }
+    
+    // If we didn't find a separate start time with am/pm, use last am/pm time
+    if (!startTime) {
+      const ampmTimes = timePatterns.filter(t => /[ap]m/i.test(t));
+      if (ampmTimes.length > 0) startTime = ampmTimes[ampmTimes.length - 1].trim();
+    }
+    
+    document.getElementById('ptStartTime').value = startTime;
+    document.getElementById('ptSlaAgreed').value = slaAgreed;
+    document.getElementById('ptTimeTaken').value = timeTaken;
+    
+    // Convert SLA to seconds
+    ptSlaSeconds = parseTimeToSeconds(slaAgreed);
+    ptStartTimeStr = startTime;
+    
+    showToast('Time parsed!');
+  } else {
+    showToast('Could not parse time data');
+  }
+}
+
+function parseTimeToSeconds(t) {
+  if (!t) return 0;
+  const parts = t.replace(/\s*[ap]m/i, '').split(':').map(Number);
+  return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+}
+
+function formatSecondsToHHMMSS(s) {
+  if (s <= 0) s = 0;
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = Math.floor(s % 60);
+  return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+function formatSecondsToFriendly(s) {
+  if (s <= 0) return '0hrs 0mins';
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return h + 'hrs ' + m + 'mins';
+}
+
+function isWorkingTime(d) {
+  const day = d.getDay(); // 0=Sun, 6=Sat
+  if (day === 0 || day === 6) return false;
+  const hour = d.getHours();
+  if (hour >= 16 || hour < 7) return false;
+  return true;
+}
+
+function ptStart() {
+  const sla = document.getElementById('ptSlaAgreed').value.trim();
+  const timeTaken = document.getElementById('ptTimeTaken').value.trim();
+  if (!sla) { showToast('No SLA time to start'); return; }
+  
+  const slaSeconds = parseTimeToSeconds(sla);
+  const takenSeconds = parseTimeToSeconds(timeTaken);
+  ptRemainingSeconds = slaSeconds - takenSeconds;
+  
+  if (ptRemainingSeconds <= 0) {
+    ptRemainingSeconds = 0;
+    document.getElementById('ptRemaining').value = '00:00:00 (Exceeded)';
+    document.getElementById('ptEndTime').value = 'N/A';
+    document.getElementById('ptResultRow').style.display = 'flex';
+    updateSendQcOutput();
+    return;
+  }
+  
+  const endTime = calculateEndTime(new Date(), ptRemainingSeconds);
+  document.getElementById('ptEndTime').value = formatDateTo12h(endTime);
+  document.getElementById('ptResultRow').style.display = 'flex';
+  
+  if (ptTimerInterval) clearInterval(ptTimerInterval);
+  ptTimerInterval = setInterval(() => {
+    const now = new Date();
+    
+    // Pause on weekends and outside 7am-4pm
+    if (!isWorkingTime(now)) {
+      document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+      updateSendQcOutput();
+      return;
+    }
+    
+    ptRemainingSeconds--;
+    if (ptRemainingSeconds <= 0) {
+      ptRemainingSeconds = 0;
+      document.getElementById('ptRemaining').value = '00:00:00';
+      clearInterval(ptTimerInterval);
+      ptTimerInterval = null;
+      updateSendQcOutput();
+      return;
+    }
+    document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+    updateSendQcOutput();
+  }, 1000);
+  
+  document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+  updateSendQcOutput();
+  showToast('Timer started!');
+}
+
+function calculateEndTime(startDate, remainingSeconds) {
+  let d = new Date(startDate);
+  let remaining = remainingSeconds;
+  
+  while (remaining > 0) {
+    const day = d.getDay();
+    // Skip weekends
+    if (day === 0) { d.setDate(d.getDate() + 1); d.setHours(7, 0, 0, 0); continue; }
+    if (day === 6) { d.setDate(d.getDate() + 2); d.setHours(7, 0, 0, 0); continue; }
+    
+    const hour = d.getHours();
+    if (hour >= 16) { d.setDate(d.getDate() + 1); d.setHours(7, 0, 0, 0); continue; }
+    if (hour < 7) { d.setHours(7, 0, 0, 0); continue; }
+    
+    const endOfDay = new Date(d);
+    endOfDay.setHours(16, 0, 0, 0);
+    const availableSeconds = Math.floor((endOfDay - d) / 1000);
+    
+    if (remaining <= availableSeconds) {
+      d = new Date(d.getTime() + remaining * 1000);
+      remaining = 0;
+    } else {
+      remaining -= availableSeconds;
+      d.setDate(d.getDate() + 1);
+      d.setHours(7, 0, 0, 0);
+    }
+  }
+  return d;
+}
+
+function formatDateTo12h(d) {
+  let h = d.getHours();
+  const m = String(d.getMinutes()).padStart(2, '0');
+  const s = String(d.getSeconds()).padStart(2, '0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return String(h).padStart(2, '0') + ':' + m + ':' + s + ' ' + ampm;
+}
+
+function ptReset() {
+  if (ptTimerInterval) { clearInterval(ptTimerInterval); ptTimerInterval = null; }
+  document.getElementById('ptInput').value = '';
+  document.getElementById('ptStartTime').value = '';
+  document.getElementById('ptSlaAgreed').value = '';
+  document.getElementById('ptTimeTaken').value = '';
+  document.getElementById('ptRemaining').value = '';
+  document.getElementById('ptEndTime').value = '';
+  document.getElementById('ptResultRow').style.display = 'none';
+  ptSlaSeconds = 0;
+  ptRemainingSeconds = 0;
+  ptStartTimeStr = '';
+  showToast('Parse time reset!');
+}
+
+// ===== SEND FOR QC =====
+function updateSendQcOutput() {
+  const biz = appState.bizName || '';
+  const wf = appState.workflow || '';
+  const sentFor = 'Sent For QC';
+  
+  // Use friendly format for QC, no paused/done text
+  let remainingText = '';
+  if (ptRemainingSeconds > 0) {
+    remainingText = formatSecondsToFriendly(ptRemainingSeconds);
+  }
+  
+  let text = '';
+  if (biz) text += biz + '\n';
+  if (wf) text += wf + '\n';
+  if (remainingText) text += 'Remaining Time: ' + remainingText + '\n';
+  text += sentFor;
+  
+  const el = document.getElementById('sendQcText');
+  if (el) el.textContent = text;
+}
+
+function copyQcOutput() {
+  const text = document.getElementById('sendQcText').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('QC info copied!'));
+}
 </script>
 </body>
 </html>
