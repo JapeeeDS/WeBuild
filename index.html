@@ -323,6 +323,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
             <div class="final-note-body" id="finalNoteBody"></div>
           </div>
         </div>
+
+        <!-- Workflow Charts -->
+        <div id="workflowCharts" class="charts" style="display:none;margin-top:24px"></div>
       </div>
 
       <!-- Page 1: New Build Checklist -->
@@ -433,6 +436,36 @@ function selectWorkflow(wf) {
     if (currentPage === 1 || currentPage === 2) switchPage(0);
   }
   updateFinalNote();
+  renderWorkflowCharts();
+}
+
+let _renderingWorkflowCharts = false;
+function renderWorkflowCharts() {
+  if (_renderingWorkflowCharts) return;
+  _renderingWorkflowCharts = true;
+  const container = document.getElementById('workflowCharts');
+  container.innerHTML = '';
+  const wf = appState.workflow;
+  let chartData = null;
+
+  if (wf === 'New Build') {
+    chartData = clGetNBChartData();
+  } else if (wf === 'Website Upgrade') {
+    chartData = clGetUpChartData();
+  }
+
+  if (!chartData) { container.style.display = 'none'; _renderingWorkflowCharts = false; return; }
+  container.style.display = 'flex';
+
+  chartData.forEach(s => {
+    const w = document.createElement('div'); w.className = 'chart-item';
+    const c = document.createElement('canvas'); c.width = 100; c.height = 100;
+    const done = s.items.filter(i => i.status === 'Done').length;
+    clDrawDonut(c, done, s.items.length, s.color);
+    const l = document.createElement('span'); l.textContent = s.label;
+    w.append(c, l); container.appendChild(w);
+  });
+  _renderingWorkflowCharts = false;
 }
 
 // ===== SITE COMMENTS =====
@@ -548,7 +581,7 @@ const nb_data = {
 };
 const nb_blogsYes=[{name:"SEO - Meta title and Meta Description",status:"Ongoing"},{name:"Checked Headings",status:"Ongoing"},{name:"Check Links",status:"Ongoing"}];
 const nb_blogsNo=[{name:"Remove templated Blogs",status:"Ongoing"}];
-const nb_dynamicYes=[{name:"Lorem Ipsum1",status:"Ongoing"},{name:"Lorem Ipsum2",status:"Ongoing"}];
+const nb_dynamicYes=[{name:"Checked Added Collections",status:"Ongoing"},{name:"Lorem Ipsum2",status:"Ongoing"}];
 const nb_dynamicNo=[{name:"Remove templated Collection",status:"Ongoing"}];
 let nb_devNotes=[];
 let nb_blogsAnswer=null, nb_dynamicAnswer=null;
@@ -654,6 +687,7 @@ function renderNewBuildChecklist() {
   saveBtn.onclick = () => saveChecklistPDF('newbuild');
   saveWrap.appendChild(saveBtn); br.appendChild(saveWrap);
   page.appendChild(br);
+  renderWorkflowCharts();
 }
 
 function addNBNote() {
@@ -768,6 +802,7 @@ function renderUpgradeChecklist() {
   saveBtn.onclick = () => saveChecklistPDF('upgrade');
   saveWrap.appendChild(saveBtn); br.appendChild(saveWrap);
   page.appendChild(br);
+  renderWorkflowCharts();
 }
 
 function addUpNote() {
@@ -1006,7 +1041,7 @@ function parseDocument() {
     table.className = 'parser-table';
     table.innerHTML = '<thead><tr><th>Item Name</th><th>Parent</th><th>Type</th><th>Anchor Links</th><th>Date & Time</th><th>Action</th></tr></thead><tbody>' +
       newItems.map(item => `<tr><td>${item.itemName}</td><td>${item.parent}</td><td>${item.type}</td><td>${item.anchorLinks}</td><td>${item.timestamp}</td><td>${item.action}</td></tr>`).join('') + '</tbody>';
-    newPagesContainer.innerHTML = '<h2>New Pages for Website Upgrade</h2>';
+    newPagesContainer.innerHTML = '<h2>Pages / New Pages</h2>';
     newPagesContainer.appendChild(table);
 
     // Add Date Updated column to main table
