@@ -609,8 +609,11 @@ function confirmClearAll() {
 }
 
 function clearAllData() {
+  // Preserve developer name and business name
+  const savedDevName = appState.devName;
+  const savedBizName = appState.bizName;
   localStorage.removeItem('webuild_data');
-  appState = { devName: '', bizName: '', workflow: '', previewLink: '', siteComments: [], devNotes: [], finalNoteContent: '' };
+  appState = { devName: savedDevName, bizName: savedBizName, workflow: '', previewLink: '', siteComments: [], devNotes: [], finalNoteContent: '' };
   finalNoteWasEdited = false;
   document.getElementById('previewLink').value = '';
   document.getElementById('finalNoteBody').innerHTML = '';
@@ -618,9 +621,6 @@ function clearAllData() {
   document.getElementById('scNo').value = '';
   document.getElementById('scText').value = '';
   document.getElementById('devNoteText').value = '';
-  document.getElementById('parserInput').value = '';
-  document.getElementById('parserBody').innerHTML = '';
-  document.getElementById('parserNewPages').innerHTML = '';
   ptReset();
   updateFinalNote();
   updateSendQcOutput();
@@ -1017,7 +1017,7 @@ function renderNewBuildChecklist() {
 
   const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:28px';
   const h1 = document.createElement('h1'); h1.textContent = 'NEW BUILD CHECKLIST'; h1.style.marginBottom = '0';
-  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { if(confirm('Reset all checklist items?')){Object.values(nb_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));nb_blogsYes.forEach(i=>i.status='Ongoing');nb_blogsNo.forEach(i=>i.status='Ongoing');nb_dynamicYes.forEach(i=>i.status='Ongoing');nb_dynamicNo.forEach(i=>i.status='Ongoing');nb_devNotes=[];nb_blogsAnswer=null;nb_dynamicAnswer=null;renderNewBuildChecklist();showToast('Checklist cleared!')} };
+  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { showConfirmModal('Reset all checklist items?', function(){Object.values(nb_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));nb_blogsYes.forEach(i=>i.status='Ongoing');nb_blogsNo.forEach(i=>i.status='Ongoing');nb_dynamicYes.forEach(i=>i.status='Ongoing');nb_dynamicNo.forEach(i=>i.status='Ongoing');nb_devNotes=[];nb_blogsAnswer=null;nb_dynamicAnswer=null;renderNewBuildChecklist();showToast('Checklist cleared!')}); };
   h1Wrap.append(h1, clrBtn);
   page.appendChild(h1Wrap);
 
@@ -1156,7 +1156,7 @@ function renderUpgradeChecklist() {
 
   const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:28px';
   const h1 = document.createElement('h1'); h1.textContent = 'WEB UPGRADE CHECKLIST'; h1.style.marginBottom = '0';
-  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { if(confirm('Reset all checklist items?')){Object.values(up_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));up_manualNo.forEach(i=>i.status='Ongoing');up_devNotes=[];up_manualAnswer=null;renderUpgradeChecklist();showToast('Checklist cleared!')} };
+  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { showConfirmModal('Reset all checklist items?', function(){Object.values(up_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));up_manualNo.forEach(i=>i.status='Ongoing');up_devNotes=[];up_manualAnswer=null;renderUpgradeChecklist();showToast('Checklist cleared!')}); };
   h1Wrap.append(h1, clrBtn);
   page.appendChild(h1Wrap);
 
