@@ -38,7 +38,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 .confirm-box .btn-confirm-yes:hover{background:#b02a37}
 .confirm-box .btn-confirm-no{background:#555}
 .confirm-box .btn-confirm-no:hover{background:#444}
-.app-header .biz-name{font-size:22px;font-weight:700;color:#00C310;font-style:italic}
+.app-header .biz-name{font-size:22px;font-weight:700; color:#444; font-style:italic; background:#fff; padding: 10px; border-radius: 10px;}
 
 .app-body{display:flex;height:calc(100vh - 72px);overflow:hidden}
 
@@ -331,7 +331,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
       <div class="avatar" onclick="goBackToLogin()" title="Back to Login"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
       <span id="headerName">ENTERED NAME</span>
     </div>
-    <div class="biz-name" id="headerBiz" style="color:#66FF70">Business Name</div>
+    <div class="biz-name" id="headerBiz" style="color:#444">Business Name</div>
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
   </div>
   <div class="app-body">
@@ -500,6 +500,9 @@ function saveToStorage() {
     ptSlaSeconds: ptSlaSeconds,
     ptRemainingSeconds: ptRemainingSeconds,
     ptStartTimeStr: ptStartTimeStr,
+    ptTimerRunning: ptTimerInterval !== null,
+    ptTimeTakenSeconds: ptTimeTakenSeconds,
+    ptTimeTakenRunning: ptTimeTakenInterval !== null,
     // Parser fields
     parserInput: document.getElementById('parserInput') ? document.getElementById('parserInput').value : '',
     // Site comment & dev note input fields
@@ -553,6 +556,40 @@ function loadFromStorage() {
     if (data.ptSlaSeconds) ptSlaSeconds = data.ptSlaSeconds;
     if (data.ptRemainingSeconds) ptRemainingSeconds = data.ptRemainingSeconds;
     if (data.ptStartTimeStr) ptStartTimeStr = data.ptStartTimeStr;
+    if (data.ptTimeTakenSeconds) ptTimeTakenSeconds = data.ptTimeTakenSeconds;
+    // Restart remaining time countdown if it was running
+    if (data.ptTimerRunning && ptRemainingSeconds > 0) {
+      if (ptTimerInterval) clearInterval(ptTimerInterval);
+      ptTimerInterval = setInterval(() => {
+        const now = new Date();
+        if (!isWorkingTime(now)) {
+          document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+          updateSendQcOutput();
+          return;
+        }
+        ptRemainingSeconds--;
+        if (ptRemainingSeconds <= 0) {
+          ptRemainingSeconds = 0;
+          document.getElementById('ptRemaining').value = '00:00:00';
+          clearInterval(ptTimerInterval);
+          ptTimerInterval = null;
+          updateSendQcOutput();
+          return;
+        }
+        document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+        updateSendQcOutput();
+      }, 1000);
+    }
+    // Restart time taken timer if it was running
+    if (data.ptTimeTakenRunning) {
+      if (ptTimeTakenInterval) clearInterval(ptTimeTakenInterval);
+      ptTimeTakenInterval = setInterval(() => {
+        const now = new Date();
+        if (!isWorkingTime(now)) return;
+        ptTimeTakenSeconds++;
+        document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
+      }, 1000);
+    }
     // Restore parser input
     if (data.parserInput) document.getElementById('parserInput').value = data.parserInput;
     // Restore site comment & dev note inputs
@@ -745,65 +782,64 @@ function renderWorkflowCharts() {
 }
 
 // ===== SITE COMMENTS =====
+// Sync edited site comment texts from the final note DOM back into appState
+function syncSiteCommentsFromDOM() {
+  const el = document.getElementById('finalNoteBody');
+  if (!el) return;
+  const html = el.innerHTML;
+  // Match all Site Comment #X: text patterns from current HTML
+  const regex = /<b>\s*Site Comment\s*#(\d+)\s*:\s*<\/b>\s*([^<]*)/gi;
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    const no = match[1].trim();
+    const text = match[2].trim();
+    // Update appState with the edited text
+    const existing = appState.siteComments.find(sc => sc.no === no);
+    if (existing && text) {
+      existing.text = text;
+    }
+  }
+}
+
 function addSiteComment() {
   const no = document.getElementById('scNo').value.trim();
   const text = document.getElementById('scText').value.trim();
   if (!no || !text) return;
+  // Sync any user edits from DOM before modifying
+  if (finalNoteWasEdited) {
+    syncSiteCommentsFromDOM();
+  }
   appState.siteComments.push({ no, text });
   appState.siteComments.sort((a, b) => parseInt(a.no) - parseInt(b.no));
   document.getElementById('scNo').value = '';
   document.getElementById('scText').value = '';
   if (finalNoteWasEdited) {
     const el = document.getElementById('finalNoteBody');
-    // Find last site comment node or insert after dev notes section
-    const allNodes = Array.from(el.childNodes);
-    let lastScIndex = -1;
-    for (let i = 0; i < allNodes.length; i++) {
-      if (allNodes[i].nodeName === 'B' && allNodes[i].textContent.startsWith('Site Comment #')) {
-        // find the <br> after this site comment's text
-        let j = i + 1;
-        while (j < allNodes.length && allNodes[j].nodeName !== 'BR' && allNodes[j].nodeName !== 'B') j++;
-        lastScIndex = j < allNodes.length && allNodes[j].nodeName === 'BR' ? j : j - 1;
-      }
+    let html = el.innerHTML;
+    // Remove existing site comments section (heading + all entries)
+    // Handle both bare and div-wrapped structures from contentEditable
+    html = html.replace(/<div>\s*<b>\s*Site Comments:\s*<\/b>\s*<\/div>/gi, '');
+    html = html.replace(/<b>\s*Site Comments:\s*<\/b>\s*(<br\s*\/?>)?/gi, '');
+    html = html.replace(/<div>\s*<b>\s*Site Comment\s*#[\s\S]*?<\/b>[^<]*<\/div>/gi, '');
+    html = html.replace(/<b>\s*Site Comment\s*#[\s\S]*?<\/b>[^<]*(<br\s*\/?>)?/gi, '');
+    // Build site comments block
+    let scBlock = '';
+    if (appState.siteComments.length > 0) {
+      scBlock = '<br><b>Site Comments:</b><br>';
+      appState.siteComments.forEach(sc => {
+        scBlock += '<b>Site Comment #' + sc.no + ':</b> ' + sc.text + '<br>';
+      });
     }
-    const scBold = document.createElement('b');
-    scBold.textContent = 'Site Comment #' + no + ':';
-    const scText = document.createTextNode(' ' + text);
-    const scBr = document.createElement('br');
-    if (lastScIndex >= 0 && allNodes[lastScIndex]) {
-      const refNode = allNodes[lastScIndex].nextSibling;
-      el.insertBefore(scBold, refNode);
-      el.insertBefore(scText, refNode);
-      el.insertBefore(scBr, refNode);
+    // Insert before Preview Link if present, otherwise append
+    const plMatch = html.match(/<(div>\s*)?<b>\s*Preview Link/i);
+    if (plMatch) {
+      const plIdx = html.indexOf(plMatch[0]);
+      html = html.slice(0, plIdx) + scBlock + html.slice(plIdx);
     } else {
-      // No existing site comments - add heading first, then the comment
-      let devNotesEnd = -1;
-      for (let i = 0; i < allNodes.length; i++) {
-        if (allNodes[i].nodeType === 3 && allNodes[i].textContent.startsWith('• ')) {
-          let j = i + 1;
-          while (j < allNodes.length && allNodes[j].nodeName === 'BR') j++;
-          devNotesEnd = j - 1;
-        }
-      }
-      const scHeading = document.createElement('b');
-      scHeading.textContent = 'Site Comments:';
-      const scHeadingBr = document.createElement('br');
-      if (devNotesEnd >= 0 && allNodes[devNotesEnd]) {
-        const refNode = allNodes[devNotesEnd].nextSibling;
-        el.insertBefore(document.createElement('br'), refNode);
-        el.insertBefore(scHeading, refNode);
-        el.insertBefore(scHeadingBr, refNode);
-        el.insertBefore(scBold, refNode);
-        el.insertBefore(scText, refNode);
-        el.insertBefore(scBr, refNode);
-      } else {
-        el.appendChild(scHeading);
-        el.appendChild(scHeadingBr);
-        el.appendChild(scBold);
-        el.appendChild(scText);
-        el.appendChild(scBr);
-      }
+      html = html.replace(/(<br\s*\/?>|\s)*$/, '');
+      html += scBlock;
     }
+    el.innerHTML = html;
     appState.finalNoteContent = el.textContent;
     updateSendQcOutput();
   } else {
@@ -823,49 +859,8 @@ function addDevNote() {
   if (!text) return;
   appState.devNotes.push(text);
   document.getElementById('devNoteText').value = '';
-  if (finalNoteWasEdited) {
-    const el = document.getElementById('finalNoteBody');
-    // Find last dev note bullet and insert after it
-    const allNodes = Array.from(el.childNodes);
-    let lastDevNoteIndex = -1;
-    for (let i = 0; i < allNodes.length; i++) {
-      if (allNodes[i].nodeType === 3 && allNodes[i].textContent.trim().startsWith('•')) {
-        let j = i + 1;
-        while (j < allNodes.length && allNodes[j].nodeName === 'BR') { lastDevNoteIndex = j; break; }
-        if (lastDevNoteIndex === -1) lastDevNoteIndex = i;
-      }
-    }
-    const noteText = document.createTextNode('• ' + text);
-    const noteBr = document.createElement('br');
-    if (lastDevNoteIndex >= 0 && allNodes[lastDevNoteIndex]) {
-      const refNode = allNodes[lastDevNoteIndex].nextSibling;
-      el.insertBefore(noteText, refNode);
-      el.insertBefore(noteBr, refNode);
-    } else {
-      // No existing dev notes, find "Dev Notes:" header
-      let headerIndex = -1;
-      for (let i = 0; i < allNodes.length; i++) {
-        if (allNodes[i].nodeName === 'B' && allNodes[i].textContent === 'Dev Notes:') {
-          let j = i + 1;
-          while (j < allNodes.length && allNodes[j].nodeName === 'BR') j++;
-          headerIndex = j - 1;
-          break;
-        }
-      }
-      if (headerIndex >= 0 && allNodes[headerIndex]) {
-        const refNode = allNodes[headerIndex].nextSibling;
-        el.insertBefore(noteText, refNode);
-        el.insertBefore(noteBr, refNode);
-      } else {
-        el.appendChild(noteText);
-        el.appendChild(noteBr);
-      }
-    }
-    appState.finalNoteContent = el.textContent;
-    updateSendQcOutput();
-  } else {
-    updateFinalNote();
-  }
+  finalNoteWasEdited = false;
+  updateFinalNote();
   showToast('Developer note added!');
 }
 
@@ -888,23 +883,14 @@ function updateFinalNote() {
 
   el.innerHTML = '';
 
-  // Title
-  el.appendChild(document.createTextNode(wfLabel));
+  // Title (bold)
+  const titleBold = document.createElement('b');
+  titleBold.textContent = wfLabel;
+  el.appendChild(titleBold);
   el.appendChild(document.createElement('br'));
   el.appendChild(document.createElement('br'));
 
-  // Preview Link
-  const link = document.getElementById('previewLink').value.trim();
-  if (link) {
-    const plBold = document.createElement('b');
-    plBold.textContent = 'Preview Link:';
-    el.appendChild(plBold);
-    el.appendChild(document.createTextNode(' ' + link));
-    el.appendChild(document.createElement('br'));
-    el.appendChild(document.createElement('br'));
-  }
-
-  // Dev Notes
+  // Dev Notes (heading always visible)
   const dnBold = document.createElement('b');
   dnBold.textContent = 'Dev Notes:';
   el.appendChild(dnBold);
@@ -913,10 +899,9 @@ function updateFinalNote() {
     el.appendChild(document.createTextNode('• ' + n));
     el.appendChild(document.createElement('br'));
   });
-
   el.appendChild(document.createElement('br'));
 
-  // Site Comments heading + items
+  // Site Comments heading + items (only show if there are comments)
   if (appState.siteComments.length > 0) {
     const scHeading = document.createElement('b');
     scHeading.textContent = 'Site Comments:';
@@ -929,6 +914,17 @@ function updateFinalNote() {
       el.appendChild(document.createTextNode(' ' + sc.text));
       el.appendChild(document.createElement('br'));
     });
+    el.appendChild(document.createElement('br'));
+  }
+
+  // Preview Link (only show if link is entered)
+  const link = document.getElementById('previewLink').value.trim();
+  if (link) {
+    const plBold = document.createElement('b');
+    plBold.textContent = 'Preview Link:';
+    el.appendChild(plBold);
+    el.appendChild(document.createTextNode(' ' + link));
+    el.appendChild(document.createElement('br'));
   }
 
   appState.finalNoteContent = el.textContent;
@@ -942,6 +938,8 @@ function toggleEditFinalNote() {
     el.contentEditable = false;
     fnContainer.classList.remove('editing');
     finalNoteWasEdited = true;
+    // Sync any site comment edits back into appState
+    syncSiteCommentsFromDOM();
     appState.finalNoteContent = el.textContent;
     showToast('Final note saved!');
   } else {
@@ -1546,6 +1544,8 @@ let ptTimerInterval = null;
 let ptSlaSeconds = 0;
 let ptStartTimeStr = '';
 let ptRemainingSeconds = 0;
+let ptTimeTakenSeconds = 0;
+let ptTimeTakenInterval = null;
 
 function ptParse() {
   const raw = document.getElementById('ptInput').value.trim();
@@ -1629,6 +1629,7 @@ function ptStart() {
   
   const slaSeconds = parseTimeToSeconds(sla);
   const takenSeconds = parseTimeToSeconds(timeTaken);
+  ptTimeTakenSeconds = takenSeconds;
   ptRemainingSeconds = slaSeconds - takenSeconds;
   
   if (ptRemainingSeconds <= 0) {
@@ -1644,17 +1645,15 @@ function ptStart() {
   document.getElementById('ptEndTime').value = formatDateTo12h(endTime);
   document.getElementById('ptResultRow').style.display = 'flex';
   
+  // Start remaining time countdown
   if (ptTimerInterval) clearInterval(ptTimerInterval);
   ptTimerInterval = setInterval(() => {
     const now = new Date();
-    
-    // Pause on weekends and outside 7am-4pm
     if (!isWorkingTime(now)) {
       document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
       updateSendQcOutput();
       return;
     }
-    
     ptRemainingSeconds--;
     if (ptRemainingSeconds <= 0) {
       ptRemainingSeconds = 0;
@@ -1666,6 +1665,15 @@ function ptStart() {
     }
     document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
     updateSendQcOutput();
+  }, 1000);
+  
+  // Start time taken counter (keeps running)
+  if (ptTimeTakenInterval) clearInterval(ptTimeTakenInterval);
+  ptTimeTakenInterval = setInterval(() => {
+    const now = new Date();
+    if (!isWorkingTime(now)) return;
+    ptTimeTakenSeconds++;
+    document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
   }, 1000);
   
   document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
@@ -1714,6 +1722,7 @@ function formatDateTo12h(d) {
 
 function ptReset() {
   if (ptTimerInterval) { clearInterval(ptTimerInterval); ptTimerInterval = null; }
+  if (ptTimeTakenInterval) { clearInterval(ptTimeTakenInterval); ptTimeTakenInterval = null; }
   document.getElementById('ptInput').value = '';
   document.getElementById('ptStartTime').value = '';
   document.getElementById('ptSlaAgreed').value = '';
@@ -1723,6 +1732,7 @@ function ptReset() {
   document.getElementById('ptResultRow').style.display = 'none';
   ptSlaSeconds = 0;
   ptRemainingSeconds = 0;
+  ptTimeTakenSeconds = 0;
   ptStartTimeStr = '';
   showToast('Parse time reset!');
 }
