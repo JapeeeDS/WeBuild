@@ -13,19 +13,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 
 /* ===== LOGIN PAGE ===== */
 #loginPage{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#3a3a3a}
-#loginPage h1{font-size:42px;font-weight:900;color:#00C310;margin-bottom:32px;letter-spacing:1px}
+#loginPage h1{font-size:42px;font-weight:900;color:#009C0C;margin-bottom:32px;letter-spacing:1px}
 .login-card{background:#1a1a1a;border:1px solid #555;border-radius:16px;padding:40px 48px;display:flex;flex-direction:column;gap:20px;min-width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
 .login-card input{background:#1a1a1a;border:1px solid #666;border-radius:8px;padding:14px 18px;color:#fff;font-size:15px;outline:none;transition:border-color .2s}
-.login-card input:focus{border-color:#00C310}
+.login-card input:focus{border-color:#009C0C}
 .login-card input::placeholder{color:#888}
-.login-card button{background:#00C310;color:#fff;border:none;border-radius:20px;padding:12px 32px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;align-self:center}
+.login-card button{background:#009C0C;color:#fff;border:none;border-radius:20px;padding:12px 32px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;align-self:center}
 .login-card button:hover{background:#00a00d}
 
 /* ===== MAIN APP ===== */
 #appPage{display:none;height:100vh;overflow:hidden}
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:#3a3a3a;border-bottom:1px solid #555}
 .app-header .dev-name{font-size:20px;font-weight:800;display:flex;align-items:center;gap:12px}
-.app-header .dev-name .avatar{width:48px;height:48px;background:#00C310;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .2s}
+.app-header .dev-name .avatar{width:48px;height:48px;background:#009C0C;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .2s}
 .app-header .dev-name .avatar:hover{opacity:0.8}
 .app-header .dev-name .avatar svg{opacity:0.9}
 /* Confirm Modal */
@@ -38,14 +38,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 .confirm-box .btn-confirm-yes:hover{background:#b02a37}
 .confirm-box .btn-confirm-no{background:#555}
 .confirm-box .btn-confirm-no:hover{background:#444}
-.app-header .biz-name{font-size:22px;font-weight:700; color:#444; font-style:italic; background:#fff; padding: 10px; border-radius: 10px;}
+.app-header .biz-name{font-size:22px;font-weight:700; color:#009C0C; font-style:italic; background:#fff; padding: 10px; border-radius: 10px;}
 
 .app-body{display:flex;height:calc(100vh - 72px);overflow:hidden}
 
 /* Sidebar */
 .sidebar{width:80px;background:#3a3a3a;display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:4px;border-right:1px solid #555;flex-shrink:0}
 .sidebar .edit-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;cursor:pointer;color:#fff;font-size:20px}
-.sidebar-icons{background:#00C310;border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;gap:16px;align-items:center}
+.sidebar-icons{background:#009C0C;border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;gap:16px;align-items:center}
 .sidebar-icons .nav-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;background:transparent;border:none;color:#fff;font-size:22px}
 .sidebar-icons .nav-icon:hover{background:rgba(255,255,255,0.2)}
 .sidebar-icons .nav-icon.active{background:rgba(255,255,255,0.3)}
@@ -54,49 +54,109 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 /* Main content */
 .main-content{flex:1;overflow-y:auto;padding:24px 32px;background:#3a3a3a}
 
-/* ===== REWORKS PAGE (Page 1) ===== */
-.workflow-dropdown{position:relative;display:inline-block;margin-bottom:24px}
-.workflow-btn{background:#fff;color:#00C310;font-weight:700;font-size:16px;border:none;border-radius:24px;padding:10px 24px;cursor:pointer;display:flex;align-items:center;gap:8px}
-.workflow-btn::after{content:'▼';font-size:12px}
+/* ===== REDESIGNED HOME / NOTES PAGE (Page 0) ===== */
+.home-top-row{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:16px;margin-bottom:16px}
+.home-left-panel{display:flex;flex-direction:column;gap:12px}
+.home-center-panel{display:flex;flex-direction:column;gap:12px}
+.home-right-panel{display:flex;flex-direction:column;gap:12px;border:1px solid #555;border-radius:8px;padding:16px;background:#2a2a2a}
+
+/* Workflow selector area */
+.wf-select-area{display:flex;flex-direction:column;gap:8px}
+.workflow-dropdown{position:relative;display:inline-block}
+.workflow-btn{background:#fff;color:#009C0C;font-weight:700;font-size:14px;border:none;border-radius:24px;padding:8px 20px;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%}
+.workflow-btn::after{content:'▼';font-size:12px;margin-left:auto}
 .workflow-menu{display:none;position:absolute;top:100%;left:0;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.3);min-width:200px;z-index:100;overflow:hidden;margin-top:4px}
 .workflow-menu.open{display:block}
 .workflow-menu button{display:block;width:100%;text-align:left;padding:10px 20px;border:none;background:none;color:#333;font-size:14px;cursor:pointer;font-weight:600}
-.workflow-menu button:hover{background:#e8ffe8;color:#00C310}
+.workflow-menu button:hover{background:#e8ffe8;color:#009C0C}
 
-.reworks-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.left-col{display:flex;flex-direction:column;gap:20px}
+/* Send for QC box */
+.send-qc-badge{background:#009C0C;color:#fff;font-weight:700;font-size:13px;padding:6px 14px;border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.send-qc-badge .qc-actions{display:flex;gap:6px}
+.send-qc-badge .qc-actions button{background:none;border:none;color:#fff;cursor:pointer;font-size:14px;padding:2px}
+.qc-info-list{font-size:12px;color:#ccc;line-height:1.6;margin-top:4px}
+.qc-info-list div{padding:2px 0}
+
+/* Paste Workload area */
+.paste-workload-box{border:1px dashed #666;border-radius:8px;padding:12px;background:#2a2a2a}
+.paste-workload-box textarea{width:100%;height:100px;background:#2a2a2a;border:none;color:#fff;font-size:13px;font-family:inherit;outline:none;resize:vertical}
+.paste-workload-box textarea::placeholder{color:#888}
+.pt-btn-row{display:flex;gap:8px;margin-top:8px}
+.pt-btn-row button{border:none;border-radius:20px;padding:6px 18px;font-size:13px;font-weight:700;cursor:pointer;color:#fff}
+.pt-parse-btn2{background:#009C0C}
+.pt-parse-btn2:hover{background:#00a00d}
+.pt-start-btn2{background:#009C0C}
+.pt-start-btn2:hover{background:#00a00d}
+.pt-reset-btn2{background:#dc3545}
+.pt-reset-btn2:hover{background:#b02a37}
+.pt-add-sla-btn2{background:#009C0C;font-size:11px!important;padding:4px 12px!important;border-radius:6px!important; color:white;}
+
+/* Time fields row */
+.time-fields-row{display:flex;gap:8px;flex-wrap:wrap}
+.time-field{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:80px}
+.time-field label{color:#fff;font-weight:700;font-size:11px;padding:3px 10px;border-radius:4px;text-align:center;width:100%}
+.time-field input{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:5px 6px;color:#fff;font-size:12px;text-align:center;width:100%;outline:none}
+
+/* Dashboard charts area */
+.dashboard-charts{display:flex;gap:16px;align-items:flex-start}
+.chart-box{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.chart-box h4{font-size:13px;font-weight:700;text-align:center}
+.bar-chart-container{width:100%;display:flex;gap:12px;justify-content:center;align-items:flex-end;height:120px;padding:8px 0}
+.bar-item{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar-fill{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height 0.3s}
+.bar-label{font-size:9px;text-align:center;color:#ccc}
+.donut-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+.donut-pct{position:absolute;font-size:20px;font-weight:900;color:#fff}
+.chart-legend{display:flex;gap:12px;margin-top:8px;font-size:11px;font-weight:600}
+.chart-legend-item{display:flex;align-items:center;gap:4px}
+.chart-legend-sq{width:12px;height:12px;border-radius:2px;display:inline-block}
+.chart-disabled-notice{color:#888;font-size:12px;text-align:center;padding:20px;border:1px dashed #555;border-radius:8px;background:#2a2a2a}
+
+/* ===== DEVELOPERS NOTES SECTION ===== */
+.dev-notes-banner{background:#009C0C;padding:10px 20px;font-weight:700;font-size:15px;border-radius:8px 8px 0 0;margin-top:12px}
+.dev-notes-body{border:1px solid #555;border-top:none;border-radius:0 0 8px 8px;padding:20px;background:#2a2a2a}
+.dev-notes-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;min-height:400px}
 
 .field-label{font-weight:700;font-size:14px;margin-bottom:6px}
 .field-input{width:100%;background:#3a3a3a;border:1px solid #666;border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none;resize:none;font-family:inherit}
-.field-input:focus{border-color:#00C310}
+.field-input:focus{border-color:#009C0C}
 
 .site-comment-row{display:flex;gap:8px;align-items:flex-start}
 .sc-no{width:60px;background:#3a3a3a;border:1px solid #666;border-radius:8px;padding:10px;color:#fff;font-size:14px;text-align:center;outline:none}
-.sc-no:focus{border-color:#00C310}
+.sc-no:focus{border-color:#009C0C}
 .sc-text{flex:1;background:#3a3a3a;border:1px solid #666;border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none;resize:none;min-height:70px;font-family:inherit}
-.sc-text:focus{border-color:#00C310}
+.sc-text:focus{border-color:#009C0C}
 
-.add-btn{width:28px;height:28px;border-radius:50%;border:1px solid #666;background:#3a3a3a;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;transition:all .2s}
-.add-btn:hover{background:#00C310;border-color:#00C310}
+.add-btn{width:28px;height:28px;border-radius:50%;border:1px solid #666;background:#3a3a3a;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.add-btn:hover{background:#009C0C;border-color:#009C0C}
 
 .dev-note-row{display:flex;gap:8px;align-items:flex-start}
-.dev-note-bullet{width:16px;height:16px;border-radius:50%;background:#00C310;margin-top:12px;flex-shrink:0}
+.dev-note-bullet{width:16px;height:16px;border-radius:50%;background:#009C0C;margin-top:12px;flex-shrink:0}
 .dev-note-text{flex:1;background:#3a3a3a;border:1px solid #666;border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none;resize:none;min-height:70px;font-family:inherit}
-.dev-note-text:focus{border-color:#00C310}
+.dev-note-text:focus{border-color:#009C0C}
 
-.copy-sc-btn{width:28px;height:28px;border-radius:50%;border:1px solid #666;background:#3a3a3a;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;transition:all .2s}
-.copy-sc-btn:hover{background:#00C310;border-color:#00C310}
+/* Translate textarea area */
+.translate-area{position:relative}
+.translate-area textarea{width:100%;min-height:120px;background:#3a3a3a;border:1px solid #666;border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none;resize:vertical;font-family:inherit}
+.translate-area textarea:focus{border-color:#009C0C}
+.translate-btn{position:absolute;bottom:10px;right:10px;width:32px;height:32px;border-radius:50%;background:#009C0C;border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.translate-btn:hover{background:#00a00d;transform:scale(1.1)}
+.translate-btn.loading{opacity:0.6;pointer-events:none;animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
 /* Final Note */
-.final-note{background:#fff;border-radius:8px;overflow:hidden;height:fit-content;transition:background .3s,color .3s}
+.final-note{background:#fff;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;flex:1;transition:background .3s,color .3s}
 .final-note.editing{background:#1a1a1a;color:#fff}
-.final-note-header{background:#00C310;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px}
+.final-note-header{background:#009C0C;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;flex-shrink:0}
 .final-note-header .fn-actions{display:flex;gap:8px}
 .final-note-header .fn-actions button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px;transition:opacity .2s}
 .final-note-header .fn-actions button:hover{opacity:0.7}
-.final-note-body{padding:16px;color:#333;font-size:13px;min-height:400px;white-space:pre-wrap;line-height:1.6;max-height:60vh;overflow-y:auto;transition:background .3s,color .3s}
-.final-note.editing .final-note-body{color:#e0e0e0;background:#1a1a1a;outline:2px solid #00C310}
-.final-note-body[contenteditable=true]{outline:2px solid #00C310}
+.final-note-body{padding:16px;color:#333;font-size:13px;white-space:pre-wrap;line-height:1.6;flex:1;overflow-y:auto;transition:background .3s,color .3s}
+.final-note.editing .final-note-body{color:#e0e0e0;background:#1a1a1a;outline:2px solid #009C0C}
+.final-note-body[contenteditable=true]{outline:2px solid #009C0C}
+
+.copy-sc-btn{width:28px;height:28px;border-radius:50%;border:1px solid #666;background:#3a3a3a;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;transition:all .2s}
+.copy-sc-btn:hover{background:#009C0C;border-color:#009C0C}
 
 /* ===== CHECKLIST PAGES (Pages 2 & 3) ===== */
 .checklist-page{min-height:100%}
@@ -110,7 +170,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 .item span{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .status-btn{border:none;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;transition:background .2s}
 .status-ongoing{background:#dc3545}
-.status-done{background:#00C310}
+.status-done{background:#009C0C}
 .charts{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-bottom:28px}
 .chart-item{display:flex;flex-direction:column;align-items:center;gap:6px}
 .chart-item span{font-size:12px;font-weight:600}
@@ -142,91 +202,97 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 .info-banner .info-full{grid-column:1/-1}
 
 /* ===== PARSER PAGE (Page 4) ===== */
-.parser-page h1{font-size:24px;font-weight:900;margin-bottom:20px;color:#00C310}
-.parser-page textarea{width:100%;height:200px;background:#2a2a2a;border:1px solid #555;border-radius:8px;color:#fff;padding:12px;font-size:13px;font-family:inherit;outline:none;resize:vertical;margin-bottom:12px}
-.parser-page textarea:focus{border-color:#00C310}
-.parser-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-.parser-controls button{background:#00C310;color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
-.parser-controls button:hover{background:#00a00d}
-.parser-controls input{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:8px 14px;color:#fff;font-size:13px;outline:none;margin-left:auto}
-.parser-controls input:focus{border-color:#00C310}
-.parser-table{width:100%;border-collapse:collapse;margin-top:16px}
-.parser-table th,.parser-table td{border:1px solid #555;padding:8px 12px;text-align:left;font-size:13px;white-space:pre-wrap}
-.parser-table th{background:#00C310;color:#fff;font-weight:700}
+.parser-page{min-height:100%}
+.parser-page h1{font-size:28px;font-weight:900;margin-bottom:24px;color:#009C0C;letter-spacing:0.5px}
+.parser-page textarea{width:100%;height:200px;background:#2a2a2a;border:2px solid #555;border-radius:12px;color:#fff;padding:16px;font-size:14px;font-family:inherit;outline:none;resize:vertical;margin-bottom:16px;transition:border-color 0.2s}
+.parser-page textarea:focus{border-color:#009C0C}
+.parser-controls{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.parser-controls button{background:#009C0C;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,195,16,0.2)}
+.parser-controls button:hover{background:#00a00d;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,195,16,0.3)}
+.parser-controls input{background:#2a2a2a;border:2px solid #555;border-radius:8px;padding:10px 16px;color:#fff;font-size:13px;outline:none;margin-left:auto;transition:border-color 0.2s}
+.parser-controls input:focus{border-color:#009C0C}
+.parser-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:16px;border-radius:12px;overflow:hidden;border:1px solid #555}
+.parser-table th,.parser-table td{padding:12px 16px;text-align:left;font-size:13px;white-space:pre-wrap}
+.parser-table th{background:#009C0C;color:#fff;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.5px}
 .parser-table tr:nth-child(odd) td{background:#2a2a2a}
 .parser-table tr:nth-child(even) td{background:#333}
+.parser-table tr:hover td{background:#3a4a3a}
 .parser-table .orange td:first-child,.parser-table .orange td:nth-child(2){background:#8B6914}
-.parser-table .copy-cell button{background:#00C310;color:#fff;border:none;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:12px;font-weight:700}
-.parser-table .copy-cell button:hover{background:#00a00d}
-#parserNewPages h2{color:#00C310;margin:20px 0 12px}
-#parserNewPages table{width:100%;border-collapse:collapse}
-#parserNewPages th{background:#00C310;color:#fff;padding:8px;font-size:13px}
-#parserNewPages td{border:1px solid #555;padding:8px;font-size:13px;background:#2a2a2a}
+.parser-table .copy-cell button{background:#009C0C;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s}
+.parser-table .copy-cell button:hover{background:#00a00d;transform:scale(1.05)}
+#parserNewPages h2{color:#009C0C;margin:24px 0 12px;font-size:18px}
+#parserNewPages table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid #555}
+#parserNewPages th{background:#009C0C;color:#fff;padding:10px 12px;font-size:13px}
+#parserNewPages td{border:1px solid #444;padding:10px 12px;font-size:13px;background:#2a2a2a}
+
+/* ===== INLINE PARSER (for New Build & Web Upgrade tabs) ===== */
+.inline-parser{margin-top:28px;border:1px solid #555;border-radius:8px;overflow:hidden;background:#2a2a2a}
+.inline-parser-header{background:#009C0C;padding:10px 16px;font-weight:700;font-size:14px}
+.inline-parser-body{padding:16px}
+.inline-parser textarea{width:100%;height:120px;background:#3a3a3a;border:1px solid #555;border-radius:8px;color:#fff;padding:10px;font-size:13px;font-family:inherit;outline:none;resize:vertical;margin-bottom:10px}
+.inline-parser textarea:focus{border-color:#009C0C}
+.inline-parser-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.inline-parser-controls button{background:#009C0C;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-size:13px;font-weight:700;cursor:pointer}
+.inline-parser-controls button:hover{background:#00a00d}
+.inline-parser-controls input{background:#3a3a3a;border:1px solid #555;border-radius:6px;padding:6px 12px;color:#fff;font-size:12px;outline:none;margin-left:auto}
+
+/* Parsed output cards */
+.parsed-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px}
+.parsed-card{background:#3a3a3a;border:1px solid #555;border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px;transition:border-color 0.2s}
+.parsed-card:hover{border-color:#009C0C}
+.parsed-card input[type=checkbox]{accent-color:#009C0C;width:16px;height:16px;margin-top:2px;flex-shrink:0;cursor:pointer}
+.parsed-card-content{flex:1;min-width:0}
+.parsed-card-field{font-size:11px;font-weight:700;color:#009C0C;text-transform:uppercase;margin-bottom:2px}
+.parsed-card-detail{font-size:12px;color:#ddd;word-break:break-word;line-height:1.4}
+.parsed-card-actions{display:flex;gap:4px;flex-shrink:0}
+.parsed-card-actions button{background:none;border:1px solid #555;border-radius:4px;color:#ccc;font-size:11px;padding:2px 8px;cursor:pointer}
+.parsed-card-actions button:hover{background:#009C0C;color:#fff;border-color:#009C0C}
+.parsed-card.orange{border-left:3px solid #FF7700}
+.parsed-card.yesno-yes{border-left:3px solid #009C0C}
+.parsed-card.yesno-no{border-left:3px solid #dc3545}
+
+/* New pages parsed section */
+.parsed-new-pages{margin-top:16px}
+.parsed-new-pages h3{color:#009C0C;font-size:14px;margin-bottom:8px}
+.parsed-new-pages table{width:100%;border-collapse:collapse}
+.parsed-new-pages th{background:#009C0C;color:#fff;padding:6px 10px;font-size:12px;font-weight:700}
+.parsed-new-pages td{border:1px solid #555;padding:6px 10px;font-size:12px;background:#3a3a3a}
+
+/* Page Tabs */
+.page-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid #555}
+.page-tab{padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;background:transparent;border:none;color:#888;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
+.page-tab:hover{color:#fff}
+.page-tab.active{color:#fff;border-bottom-color:#009C0C;background:rgba(0,156,12,0.1)}
+.page-tab-content{display:none}
+.page-tab-content.active{display:block}
 
 /* Toast */
-.toast{position:fixed;top:20px;right:20px;background:#00C310;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast{position:fixed;top:20px;right:20px;background:#009C0C;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 
-/* ===== PARSE TIME & SEND FOR QC ===== */
-.pt-qc-bar{display:flex;gap:24px;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap}
-.parse-time-box{flex:1;min-width:300px; border:1px solid #555;border-radius:8px;padding:10px;}
-.parse-time-box h3{font-size:16px;font-weight:800;margin-bottom:8px}
-.pt-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.pt-textarea{background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:10px;color:#fff;font-size:13px;font-family:inherit;outline:none;resize:vertical;width:520px;height:80px}
-.send-qc-box{background:transparent;border:none;padding:0;min-width:200px;max-width:240px;margin-left:auto}
-.send-qc-box h3{font-size:16px;font-weight:800;margin-bottom:4px}
-.send-qc-output{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:8px 10px;font-size:12px;min-height:80px;color:#ccc;white-space:pre-wrap;position:relative;text-align:left}
-.send-qc-output .copy-qc-btn{position:absolute;top:4px;right:4px;background:#00C310;border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:11px;z-index:1}
-.pt-add-sla-btn{background:#FF7700;color:#fff;border:none;border-radius:4px;padding:4px 14px;font-size:12px;font-weight:700;cursor:pointer}
-.pt-add-sla-btn:hover{background:#e06600}
 .clear-all-btn{background:#dc3545;color:#fff;border:none;border-radius:24px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
 .clear-all-btn:hover{background:#b02a37}
-.pt-textarea:focus{border-color:#00C310}
-.pt-fields{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
-.pt-field{display:flex;flex-direction:column;align-items:center;gap:4px}
-.pt-field label{background:#FF7700;color:#fff;font-weight:700;font-size:12px;padding:4px 14px;border-radius:4px;text-align:center;min-width:90px}
-.pt-field input{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:6px 8px;color:#fff;font-size:13px;text-align:center;width:100px;outline:none}
-.pt-field input:focus{border-color:#00C310}
-.pt-actions{display:flex;gap:6px;align-items:center;margin-top:4px;justify-content:flex-end}
-.pt-actions button{border:none;border-radius:4px;padding:4px 14px;font-size:12px;font-weight:700;color:#fff;cursor:pointer}
-.pt-start-btn{background:#00C310}
-.pt-start-btn:hover{background:#00a00d}
-.pt-reset-btn{background:#dc3545}
-.pt-reset-btn:hover{background:#b02a37}
-.pt-parse-btn{background:#00a00d;color:#ffffff;border:none;border-radius:12px;padding:5px 16px;font-size:12px;font-weight:700;cursor:pointer}
-.pt-result-row{display:flex;gap:16px;align-items:center;margin-top:8px;font-size:13px;flex-wrap:wrap}
-.pt-result-row span{font-weight:700}
-.pt-result-row input{background:#2a2a2a;border:1px solid #555;border-radius:6px;padding:4px 8px;color:#fff;font-size:13px;text-align:center;width:110px;outline:none}
 
-/* ===== RESPONSIVE - MOBILE HAMBURGER ===== */
+/* ===== RESPONSIVE ===== */
 .mobile-menu-btn{display:none;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;padding:4px 8px;line-height:1}
 
-/* ===== TABLET (max-width: 1024px) ===== */
 @media(max-width:1024px){
-  .reworks-layout{grid-template-columns:1fr;gap:20px}
-  .pt-textarea{width:100%}
-  .pt-qc-bar{flex-direction:column}
-  .send-qc-box{max-width:100%;margin-left:0;min-width:auto}
-  .pt-row{flex-direction:column}
-  .pt-fields{width:100%;justify-content:flex-start}
-  .pt-actions{justify-content:flex-start}
+  .home-top-row{grid-template-columns:1fr 1fr;gap:12px}
+  .home-right-panel{grid-column:1/-1}
+  .dev-notes-layout{grid-template-columns:1fr}
+  .parsed-cards{grid-template-columns:1fr}
 }
 
 @media(max-width:768px){
-  /* Login */
   #loginPage h1{font-size:30px;margin-bottom:20px}
   .login-card{min-width:auto;width:90vw;max-width:380px;padding:28px 24px;gap:16px}
   .login-card input{padding:12px 14px;font-size:14px}
   .login-card button{padding:10px 28px;font-size:15px}
-
-  /* Header */
   .app-header{padding:10px 16px;flex-wrap:wrap;gap:8px}
   .app-header .dev-name{font-size:16px;gap:8px}
   .app-header .dev-name .avatar{width:40px;height:40px}
   .app-header .biz-name{font-size:16px}
   .mobile-menu-btn{display:block}
-
-  /* Body & Sidebar */
   body{overflow:auto}
   #appPage{overflow:auto;height:auto;min-height:100vh}
   .app-body{flex-direction:column;height:auto;min-height:calc(100vh - 60px);overflow:visible}
@@ -234,60 +300,30 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
   .sidebar.open{display:flex}
   .sidebar-icons{flex-direction:row;border-radius:8px;padding:8px 12px;gap:8px;width:100%;justify-content:center}
   .sidebar-icons .nav-icon{width:44px;height:44px}
-
-  /* Main content */
   .main-content{padding:16px 14px;overflow-y:visible}
-
-  /* Reworks layout */
-  .reworks-layout{grid-template-columns:1fr;gap:16px}
-
-  /* Parse Time responsive */
-  .pt-textarea{width:100%;height:80px}
-  .pt-fields{width:100%}
-  .pt-field input{width:80px}
-  .pt-result-row{flex-direction:column;gap:8px;align-items:flex-start}
-
-  /* Final note */
+  .home-top-row{grid-template-columns:1fr;gap:12px}
+  .dev-notes-layout{grid-template-columns:1fr}
+  .dashboard-charts{flex-direction:column}
+  .time-fields-row{gap:4px}
   .final-note-body{min-height:200px;max-height:50vh}
-
-  /* Parser */
   .parser-page textarea{height:140px}
   .parser-controls{flex-direction:column;align-items:stretch}
   .parser-controls input{margin-left:0;width:100%}
   .parser-controls button{width:100%}
   .parser-table{display:block;overflow-x:auto}
-  .parser-table th,.parser-table td{padding:6px 8px;font-size:12px}
-  #parserNewPages table{display:block;overflow-x:auto}
-  #parserNewPages th,#parserNewPages td{padding:6px;font-size:12px}
-
-  /* Checklist grids */
   .grid3{grid-template-columns:1fr;gap:12px}
   .bottom-row{grid-template-columns:1fr;gap:12px}
-  .checklist-page h1{font-size:22px;margin-bottom:16px}
-
-  /* Charts */
   .charts{gap:12px}
   .chart-item canvas{width:70px!important;height:70px!important}
-
-  /* Info banner */
   .info-banner .info-grid{grid-template-columns:1fr}
-
-  /* Legend */
   .legend-box{flex-direction:column;gap:12px;align-items:flex-start}
-
-  /* Items */
   .item span{white-space:normal;font-size:12px}
   .status-btn{font-size:10px;padding:4px 8px}
-
-  /* Confirm modal */
   .confirm-box{min-width:auto;width:90vw;max-width:380px;padding:20px}
-
-  /* Toast */
   .toast{top:auto;bottom:20px;right:12px;left:12px;text-align:center;border-radius:12px}
-
-  /* Workflow & Clear All */
   .workflow-btn{font-size:14px;padding:8px 18px}
   .clear-all-btn{padding:8px 16px;font-size:13px}
+  .parsed-cards{grid-template-columns:1fr}
 }
 
 @media(max-width:480px){
@@ -299,9 +335,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
   .workflow-btn{font-size:13px;padding:8px 14px}
   .site-comment-row{flex-direction:column;gap:6px}
   .sc-no{width:100%}
-  .pt-field{width:calc(33% - 8px)}
-  .pt-field input{width:100%}
-  .pt-field label{min-width:auto;font-size:11px;padding:3px 8px}
   .sidebar-icons .nav-icon{width:38px;height:38px}
   .final-note-header{padding:8px 12px;font-size:13px}
   .section-header{font-size:13px;padding:6px 12px}
@@ -338,7 +371,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-icons">
-        <button class="nav-icon active" onclick="switchPage(0)" title="Notes" id="navBtn0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></button>
+        <button class="nav-icon active" onclick="switchPage(0)" title="Home" id="navBtn0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
         <button class="nav-icon" onclick="switchPage(1)" title="New Build Checklist" id="navBtn1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg></button>
         <button class="nav-icon" onclick="switchPage(2)" title="Website Upgrade Checklist" id="navBtn2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
         <button class="nav-icon" onclick="switchPage(3)" title="Parser" id="navBtn3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
@@ -347,100 +380,140 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#3a3a3a;color:#fff;m
 
     <!-- Page containers -->
     <div class="main-content" id="mainContent">
-      <!-- Page 0: Reworks -->
+      <!-- Page 0: Home / Notes (Redesigned) -->
       <div id="page0">
-        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
-          <button class="clear-all-btn" onclick="confirmClearAll()" style="padding:8px 20px;width:fit-content">Clear All</button>
-          <div class="workflow-dropdown">
-            <button class="workflow-btn" onclick="toggleWorkflowMenu()" id="workflowBtn">Select Workflow</button>
-            <div class="workflow-menu" id="workflowMenu">
-              <button onclick="selectWorkflow('New Build')">New Build</button>
-              <button onclick="selectWorkflow('Rebuild')">Rebuild</button>
-              <button onclick="selectWorkflow('Website Upgrade')">Website Upgrade</button>
-              <button onclick="selectWorkflow('Reworks')">Reworks</button>
-              <button onclick="selectWorkflow('Change Request')">Change Request</button>
-            </div>
-          </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <button class="clear-all-btn" onclick="confirmClearAll()" style="padding:6px 16px;font-size:13px">Clear All</button>
         </div>
 
-        <!-- Parse Time & Send for QC Bar -->
-        <div class="pt-qc-bar" id="ptQcBar">
-          <div class="parse-time-box">
-            <h3>Parse Time</h3>
-            <div class="pt-row">
-              <div style="display:flex;flex-direction:column;gap:6px">
-                <textarea class="pt-textarea" id="ptInput" placeholder="Paste time data here..."></textarea>
-                <button class="pt-parse-btn" onclick="ptParse()">Parse</button>
-              </div>
-              <div class="pt-fields">
-                <div class="pt-field"><label>Start Time</label><input type="text" id="ptStartTime" readonly/></div>
-                <div class="pt-field"><label>SLA Agreed</label><input type="text" id="ptSlaAgreed" readonly/></div>
-                <div class="pt-field"><label>Time Taken</label><input type="text" id="ptTimeTaken" readonly/></div>
-              </div>
-              <div class="pt-actions">
-                <button class="pt-start-btn" onclick="ptStart()">Start</button>
-                <button class="pt-reset-btn" onclick="ptReset()">Reset</button>
-                <button class="pt-add-sla-btn" onclick="ptAddSLA()">Add SLA</button>
+        <!-- Top Row: 3 columns -->
+        <div class="home-top-row">
+          <!-- LEFT: Workflow + QC -->
+          <div class="home-left-panel">
+            <div class="wf-select-area">
+              <div class="field-label">Select Workflow</div>
+              <div class="workflow-dropdown" style="width:100%">
+                <button class="workflow-btn" onclick="toggleWorkflowMenu()" id="workflowBtn">Select Workflow</button>
+                <div class="workflow-menu" id="workflowMenu">
+                  <button onclick="selectWorkflow('New Build')">New Build</button>
+                  <button onclick="selectWorkflow('Rebuild')">Rebuild</button>
+                  <button onclick="selectWorkflow('Website Upgrade')">Website Upgrade</button>
+                  <button onclick="selectWorkflow('Reworks')">Reworks</button>
+                  <button onclick="selectWorkflow('Change Request')">Change Request</button>
+                </div>
               </div>
             </div>
-            <div class="pt-result-row" id="ptResultRow" style="display:none">
-              <span>Remaining Time:</span><input type="text" id="ptRemaining" readonly/>
-              <span>End Time:</span><input type="text" id="ptEndTime" readonly/>
-            </div>
-          </div>
-          <div class="send-qc-box">
-            <h3>Send for QC</h3>
-            <div class="send-qc-output" id="sendQcOutput">
-              <button class="copy-qc-btn" onclick="copyQcOutput()" title="Copy">📋</button>
-              <span id="sendQcText" style="display:block;padding-top:0"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="reworks-layout">
-          <div class="left-col">
-            <div>
-              <div class="field-label">Preview Link:</div>
-              <input type="text" class="field-input" id="previewLink" placeholder="https://..."/>
-            </div>
-
-            <div>
-              <div class="field-label">Site Comments:</div>
-              <div class="site-comment-row">
-                <input type="text" class="sc-no" id="scNo" placeholder="No."/>
-                <textarea class="sc-text" id="scText" placeholder="Enter site comment..."></textarea>
-              </div>
-              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
-                <button class="add-btn" onclick="addSiteComment()" title="Add to Final Note">+</button>
-              </div>
-            </div>
-
-            <div>
-              <div class="field-label">Developer Notes:</div>
-              <div class="dev-note-row">
-                <div class="dev-note-bullet"></div>
-                <textarea class="dev-note-text" id="devNoteText" placeholder="Enter developer note..."></textarea>
-              </div>
-              <div style="display:flex;justify-content:flex-end;margin-top:6px">
-                <button class="add-btn" onclick="addDevNote()" title="Add to Final Note">+</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="final-note">
-            <div class="final-note-header">
-              <span>Final Note</span>
-              <div class="fn-actions">
+            <div class="send-qc-badge">
+              <span>SENT FOR QC</span>
+              <div class="qc-actions">
                 <button onclick="toggleEditFinalNote()" title="Edit">✏️</button>
-                <button onclick="copyFinalNote()" title="Copy all">📋</button>
+                <button onclick="copyQcOutput()" title="Copy">📋</button>
               </div>
             </div>
-            <div class="final-note-body" id="finalNoteBody"></div>
+            <div class="qc-info-list" id="qcInfoList">
+              <div><strong>Business Name</strong></div>
+              <div><strong>Workflow Type</strong></div>
+              <div><strong>Time Remaining</strong></div>
+              <div><strong>Sent For QC</strong></div>
+            </div>
+          </div>
+
+          <!-- CENTER: Paste Workload + Time -->
+          <div class="home-center-panel">
+            <div class="paste-workload-box">
+              <textarea id="ptInput" placeholder="Paste Workload Here:"></textarea>
+              <div class="pt-btn-row">
+                <button class="pt-parse-btn2" onclick="ptParse()">Parse</button>
+                <button class="pt-start-btn2" onclick="ptStart()">Start</button>
+                <button class="pt-reset-btn2" onclick="ptReset()">Reset</button>
+              </div>
+            </div>
+            <div class="time-fields-row">
+              <div class="time-field"><label>Start Time</label><input type="text" id="ptStartTime" readonly/></div>
+              <div class="time-field"><label>SLA Agreed</label><input type="text" id="ptSlaAgreed" readonly/></div>
+              <div class="time-field"><label>Time Taken</label><input type="text" id="ptTimeTaken" readonly/></div>
+              <div class="time-field"><label>Remaining Time</label><input type="text" id="ptRemaining" readonly/></div>
+            </div>
+            <div style="display:flex;gap:6px;justify-content:flex-end">
+              <button class="pt-add-sla-btn2" onclick="ptAddSLA()">Add SLA</button>
+            </div>
+          </div>
+
+          <!-- RIGHT: Charts -->
+          <div class="home-right-panel">
+            <div class="dashboard-charts" id="dashboardCharts">
+              <div class="chart-box" id="onboardingChartBox">
+                <h4>Onboarding Form</h4>
+                <div id="onboardingBarChart" class="bar-chart-container"></div>
+                <div class="chart-legend" id="onboardingLegend">
+                  <div class="chart-legend-item"><span class="chart-legend-sq" style="background:#009C0C"></span>Done</div>
+                  <div class="chart-legend-item"><span class="chart-legend-sq" style="background:#dc3545"></span>Ongoing</div>
+                </div>
+              </div>
+              <div class="chart-box" id="checklistDonutBox">
+                <h4>Website Checklist</h4>
+                <div class="donut-wrap">
+                  <canvas id="dashDonutCanvas" width="120" height="120"></canvas>
+                  <span class="donut-pct" id="dashDonutPct">0%</span>
+                </div>
+              </div>
+            </div>
+            <div class="chart-disabled-notice" id="chartDisabledNotice" style="display:none">
+              📊 Dashboard charts are not available for the selected workflow type. Please select <strong>New Build</strong>, <strong>Website Upgrade</strong>, or <strong>Rebuild</strong> to view progress.
+            </div>
           </div>
         </div>
 
-        <!-- Workflow Charts -->
-        <div id="workflowCharts" class="charts" style="display:none;margin-top:24px"></div>
+        <!-- Developer Notes Section -->
+        <div class="dev-notes-banner">Developers Notes:</div>
+        <div class="dev-notes-body">
+          <div class="dev-notes-layout">
+            <!-- Left column -->
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div>
+                <div class="field-label">Preview Link:</div>
+                <input type="text" class="field-input" id="previewLink" placeholder="https://..."/>
+              </div>
+              <div>
+                <div class="field-label">Site Comments</div>
+                <div class="site-comment-row">
+                  <input type="text" class="sc-no" id="scNo" placeholder="No."/>
+                  <textarea class="sc-text" id="scText" placeholder="Enter site comment..."></textarea>
+                </div>
+                <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+                  <button class="add-btn" onclick="addSiteComment()" title="Add to Final Note">+</button>
+                </div>
+              </div>
+              <div>
+                <div class="field-label">Dev Notes:</div>
+                <div class="dev-note-row">
+                  <textarea class="dev-note-text" id="devNoteText" placeholder="Enter developer note..."></textarea>
+                </div>
+                <div style="display:flex;justify-content:flex-end;margin-top:6px">
+                  <button class="add-btn" onclick="addDevNote()" title="Add to Final Note">+</button>
+                </div>
+              </div>
+              <div>
+                <div class="translate-area">
+                  <textarea id="translateInput" placeholder="Paste text here to translate & fix grammar..."></textarea>
+                  <button class="translate-btn" id="translateBtn" onclick="translateAndFix()" title="Translate to English & fix grammar">✳</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right column: Final Note -->
+            <div class="final-note">
+              <div class="final-note-header">
+                <span>Notes</span>
+                <div class="fn-actions">
+                  <button onclick="toggleEditFinalNote()" title="Edit">✏️</button>
+                  <button onclick="copyFinalNote()" title="Copy all">📋</button>
+                </div>
+              </div>
+              <div class="final-note-body" id="finalNoteBody"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Page 1: New Build Checklist -->
@@ -481,6 +554,10 @@ let appState = {
 };
 let finalNoteWasEdited = false;
 
+// Parsed onboarding data for New Build / Web Upgrade tabs
+let nb_parsedItems = []; // {field, detail, checked}
+let up_parsedItems = [];
+
 // ===== LOCAL STORAGE PERSISTENCE =====
 function saveToStorage() {
   const data = {
@@ -489,27 +566,21 @@ function saveToStorage() {
     finalNoteHTML: document.getElementById('finalNoteBody') ? document.getElementById('finalNoteBody').innerHTML : '',
     finalNoteWasEdited: finalNoteWasEdited,
     loggedIn: document.getElementById('appPage').style.display === 'block',
-    // Parse Time fields
     ptInput: document.getElementById('ptInput') ? document.getElementById('ptInput').value : '',
     ptStartTime: document.getElementById('ptStartTime') ? document.getElementById('ptStartTime').value : '',
     ptSlaAgreed: document.getElementById('ptSlaAgreed') ? document.getElementById('ptSlaAgreed').value : '',
     ptTimeTaken: document.getElementById('ptTimeTaken') ? document.getElementById('ptTimeTaken').value : '',
     ptRemaining: document.getElementById('ptRemaining') ? document.getElementById('ptRemaining').value : '',
-    ptEndTime: document.getElementById('ptEndTime') ? document.getElementById('ptEndTime').value : '',
-    ptResultRowVisible: document.getElementById('ptResultRow') ? document.getElementById('ptResultRow').style.display : 'none',
     ptSlaSeconds: ptSlaSeconds,
     ptRemainingSeconds: ptRemainingSeconds,
     ptStartTimeStr: ptStartTimeStr,
     ptTimerRunning: ptTimerInterval !== null,
     ptTimeTakenSeconds: ptTimeTakenSeconds,
     ptTimeTakenRunning: ptTimeTakenInterval !== null,
-    // Parser fields
     parserInput: document.getElementById('parserInput') ? document.getElementById('parserInput').value : '',
-    // Site comment & dev note input fields
     scNo: document.getElementById('scNo') ? document.getElementById('scNo').value : '',
     scText: document.getElementById('scText') ? document.getElementById('scText').value : '',
     devNoteText: document.getElementById('devNoteText') ? document.getElementById('devNoteText').value : '',
-    // Checklist state - New Build
     nb_data_state: Object.fromEntries(Object.entries(nb_data).map(([k,v])=>([k, v.items.map(i=>i.status)]))),
     nb_blogsYes_state: nb_blogsYes.map(i=>i.status),
     nb_blogsNo_state: nb_blogsNo.map(i=>i.status),
@@ -518,11 +589,12 @@ function saveToStorage() {
     nb_devNotes: nb_devNotes.map(i=>({name:i.name,status:i.status})),
     nb_blogsAnswer: nb_blogsAnswer,
     nb_dynamicAnswer: nb_dynamicAnswer,
-    // Checklist state - Website Upgrade
     up_data_state: Object.fromEntries(Object.entries(up_data).map(([k,v])=>([k, v.items.map(i=>i.status)]))),
     up_manualNo_state: up_manualNo.map(i=>i.status),
     up_devNotes: up_devNotes.map(i=>({name:i.name,status:i.status})),
-    up_manualAnswer: up_manualAnswer
+    up_manualAnswer: up_manualAnswer,
+    nb_parsedItems: nb_parsedItems,
+    up_parsedItems: up_parsedItems
   };
   localStorage.setItem('webuild_data', JSON.stringify(data));
 }
@@ -545,42 +617,26 @@ function loadFromStorage() {
       document.getElementById('workflowBtn').textContent = appState.workflow;
       selectWorkflow(appState.workflow);
     }
-    // Restore parse time fields
     if (data.ptInput) document.getElementById('ptInput').value = data.ptInput;
     if (data.ptStartTime) document.getElementById('ptStartTime').value = data.ptStartTime;
     if (data.ptSlaAgreed) document.getElementById('ptSlaAgreed').value = data.ptSlaAgreed;
     if (data.ptTimeTaken) document.getElementById('ptTimeTaken').value = data.ptTimeTaken;
     if (data.ptRemaining) document.getElementById('ptRemaining').value = data.ptRemaining;
-    if (data.ptEndTime) document.getElementById('ptEndTime').value = data.ptEndTime;
-    if (data.ptResultRowVisible === 'flex') document.getElementById('ptResultRow').style.display = 'flex';
     if (data.ptSlaSeconds) ptSlaSeconds = data.ptSlaSeconds;
     if (data.ptRemainingSeconds) ptRemainingSeconds = data.ptRemainingSeconds;
     if (data.ptStartTimeStr) ptStartTimeStr = data.ptStartTimeStr;
     if (data.ptTimeTakenSeconds) ptTimeTakenSeconds = data.ptTimeTakenSeconds;
-    // Restart remaining time countdown if it was running
     if (data.ptTimerRunning && ptRemainingSeconds > 0) {
       if (ptTimerInterval) clearInterval(ptTimerInterval);
       ptTimerInterval = setInterval(() => {
         const now = new Date();
-        if (!isWorkingTime(now)) {
-          document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
-          updateSendQcOutput();
-          return;
-        }
+        if (!isWorkingTime(now)) { document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds); updateSendQcOutput(); return; }
         ptRemainingSeconds--;
-        if (ptRemainingSeconds <= 0) {
-          ptRemainingSeconds = 0;
-          document.getElementById('ptRemaining').value = '00:00:00';
-          clearInterval(ptTimerInterval);
-          ptTimerInterval = null;
-          updateSendQcOutput();
-          return;
-        }
+        if (ptRemainingSeconds <= 0) { ptRemainingSeconds = 0; document.getElementById('ptRemaining').value = '00:00:00'; clearInterval(ptTimerInterval); ptTimerInterval = null; updateSendQcOutput(); return; }
         document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
         updateSendQcOutput();
       }, 1000);
     }
-    // Restart time taken timer if it was running
     if (data.ptTimeTakenRunning) {
       if (ptTimeTakenInterval) clearInterval(ptTimeTakenInterval);
       ptTimeTakenInterval = setInterval(() => {
@@ -590,13 +646,10 @@ function loadFromStorage() {
         document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
       }, 1000);
     }
-    // Restore parser input
     if (data.parserInput) document.getElementById('parserInput').value = data.parserInput;
-    // Restore site comment & dev note inputs
     if (data.scNo) document.getElementById('scNo').value = data.scNo;
     if (data.scText) document.getElementById('scText').value = data.scText;
     if (data.devNoteText) document.getElementById('devNoteText').value = data.devNoteText;
-    // Restore checklist state - New Build
     if (data.nb_data_state) {
       Object.entries(data.nb_data_state).forEach(([k, statuses]) => {
         if (nb_data[k]) statuses.forEach((s, i) => { if (nb_data[k].items[i]) nb_data[k].items[i].status = s; });
@@ -609,7 +662,6 @@ function loadFromStorage() {
     if (data.nb_devNotes) nb_devNotes = data.nb_devNotes.map(n => ({name: n.name, status: n.status}));
     if (data.nb_blogsAnswer !== undefined) nb_blogsAnswer = data.nb_blogsAnswer;
     if (data.nb_dynamicAnswer !== undefined) nb_dynamicAnswer = data.nb_dynamicAnswer;
-    // Restore checklist state - Website Upgrade
     if (data.up_data_state) {
       Object.entries(data.up_data_state).forEach(([k, statuses]) => {
         if (up_data[k]) statuses.forEach((s, i) => { if (up_data[k].items[i]) up_data[k].items[i].status = s; });
@@ -618,15 +670,16 @@ function loadFromStorage() {
     if (data.up_manualNo_state) data.up_manualNo_state.forEach((s, i) => { if (up_manualNo[i]) up_manualNo[i].status = s; });
     if (data.up_devNotes) up_devNotes = data.up_devNotes.map(n => ({name: n.name, status: n.status}));
     if (data.up_manualAnswer !== undefined) up_manualAnswer = data.up_manualAnswer;
-    // Re-render checklists if they had been rendered
+    if (data.nb_parsedItems) nb_parsedItems = data.nb_parsedItems;
+    if (data.up_parsedItems) up_parsedItems = data.up_parsedItems;
     if (nb_blogsAnswer !== null || nb_dynamicAnswer !== null || nb_devNotes.length > 0 || Object.values(nb_data).some(c => c.items.some(i => i.status === 'Done'))) {
       renderNewBuildChecklist();
     }
     if (up_manualAnswer !== null || up_devNotes.length > 0 || Object.values(up_data).some(c => c.items.some(i => i.status === 'Done'))) {
       renderUpgradeChecklist();
     }
-    // Don't call updateFinalNote since we restored finalNoteHTML directly
     updateSendQcOutput();
+    updateDashboardCharts();
     return true;
   } catch(e) { return false; }
 }
@@ -646,21 +699,24 @@ function confirmClearAll() {
 }
 
 function clearAllData() {
-  // Preserve developer name and business name
   const savedDevName = appState.devName;
   const savedBizName = appState.bizName;
   localStorage.removeItem('webuild_data');
   appState = { devName: savedDevName, bizName: savedBizName, workflow: '', previewLink: '', siteComments: [], devNotes: [], finalNoteContent: '' };
   finalNoteWasEdited = false;
+  nb_parsedItems = [];
+  up_parsedItems = [];
   document.getElementById('previewLink').value = '';
   document.getElementById('finalNoteBody').innerHTML = '';
   document.getElementById('workflowBtn').textContent = 'Select Workflow';
   document.getElementById('scNo').value = '';
   document.getElementById('scText').value = '';
   document.getElementById('devNoteText').value = '';
+  document.getElementById('translateInput').value = '';
   ptReset();
   updateFinalNote();
   updateSendQcOutput();
+  updateDashboardCharts();
   showToast('All data cleared!');
 }
 
@@ -674,7 +730,6 @@ function goBackToLogin() {
   });
 }
 
-// Auto-save on changes
 setInterval(saveToStorage, 2000);
 
 // ===== LOGIN =====
@@ -690,6 +745,7 @@ function doLogin() {
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('appPage').style.display = 'block';
   updateFinalNote();
+  updateDashboardCharts();
 }
 
 // ===== TOAST =====
@@ -710,6 +766,7 @@ function switchPage(idx) {
     document.getElementById('page' + i).style.display = i === idx ? 'block' : 'none';
     document.getElementById('navBtn' + i).classList.toggle('active', i === idx);
   }
+  if (idx === 0) updateDashboardCharts();
   if (idx === 1 && !nb_rendered) renderNewBuildChecklist();
   if (idx === 2 && !up_rendered) renderUpgradeChecklist();
 }
@@ -729,8 +786,6 @@ function selectWorkflow(wf) {
   document.getElementById('workflowBtn').textContent = wf;
   document.getElementById('workflowMenu').classList.remove('open');
 
-  // New Build disables 3rd menu (Website Upgrade idx=2)
-  // Website Upgrade disables 2nd menu (New Build idx=1)
   const btn1 = document.getElementById('navBtn1');
   const btn2 = document.getElementById('navBtn2');
   btn1.classList.remove('disabled');
@@ -749,55 +804,109 @@ function selectWorkflow(wf) {
   }
   updateFinalNote();
   updateSendQcOutput();
-  renderWorkflowCharts();
+  updateDashboardCharts();
 }
 
-let _renderingWorkflowCharts = false;
-function renderWorkflowCharts() {
-  if (_renderingWorkflowCharts) return;
-  _renderingWorkflowCharts = true;
-  const container = document.getElementById('workflowCharts');
-  container.innerHTML = '';
+// ===== DASHBOARD CHARTS =====
+function updateDashboardCharts() {
   const wf = appState.workflow;
-  let chartData = null;
+  const chartsEl = document.getElementById('dashboardCharts');
+  const noticeEl = document.getElementById('chartDisabledNotice');
 
-  if (wf === 'New Build') {
-    chartData = clGetNBChartData();
-  } else if (wf === 'Website Upgrade') {
-    chartData = clGetUpChartData();
+  if (!wf || (wf !== 'New Build' && wf !== 'Website Upgrade' && wf !== 'Rebuild')) {
+    chartsEl.style.display = 'none';
+    noticeEl.style.display = 'block';
+    return;
+  }
+  chartsEl.style.display = 'flex';
+  noticeEl.style.display = 'none';
+
+  // Bar chart: onboarding form parsed items
+  const barContainer = document.getElementById('onboardingBarChart');
+  barContainer.innerHTML = '';
+  let parsedItems = [];
+  if (wf === 'New Build' || wf === 'Rebuild') parsedItems = nb_parsedItems;
+  else if (wf === 'Website Upgrade') parsedItems = up_parsedItems;
+
+  const checkedCount = parsedItems.filter(i => i.checked).length;
+  const uncheckedCount = parsedItems.length - checkedCount;
+  const total = parsedItems.length;
+  const donePct = total === 0 ? 0 : Math.round(checkedCount / total * 100);
+  const ongoingPct = total === 0 ? 0 : Math.round(uncheckedCount / total * 100);
+
+  if (parsedItems.length === 0) {
+    barContainer.innerHTML = '<div style="color:#888;font-size:11px;text-align:center;width:100%;align-self:center">Parse a document to see data</div>';
+  } else {
+    // Done bar
+    const doneBar = document.createElement('div');
+    doneBar.className = 'bar-item';
+    const doneFill = document.createElement('div');
+    doneFill.className = 'bar-fill';
+    doneFill.style.background = '#009C0C';
+    doneFill.style.height = Math.max(donePct, 4) + 'px';
+    const doneLabel = document.createElement('div');
+    doneLabel.className = 'bar-label';
+    doneLabel.textContent = donePct + '%';
+    doneBar.append(doneFill, doneLabel);
+
+    // Ongoing bar
+    const ongoingBar = document.createElement('div');
+    ongoingBar.className = 'bar-item';
+    const ongoingFill = document.createElement('div');
+    ongoingFill.className = 'bar-fill';
+    ongoingFill.style.background = '#dc3545';
+    ongoingFill.style.height = Math.max(ongoingPct, 4) + 'px';
+    const ongoingLabel = document.createElement('div');
+    ongoingLabel.className = 'bar-label';
+    ongoingLabel.textContent = ongoingPct + '%';
+    ongoingBar.append(ongoingFill, ongoingLabel);
+
+    barContainer.append(doneBar, ongoingBar);
   }
 
-  if (!chartData) { container.style.display = 'none'; _renderingWorkflowCharts = false; return; }
-  container.style.display = 'flex';
+  // Donut chart: overall checklist progress
+  const canvas = document.getElementById('dashDonutCanvas');
+  const pctEl = document.getElementById('dashDonutPct');
+  let allItems = [];
+  if (wf === 'New Build' || wf === 'Rebuild') {
+    const chartData = clGetNBChartData();
+    allItems = chartData.flatMap(s => s.items);
+  } else if (wf === 'Website Upgrade') {
+    const chartData = clGetUpChartData();
+    allItems = chartData.flatMap(s => s.items);
+  }
 
-  chartData.forEach(s => {
-    const w = document.createElement('div'); w.className = 'chart-item';
-    const c = document.createElement('canvas'); c.width = 100; c.height = 100;
-    const done = s.items.filter(i => i.status === 'Done').length;
-    clDrawDonut(c, done, s.items.length, s.color);
-    const l = document.createElement('span'); l.textContent = s.label;
-    w.append(c, l); container.appendChild(w);
-  });
-  _renderingWorkflowCharts = false;
+  const totalItems = allItems.length;
+  const doneItems = allItems.filter(i => i.status === 'Done').length;
+  const pct = totalItems === 0 ? 0 : Math.round(doneItems / totalItems * 100);
+  pctEl.textContent = pct + '%';
+
+  // Draw donut
+  const ctx = canvas.getContext('2d');
+  const cx = 60, cy = 60, r = 48, lw = 12;
+  ctx.clearRect(0, 0, 120, 120);
+  // Background ring
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+  ctx.strokeStyle = '#dc3545'; ctx.lineWidth = lw; ctx.stroke();
+  // Progress ring
+  if (totalItems > 0 && doneItems > 0) {
+    ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + 2 * Math.PI * (doneItems / totalItems));
+    ctx.strokeStyle = '#009C0C'; ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.stroke();
+  }
 }
 
 // ===== SITE COMMENTS =====
-// Sync edited site comment texts from the final note DOM back into appState
 function syncSiteCommentsFromDOM() {
   const el = document.getElementById('finalNoteBody');
   if (!el) return;
   const html = el.innerHTML;
-  // Match all Site Comment #X: text patterns from current HTML
   const regex = /<b>\s*Site Comment\s*#(\d+)\s*:\s*<\/b>\s*([^<]*)/gi;
   let match;
   while ((match = regex.exec(html)) !== null) {
     const no = match[1].trim();
     const text = match[2].trim();
-    // Update appState with the edited text
     const existing = appState.siteComments.find(sc => sc.no === no);
-    if (existing && text) {
-      existing.text = text;
-    }
+    if (existing && text) existing.text = text;
   }
 }
 
@@ -805,10 +914,7 @@ function addSiteComment() {
   const no = document.getElementById('scNo').value.trim();
   const text = document.getElementById('scText').value.trim();
   if (!no || !text) return;
-  // Sync any user edits from DOM before modifying
-  if (finalNoteWasEdited) {
-    syncSiteCommentsFromDOM();
-  }
+  if (finalNoteWasEdited) syncSiteCommentsFromDOM();
   appState.siteComments.push({ no, text });
   appState.siteComments.sort((a, b) => parseInt(a.no) - parseInt(b.no));
   document.getElementById('scNo').value = '';
@@ -816,41 +922,23 @@ function addSiteComment() {
   if (finalNoteWasEdited) {
     const el = document.getElementById('finalNoteBody');
     let html = el.innerHTML;
-    // Remove existing site comments section (heading + all entries)
-    // Handle both bare and div-wrapped structures from contentEditable
     html = html.replace(/<div>\s*<b>\s*Site Comments:\s*<\/b>\s*<\/div>/gi, '');
     html = html.replace(/<b>\s*Site Comments:\s*<\/b>\s*(<br\s*\/?>)?/gi, '');
     html = html.replace(/<div>\s*<b>\s*Site Comment\s*#[\s\S]*?<\/b>[^<]*<\/div>/gi, '');
     html = html.replace(/<b>\s*Site Comment\s*#[\s\S]*?<\/b>[^<]*(<br\s*\/?>)?/gi, '');
-    // Build site comments block
     let scBlock = '';
     if (appState.siteComments.length > 0) {
       scBlock = '<br><b>Site Comments:</b><br>';
-      appState.siteComments.forEach(sc => {
-        scBlock += '<b>Site Comment #' + sc.no + ':</b> ' + sc.text + '<br>';
-      });
+      appState.siteComments.forEach(sc => { scBlock += '<b>Site Comment #' + sc.no + ':</b> ' + sc.text + '<br>'; });
     }
-    // Insert before Preview Link if present, otherwise append
     const plMatch = html.match(/<(div>\s*)?<b>\s*Preview Link/i);
-    if (plMatch) {
-      const plIdx = html.indexOf(plMatch[0]);
-      html = html.slice(0, plIdx) + scBlock + html.slice(plIdx);
-    } else {
-      html = html.replace(/(<br\s*\/?>|\s)*$/, '');
-      html += scBlock;
-    }
+    if (plMatch) { const plIdx = html.indexOf(plMatch[0]); html = html.slice(0, plIdx) + scBlock + html.slice(plIdx); }
+    else { html = html.replace(/(<br\s*\/?>|\s)*$/, ''); html += scBlock; }
     el.innerHTML = html;
     appState.finalNoteContent = el.textContent;
     updateSendQcOutput();
-  } else {
-    updateFinalNote();
-  }
+  } else { updateFinalNote(); }
   showToast('Site comment added!');
-}
-
-function copySiteComments() {
-  const text = appState.siteComments.map(sc => `Site Comment #${sc.no}: ${sc.text}`).join('\n\n');
-  navigator.clipboard.writeText(text).then(() => showToast('Site comments copied!'));
 }
 
 // ===== DEV NOTES =====
@@ -864,69 +952,84 @@ function addDevNote() {
   showToast('Developer note added!');
 }
 
+// ===== TRANSLATE & FIX GRAMMAR =====
+// Uses OpenAI API (gpt-5-nano) for translation and grammar fixing
+async function translateAndFix() {
+  const input = document.getElementById('translateInput');
+  const btn = document.getElementById('translateBtn');
+  const text = input.value.trim();
+  if (!text) { showToast('Please paste some text first'); return; }
+  btn.classList.add('loading');
+  try {
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
+      },
+      body: JSON.stringify({
+        model: 'gpt-5-nano',
+        input: 'Translate the following text to English (if it is already in English, keep it as is). Fix any grammar, spelling, and punctuation errors. Return ONLY the corrected English text, nothing else:\n\n' + text,
+        store: true
+      })
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || 'API request failed (' + response.status + ')');
+    }
+
+    const data = await response.json();
+    // Extract the output text from the response
+    let result = '';
+    if (data.output && Array.isArray(data.output)) {
+      for (const item of data.output) {
+        if (item.type === 'message' && item.content) {
+          for (const c of item.content) {
+            if (c.type === 'output_text') result += c.text;
+          }
+        }
+      }
+    }
+    if (!result) result = data.output_text || data.choices?.[0]?.message?.content || '';
+
+    if (result.trim()) {
+      input.value = result.trim();
+      showToast('Translated & grammar fixed!');
+    } else {
+      showToast('No result returned from AI');
+    }
+  } catch (e) {
+    showToast('Translation error: ' + e.message);
+  }
+  btn.classList.remove('loading');
+}
+
 // ===== FINAL NOTE =====
 function updateFinalNote() {
   const wfType = appState.workflow || 'Reworks';
   const wfLabel = 'Dev Completed ' + wfType;
-
   const el = document.getElementById('finalNoteBody');
-  // Don't overwrite while user is actively editing
-  if (el.isContentEditable) {
-    appState.finalNoteContent = el.textContent;
-    return;
-  }
-  // Don't rebuild if user has manually edited the final note
-  if (finalNoteWasEdited) {
-    updateSendQcOutput();
-    return;
-  }
-
+  if (el.isContentEditable) { appState.finalNoteContent = el.textContent; return; }
+  if (finalNoteWasEdited) { updateSendQcOutput(); return; }
   el.innerHTML = '';
-
-  // Title (bold)
-  const titleBold = document.createElement('b');
-  titleBold.textContent = wfLabel;
-  el.appendChild(titleBold);
+  const titleBold = document.createElement('b'); titleBold.textContent = wfLabel;
+  el.appendChild(titleBold); el.appendChild(document.createElement('br')); el.appendChild(document.createElement('br'));
+  const dnBold = document.createElement('b'); dnBold.textContent = 'Dev Notes:';
+  el.appendChild(dnBold); el.appendChild(document.createElement('br'));
+  appState.devNotes.forEach(n => { el.appendChild(document.createTextNode('• ' + n)); el.appendChild(document.createElement('br')); });
   el.appendChild(document.createElement('br'));
-  el.appendChild(document.createElement('br'));
-
-  // Dev Notes (heading always visible)
-  const dnBold = document.createElement('b');
-  dnBold.textContent = 'Dev Notes:';
-  el.appendChild(dnBold);
-  el.appendChild(document.createElement('br'));
-  appState.devNotes.forEach(n => {
-    el.appendChild(document.createTextNode('• ' + n));
-    el.appendChild(document.createElement('br'));
-  });
-  el.appendChild(document.createElement('br'));
-
-  // Site Comments heading + items (only show if there are comments)
   if (appState.siteComments.length > 0) {
-    const scHeading = document.createElement('b');
-    scHeading.textContent = 'Site Comments:';
-    el.appendChild(scHeading);
-    el.appendChild(document.createElement('br'));
-    appState.siteComments.forEach((sc, i) => {
-      const scBold = document.createElement('b');
-      scBold.textContent = 'Site Comment #' + sc.no + ':';
-      el.appendChild(scBold);
-      el.appendChild(document.createTextNode(' ' + sc.text));
-      el.appendChild(document.createElement('br'));
+    const scHeading = document.createElement('b'); scHeading.textContent = 'Site Comments:';
+    el.appendChild(scHeading); el.appendChild(document.createElement('br'));
+    appState.siteComments.forEach(sc => {
+      const scBold = document.createElement('b'); scBold.textContent = 'Site Comment #' + sc.no + ':';
+      el.appendChild(scBold); el.appendChild(document.createTextNode(' ' + sc.text)); el.appendChild(document.createElement('br'));
     });
     el.appendChild(document.createElement('br'));
   }
-
-  // Preview Link (only show if link is entered)
   const link = document.getElementById('previewLink').value.trim();
-  if (link) {
-    const plBold = document.createElement('b');
-    plBold.textContent = 'Preview Link:';
-    el.appendChild(plBold);
-    el.appendChild(document.createTextNode(' ' + link));
-    el.appendChild(document.createElement('br'));
-  }
-
+  if (link) { const plBold = document.createElement('b'); plBold.textContent = 'Preview Link:'; el.appendChild(plBold); el.appendChild(document.createTextNode(' ' + link)); el.appendChild(document.createElement('br')); }
   appState.finalNoteContent = el.textContent;
   updateSendQcOutput();
 }
@@ -938,7 +1041,6 @@ function toggleEditFinalNote() {
     el.contentEditable = false;
     fnContainer.classList.remove('editing');
     finalNoteWasEdited = true;
-    // Sync any site comment edits back into appState
     syncSiteCommentsFromDOM();
     appState.finalNoteContent = el.textContent;
     showToast('Final note saved!');
@@ -951,34 +1053,39 @@ function toggleEditFinalNote() {
 
 function copyFinalNote() {
   const el = document.getElementById('finalNoteBody');
-  // Copy with formatting using Selection API
   const range = document.createRange();
   range.selectNodeContents(el);
   const selection = window.getSelection();
   selection.removeAllRanges();
   selection.addRange(range);
-  // Use clipboard API with HTML
   const htmlContent = el.innerHTML;
   const textContent = el.textContent;
   if (navigator.clipboard && navigator.clipboard.write) {
     const blob = new Blob([htmlContent], { type: 'text/html' });
     const textBlob = new Blob([textContent], { type: 'text/plain' });
-    navigator.clipboard.write([
-      new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob })
-    ]).then(() => showToast('Final note copied with formatting!'));
-  } else {
-    document.execCommand('copy');
-    showToast('Final note copied!');
-  }
+    navigator.clipboard.write([new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob })]).then(() => showToast('Final note copied with formatting!'));
+  } else { document.execCommand('copy'); showToast('Final note copied!'); }
   selection.removeAllRanges();
 }
 
-// Listen for preview link changes
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('previewLink').addEventListener('input', function() {
     finalNoteWasEdited = false;
     updateFinalNote();
   });
+
+  // Auto-sync: when the final note editor is edited, extract preview link back to input field
+  const finalNoteEl = document.getElementById('finalNoteBody');
+  finalNoteEl.addEventListener('input', function() {
+    const html = finalNoteEl.innerHTML;
+    const match = html.match(/<b>\s*Preview Link:\s*<\/b>\s*([^<]*)/i);
+    if (match) {
+      const extractedLink = match[1].trim();
+      document.getElementById('previewLink').value = extractedLink;
+      appState.previewLink = extractedLink;
+    }
+  });
+
   loadFromStorage();
 });
 
@@ -988,7 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let nb_rendered = false;
 const nb_data = {
   onboarding:{label:"From Onboarding",color:"#0088FF",items:["ABN / ACN","Primary and Secondary Number","Address","Email","Trading Hours","Primary and Secondary Color","Membership","Anchor links","Social Media"].map(n=>({name:n,status:"Ongoing"}))},
-  website:{label:"Website Checking",color:"#00C310",items:["Added Icons","Added Images","Modules alignment (Desktop/Tablet/Mobile)","Check Links","Alt text for Images and Icon","Check Headings","Footer Heading (h6)","Theme Based","Text Link Hover"].map(n=>({name:n,status:"Ongoing"}))},
+  website:{label:"Website Checking",color:"#009C0C",items:["Added Icons","Added Images","Modules alignment (Desktop/Tablet/Mobile)","Check Links","Alt text for Images and Icon","Check Headings","Footer Heading (h6)","Theme Based","Text Link Hover"].map(n=>({name:n,status:"Ongoing"}))},
   contact:{label:"Contact Form",color:"#CCCC00",items:["Contact form anchor name","Contact form Headings in Location Page","Contact form Content","Contact form Submission Message","Contact form Test"].map(n=>({name:n,status:"Ongoing"}))},
   mobile:{label:"Mobile And Tablet",color:"#00E5FF",items:["Menu check contrast Issue","Connect to data number and Call icon","Actioned - if contact details is also in Menu"].map(n=>({name:n,status:"Ongoing"}))}
 };
@@ -1004,27 +1111,34 @@ function renderNewBuildChecklist() {
   const page = document.getElementById('page1');
   page.innerHTML = '';
 
-  // Info banner
   const banner = document.createElement('div');
   banner.className = 'info-banner visible';
-  banner.innerHTML = `<div class="info-grid">
-    <div class="info-item"><div class="info-label">Developer</div><div class="info-val">${appState.devName}</div></div>
-    <div class="info-item"><div class="info-label">Business</div><div class="info-val">${appState.bizName}</div></div>
-  </div>`;
+  banner.innerHTML = `<div class="info-grid"><div class="info-item"><div class="info-label">Developer</div><div class="info-val">${appState.devName}</div></div><div class="info-item"><div class="info-label">Business</div><div class="info-val">${appState.bizName}</div></div></div>`;
   page.appendChild(banner);
 
-  const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:28px';
+  const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:20px';
   const h1 = document.createElement('h1'); h1.textContent = 'NEW BUILD CHECKLIST'; h1.style.marginBottom = '0';
-  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { showConfirmModal('Reset all checklist items?', function(){Object.values(nb_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));nb_blogsYes.forEach(i=>i.status='Ongoing');nb_blogsNo.forEach(i=>i.status='Ongoing');nb_dynamicYes.forEach(i=>i.status='Ongoing');nb_dynamicNo.forEach(i=>i.status='Ongoing');nb_devNotes=[];nb_blogsAnswer=null;nb_dynamicAnswer=null;renderNewBuildChecklist();showToast('Checklist cleared!')}); };
+  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { showConfirmModal('Reset all checklist items?', function(){Object.values(nb_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));nb_blogsYes.forEach(i=>i.status='Ongoing');nb_blogsNo.forEach(i=>i.status='Ongoing');nb_dynamicYes.forEach(i=>i.status='Ongoing');nb_dynamicNo.forEach(i=>i.status='Ongoing');nb_devNotes=[];nb_blogsAnswer=null;nb_dynamicAnswer=null;nb_parsedItems=[];renderNewBuildChecklist();updateDashboardCharts();showToast('Checklist cleared!')}); };
   h1Wrap.append(h1, clrBtn);
   page.appendChild(h1Wrap);
 
-  // Top grid
+  // Tabs
+  const tabs = document.createElement('div'); tabs.className = 'page-tabs';
+  const tabChecklist = document.createElement('button'); tabChecklist.className = 'page-tab active'; tabChecklist.textContent = 'Checklist';
+  const tabParser = document.createElement('button'); tabParser.className = 'page-tab'; tabParser.textContent = 'Parser';
+  tabs.append(tabChecklist, tabParser);
+  page.appendChild(tabs);
+
+  const checklistContent = document.createElement('div'); checklistContent.className = 'page-tab-content active';
+  const parserContent = document.createElement('div'); parserContent.className = 'page-tab-content';
+
+  tabChecklist.onclick = () => { tabChecklist.classList.add('active'); tabParser.classList.remove('active'); checklistContent.classList.add('active'); parserContent.classList.remove('active'); };
+  tabParser.onclick = () => { tabParser.classList.add('active'); tabChecklist.classList.remove('active'); parserContent.classList.add('active'); checklistContent.classList.remove('active'); };
+
   const tg = document.createElement('div'); tg.className = 'grid3';
   ['onboarding','website','contact'].forEach(k => tg.appendChild(clMakeSection(nb_data[k], nb_data[k].items, renderNewBuildChecklist)));
-  page.appendChild(tg);
+  checklistContent.appendChild(tg);
 
-  // Charts
   const ch = document.createElement('div'); ch.className = 'charts';
   const chartData = clGetNBChartData();
   chartData.forEach(s => {
@@ -1035,12 +1149,10 @@ function renderNewBuildChecklist() {
     const l = document.createElement('span'); l.textContent = s.label;
     w.append(c, l); ch.appendChild(w);
   });
-  page.appendChild(ch);
+  checklistContent.appendChild(ch);
 
-  // Mid grid
   const mg = document.createElement('div'); mg.className = 'grid3';
 
-  // Blogs
   const blogSec = document.createElement('div'); blogSec.className = 'section';
   const bh = document.createElement('div'); bh.className = 'section-header'; bh.textContent = 'Blogs'; bh.style.background = '#FF8800';
   const bb = document.createElement('div'); bb.className = 'section-body';
@@ -1054,7 +1166,6 @@ function renderNewBuildChecklist() {
   if (nb_blogsAnswer) { (nb_blogsAnswer === 'yes' ? nb_blogsYes : nb_blogsNo).forEach(it => bb.appendChild(clMakeItem(it, renderNewBuildChecklist))); }
   blogSec.append(bh, bb); mg.appendChild(blogSec);
 
-  // Dynamic
   const dynSec = document.createElement('div'); dynSec.className = 'section';
   const dh = document.createElement('div'); dh.className = 'section-header'; dh.textContent = 'Dynamic Pages'; dh.style.background = '#FF00FF';
   const db = document.createElement('div'); db.className = 'section-body';
@@ -1068,23 +1179,17 @@ function renderNewBuildChecklist() {
   if (nb_dynamicAnswer) { (nb_dynamicAnswer === 'yes' ? nb_dynamicYes : nb_dynamicNo).forEach(it => db.appendChild(clMakeItem(it, renderNewBuildChecklist))); }
   dynSec.append(dh, db); mg.appendChild(dynSec);
 
-  // Mobile
   mg.appendChild(clMakeSection(nb_data.mobile, nb_data.mobile.items, renderNewBuildChecklist));
-  page.appendChild(mg);
+  checklistContent.appendChild(mg);
 
-  // Bottom row
   const br = document.createElement('div'); br.className = 'bottom-row';
-
-  // Legend
   const leg = document.createElement('div'); leg.className = 'legend-box';
-  leg.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px"><div class="legend-item"><span class="legend-sq" style="background:#00C310"></span>Done</div><div class="legend-item"><span class="legend-sq" style="background:#dc3545"></span>Ongoing</div></div>';
+  leg.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px"><div class="legend-item"><span class="legend-sq" style="background:#009C0C"></span>Done</div><div class="legend-item"><span class="legend-sq" style="background:#dc3545"></span>Ongoing</div></div>';
   const legC = document.createElement('canvas'); legC.width = 100; legC.height = 100;
   const allItems = chartData.flatMap(s => s.items);
-  clDrawDonut(legC, allItems.filter(i => i.status === 'Done').length, allItems.length, '#00C310');
-  leg.appendChild(legC);
-  br.appendChild(leg);
+  clDrawDonut(legC, allItems.filter(i => i.status === 'Done').length, allItems.length, '#009C0C');
+  leg.appendChild(legC); br.appendChild(leg);
 
-  // Notes
   const notesSec = document.createElement('div'); notesSec.className = 'section';
   const nh = document.createElement('div'); nh.className = 'section-header'; nh.textContent = 'Notes for Developer'; nh.style.background = '#CC0000';
   const nb2 = document.createElement('div'); nb2.className = 'section-body';
@@ -1096,13 +1201,17 @@ function renderNewBuildChecklist() {
   nb_devNotes.forEach(it => nb2.appendChild(clMakeItem(it, renderNewBuildChecklist)));
   notesSec.append(nh, nb2); br.appendChild(notesSec);
 
-  // Save
   const saveWrap = document.createElement('div'); saveWrap.style.cssText = 'display:flex;align-items:flex-end;justify-content:flex-end';
   const saveBtn = document.createElement('button'); saveBtn.className = 'save-btn'; saveBtn.textContent = 'Save';
   saveBtn.onclick = () => saveChecklistPDF('newbuild');
   saveWrap.appendChild(saveBtn); br.appendChild(saveWrap);
-  page.appendChild(br);
-  renderWorkflowCharts();
+  checklistContent.appendChild(br);
+
+  // Parser tab content
+  parserContent.appendChild(createInlineParser('nb'));
+
+  page.append(checklistContent, parserContent);
+  updateDashboardCharts();
 }
 
 function addNBNote() {
@@ -1117,7 +1226,7 @@ function clGetNBChartData() {
   const dItems = nb_dynamicAnswer === 'yes' ? nb_dynamicYes : nb_dynamicAnswer === 'no' ? nb_dynamicNo : [];
   return [
     { label: 'Onboarding', color: '#0088FF', items: nb_data.onboarding.items },
-    { label: 'Website', color: '#00C310', items: nb_data.website.items },
+    { label: 'Website', color: '#009C0C', items: nb_data.website.items },
     { label: 'Contact', color: '#CCCC00', items: nb_data.contact.items },
     { label: 'Mobile', color: '#00E5FF', items: nb_data.mobile.items },
     { label: 'Blogs & Dynamic', color: '#FF6600', items: [...bItems, ...dItems] },
@@ -1130,10 +1239,10 @@ function clGetNBChartData() {
 // ================================
 let up_rendered = false;
 const up_data = {
-  onboarding:{label:"Check Onboarding Updates",color:"#00C310",items:["ABN / ACN","Primary and Secondary Number","Address","Email","Trading Hours","Primary and Secondary Color","Membership","Anchor links","Social Media"].map(n=>({name:n,status:"Ongoing"}))},
-  website:{label:"Website Checking",color:"#00C310",items:["Added Icons","Added Images","Modules alignment (Desktop/Tablet/Mobile)","Check Links","Alt text for Images and Icon","Check Headings","Existing Page Based","Map Location"].map(n=>({name:n,status:"Ongoing"}))},
-  mobile:{label:"Mobile And Tablet",color:"#00C310",items:["Menu check contrast Issue","Connect to data number and Call icon","Actioned - if contact details is also in Menu","Alignment and Spacing","Font sizes"].map(n=>({name:n,status:"Ongoing"}))},
-  manual:{label:"Manual Upgrade",color:"#00C310",items:["SEO - Meta Title and Meta Description","Document Content Added","Ensure new pages set to draft","Ensure New page have no-index unticked","For Classic (Check if tablet is showing)","Contact form Anchor Links"].map(n=>({name:n,status:"Ongoing"}))}
+  onboarding:{label:"Check Onboarding Updates",color:"#009C0C",items:["ABN / ACN","Primary and Secondary Number","Address","Email","Trading Hours","Primary and Secondary Color","Membership","Anchor links","Social Media"].map(n=>({name:n,status:"Ongoing"}))},
+  website:{label:"Website Checking",color:"#009C0C",items:["Added Icons","Added Images","Modules alignment (Desktop/Tablet/Mobile)","Check Links","Alt text for Images and Icon","Check Headings","Existing Page Based","Map Location"].map(n=>({name:n,status:"Ongoing"}))},
+  mobile:{label:"Mobile And Tablet",color:"#009C0C",items:["Menu check contrast Issue","Connect to data number and Call icon","Actioned - if contact details is also in Menu","Alignment and Spacing","Font sizes"].map(n=>({name:n,status:"Ongoing"}))},
+  manual:{label:"Manual Upgrade",color:"#009C0C",items:["SEO - Meta Title and Meta Description","Document Content Added","Ensure new pages set to draft","Ensure New page have no-index unticked","For Classic (Check if tablet is showing)","Contact form Anchor Links"].map(n=>({name:n,status:"Ongoing"}))}
 };
 const up_manualNo = [{name:"Checked existing pages as reference",status:"Ongoing"}];
 let up_devNotes = [];
@@ -1146,23 +1255,32 @@ function renderUpgradeChecklist() {
 
   const banner = document.createElement('div');
   banner.className = 'info-banner visible';
-  banner.innerHTML = `<div class="info-grid">
-    <div class="info-item"><div class="info-label">Developer</div><div class="info-val">${appState.devName}</div></div>
-    <div class="info-item"><div class="info-label">Business</div><div class="info-val">${appState.bizName}</div></div>
-  </div>`;
+  banner.innerHTML = `<div class="info-grid"><div class="info-item"><div class="info-label">Developer</div><div class="info-val">${appState.devName}</div></div><div class="info-item"><div class="info-label">Business</div><div class="info-val">${appState.bizName}</div></div></div>`;
   page.appendChild(banner);
 
-  const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:28px';
+  const h1Wrap = document.createElement('div'); h1Wrap.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:20px';
   const h1 = document.createElement('h1'); h1.textContent = 'WEB UPGRADE CHECKLIST'; h1.style.marginBottom = '0';
-  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { showConfirmModal('Reset all checklist items?', function(){Object.values(up_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));up_manualNo.forEach(i=>i.status='Ongoing');up_devNotes=[];up_manualAnswer=null;renderUpgradeChecklist();showToast('Checklist cleared!')}); };
+  const clrBtn = document.createElement('button'); clrBtn.className = 'clear-all-btn'; clrBtn.textContent = 'Clear All'; clrBtn.onclick = () => { showConfirmModal('Reset all checklist items?', function(){Object.values(up_data).forEach(c=>c.items.forEach(i=>i.status='Ongoing'));up_manualNo.forEach(i=>i.status='Ongoing');up_devNotes=[];up_manualAnswer=null;up_parsedItems=[];renderUpgradeChecklist();updateDashboardCharts();showToast('Checklist cleared!')}); };
   h1Wrap.append(h1, clrBtn);
   page.appendChild(h1Wrap);
 
+  // Tabs
+  const tabs = document.createElement('div'); tabs.className = 'page-tabs';
+  const tabChecklist = document.createElement('button'); tabChecklist.className = 'page-tab active'; tabChecklist.textContent = 'Checklist';
+  const tabParser = document.createElement('button'); tabParser.className = 'page-tab'; tabParser.textContent = 'Parser';
+  tabs.append(tabChecklist, tabParser);
+  page.appendChild(tabs);
+
+  const checklistContent = document.createElement('div'); checklistContent.className = 'page-tab-content active';
+  const parserContent = document.createElement('div'); parserContent.className = 'page-tab-content';
+
+  tabChecklist.onclick = () => { tabChecklist.classList.add('active'); tabParser.classList.remove('active'); checklistContent.classList.add('active'); parserContent.classList.remove('active'); };
+  tabParser.onclick = () => { tabParser.classList.add('active'); tabChecklist.classList.remove('active'); parserContent.classList.add('active'); checklistContent.classList.remove('active'); };
+
   const tg = document.createElement('div'); tg.className = 'grid3';
   ['onboarding','website','mobile'].forEach(k => tg.appendChild(clMakeSection(up_data[k], up_data[k].items, renderUpgradeChecklist)));
-  page.appendChild(tg);
+  checklistContent.appendChild(tg);
 
-  // Charts
   const ch = document.createElement('div'); ch.className = 'charts';
   const chartData = clGetUpChartData();
   chartData.forEach(s => {
@@ -1172,14 +1290,12 @@ function renderUpgradeChecklist() {
     const l = document.createElement('span'); l.textContent = s.label;
     w.append(c, l); ch.appendChild(w);
   });
-  page.appendChild(ch);
+  checklistContent.appendChild(ch);
 
-  // Mid
   const mg = document.createElement('div'); mg.className = 'grid3';
 
-  // Manual with Yes/No
   const manSec = document.createElement('div'); manSec.className = 'section';
-  const mh = document.createElement('div'); mh.className = 'section-header'; mh.textContent = 'Manual Upgrade'; mh.style.background = '#00C310';
+  const mh = document.createElement('div'); mh.className = 'section-header'; mh.textContent = 'Manual Upgrade'; mh.style.background = '#009C0C';
   const mb = document.createElement('div'); mb.className = 'section-body';
   const mq = document.createElement('div'); mq.className = 'question'; mq.textContent = 'Is the Website Upgrade Manual?';
   const mbtns = document.createElement('div'); mbtns.className = 'yesno-btns';
@@ -1191,9 +1307,8 @@ function renderUpgradeChecklist() {
   if (up_manualAnswer) { (up_manualAnswer === 'yes' ? up_data.manual.items : up_manualNo).forEach(it => mb.appendChild(clMakeItem(it, renderUpgradeChecklist))); }
   manSec.append(mh, mb); mg.appendChild(manSec);
 
-  // Notes
   const notesSec = document.createElement('div'); notesSec.className = 'section';
-  const nh = document.createElement('div'); nh.className = 'section-header'; nh.textContent = 'Notes for Developer'; nh.style.background = '#00C310';
+  const nh = document.createElement('div'); nh.className = 'section-header'; nh.textContent = 'Notes for Developer'; nh.style.background = '#009C0C';
   const nb2 = document.createElement('div'); nb2.className = 'section-body';
   const addRow = document.createElement('div'); addRow.className = 'cl-add-row';
   const inp = document.createElement('input'); inp.placeholder = 'Add item...'; inp.id = 'upNoteInput';
@@ -1203,23 +1318,27 @@ function renderUpgradeChecklist() {
   up_devNotes.forEach(it => nb2.appendChild(clMakeItem(it, renderUpgradeChecklist)));
   notesSec.append(nh, nb2); mg.appendChild(notesSec);
 
-  page.appendChild(mg);
+  checklistContent.appendChild(mg);
 
-  // Bottom row
   const br = document.createElement('div'); br.className = 'bottom-row';
   const leg = document.createElement('div'); leg.className = 'legend-box';
-  leg.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px"><div class="legend-item"><span class="legend-sq" style="background:#00C310"></span>Done</div><div class="legend-item"><span class="legend-sq" style="background:#dc3545"></span>Ongoing</div></div>';
+  leg.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px"><div class="legend-item"><span class="legend-sq" style="background:#009C0C"></span>Done</div><div class="legend-item"><span class="legend-sq" style="background:#dc3545"></span>Ongoing</div></div>';
   const legC = document.createElement('canvas'); legC.width = 100; legC.height = 100;
   const allItems = chartData.flatMap(s => s.items);
-  clDrawDonut(legC, allItems.filter(i => i.status === 'Done').length, allItems.length, '#00C310');
+  clDrawDonut(legC, allItems.filter(i => i.status === 'Done').length, allItems.length, '#009C0C');
   leg.appendChild(legC); br.appendChild(leg);
 
   const saveWrap = document.createElement('div'); saveWrap.style.cssText = 'display:flex;align-items:flex-end;justify-content:flex-end';
   const saveBtn = document.createElement('button'); saveBtn.className = 'save-btn'; saveBtn.textContent = 'Save';
   saveBtn.onclick = () => saveChecklistPDF('upgrade');
   saveWrap.appendChild(saveBtn); br.appendChild(saveWrap);
-  page.appendChild(br);
-  renderWorkflowCharts();
+  checklistContent.appendChild(br);
+
+  // Parser tab content
+  parserContent.appendChild(createInlineParser('up'));
+
+  page.append(checklistContent, parserContent);
+  updateDashboardCharts();
 }
 
 function addUpNote() {
@@ -1232,10 +1351,10 @@ function addUpNote() {
 function clGetUpChartData() {
   const mItems = up_manualAnswer === 'yes' ? up_data.manual.items : up_manualAnswer === 'no' ? up_manualNo : [];
   return [
-    { label: 'Onboarding', color: '#00C310', items: up_data.onboarding.items },
-    { label: 'Website', color: '#00C310', items: up_data.website.items },
-    { label: 'Mobile', color: '#00C310', items: up_data.mobile.items },
-    { label: 'Manual', color: '#00C310', items: mItems },
+    { label: 'Onboarding', color: '#009C0C', items: up_data.onboarding.items },
+    { label: 'Website', color: '#009C0C', items: up_data.website.items },
+    { label: 'Mobile', color: '#009C0C', items: up_data.mobile.items },
+    { label: 'Manual', color: '#009C0C', items: mItems },
     { label: 'Dev Notes', color: '#CC0000', items: up_devNotes }
   ];
 }
@@ -1247,7 +1366,7 @@ function clMakeItem(item, rerender) {
   const btn = document.createElement('button');
   btn.className = 'status-btn ' + (item.status === 'Done' ? 'status-done' : 'status-ongoing');
   btn.textContent = item.status;
-  btn.onclick = () => { item.status = item.status === 'Ongoing' ? 'Done' : 'Ongoing'; rerender(); };
+  btn.onclick = () => { item.status = item.status === 'Ongoing' ? 'Done' : 'Ongoing'; rerender(); updateDashboardCharts(); };
   div.append(sp, btn); return div;
 }
 
@@ -1269,38 +1388,188 @@ function clDrawDonut(canvas, done, total, color) {
   ctx.fillText(Math.round(pct * 100) + '%', cx, cy);
 }
 
+// ===== INLINE PARSER (for New Build & Web Upgrade tabs) =====
+function createInlineParser(prefix) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'inline-parser';
+
+  const header = document.createElement('div');
+  header.className = 'inline-parser-header';
+  header.textContent = 'Parse Onboarding Document';
+
+  const body = document.createElement('div');
+  body.className = 'inline-parser-body';
+
+  const textarea = document.createElement('textarea');
+  textarea.id = prefix + '_parserInput';
+  textarea.placeholder = 'Paste your onboarding document here...';
+
+  const controls = document.createElement('div');
+  controls.className = 'inline-parser-controls';
+  const parseBtn = document.createElement('button');
+  parseBtn.textContent = 'Parse Document';
+  parseBtn.onclick = () => inlineParseDocument(prefix);
+  const searchInput = document.createElement('input');
+  searchInput.placeholder = 'Search...';
+  searchInput.id = prefix + '_parserSearch';
+  searchInput.oninput = () => filterInlineParsed(prefix);
+  controls.append(parseBtn, searchInput);
+
+  const output = document.createElement('div');
+  output.id = prefix + '_parsedOutput';
+  output.className = 'parsed-cards';
+
+  const newPagesDiv = document.createElement('div');
+  newPagesDiv.id = prefix + '_parsedNewPages';
+  newPagesDiv.className = 'parsed-new-pages';
+
+  body.append(textarea, controls, output, newPagesDiv);
+  wrapper.append(header, body);
+
+  // Render existing parsed items if any
+  setTimeout(() => renderInlineParsedItems(prefix), 0);
+
+  return wrapper;
+}
+
+function inlineParseDocument(prefix) {
+  const inputText = document.getElementById(prefix + '_parserInput').value;
+  if (!inputText.trim()) return;
+
+  const lines = inputText.split('\n');
+  const results = {};
+  const cxSalesPattern = /^(CX|Sales)$/;
+  const dateTimePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/;
+  let currentField = null;
+  let multiLineDetail = '';
+  let newItems = [];
+  let currentFieldDateTime = {};
+  let lastField = null;
+
+  for (let i = 0; i < lines.length; i++) {
+    const trimmedLine = lines[i].trim();
+    if (!trimmedLine) continue;
+    if (dateTimePattern.test(trimmedLine)) { if (lastField) currentFieldDateTime[lastField] = trimmedLine; continue; }
+    if (cxSalesPattern.test(trimmedLine)) { if (currentField) { results[currentField] = multiLineDetail.trim(); lastField = currentField; currentField = null; multiLineDetail = ''; } continue; }
+    if (parserFields.includes(trimmedLine)) { if (currentField) { results[currentField] = multiLineDetail.trim(); lastField = currentField; } currentField = trimmedLine; multiLineDetail = ''; continue; }
+    if (currentField) multiLineDetail += trimmedLine + '\n';
+    if (/^Item \d+ Action$/i.test(trimmedLine)) {
+      const itemNumber = trimmedLine.match(/^Item (\d+)/)?.[1];
+      const action = lines[i + 1]?.trim() || 'Unknown';
+      const itemNameIndex = lines.findIndex(line => line.trim() === `Item ${itemNumber} Name`);
+      const itemName = itemNameIndex !== -1 ? lines[itemNameIndex + 1]?.trim() : 'Unknown';
+      const anchorLinksIndex = lines.findIndex(line => line.trim().toLowerCase() === `item ${itemNumber} anchor links`);
+      const anchorLinks = anchorLinksIndex !== -1 ? lines[anchorLinksIndex + 1]?.trim() : 'NA';
+      const parent = lines[i - 9]?.trim() || 'NA';
+      const type = lines[i - 4]?.trim() || 'NA';
+      const timestamp = lines[i - 1]?.trim() || '';
+      newItems.push({ itemName, parent, type, anchorLinks, timestamp, action });
+    }
+  }
+  if (currentField) { results[currentField] = multiLineDetail.trim(); lastField = currentField; }
+
+  if (results['ABN']) results['ABN'] = formatABN(results['ABN']);
+  if (results['ACN']) results['ACN'] = formatACN(results['ACN']);
+
+  // Convert to parsed items with checkbox state
+  const items = Object.entries(results).map(([field, detail]) => ({
+    field, detail: detail.trim(), checked: false,
+    isOrange: parserOrangeFields.includes(field),
+    isYesNo: parserYesNoFields.includes(field)
+  }));
+
+  if (prefix === 'nb') nb_parsedItems = items;
+  else up_parsedItems = items;
+
+  renderInlineParsedItems(prefix);
+
+  // Handle new pages
+  const newPagesDiv = document.getElementById(prefix + '_parsedNewPages');
+  newPagesDiv.innerHTML = '';
+  if (newItems.length > 0) {
+    const table = document.createElement('table');
+    table.innerHTML = '<thead><tr><th>Item Name</th><th>Parent</th><th>Type</th><th>Anchor Links</th><th>Date & Time</th><th>Action</th></tr></thead><tbody>' +
+      newItems.map(item => `<tr><td>${item.itemName}</td><td>${item.parent}</td><td>${item.type}</td><td>${item.anchorLinks}</td><td>${item.timestamp}</td><td>${item.action}</td></tr>`).join('') + '</tbody>';
+    const h3 = document.createElement('h3'); h3.textContent = 'Pages / New Pages';
+    newPagesDiv.append(h3, table);
+  }
+
+  updateDashboardCharts();
+  showToast('Document parsed! ' + items.length + ' fields found.');
+}
+
+function renderInlineParsedItems(prefix) {
+  const output = document.getElementById(prefix + '_parsedOutput');
+  if (!output) return;
+  output.innerHTML = '';
+  const items = prefix === 'nb' ? nb_parsedItems : up_parsedItems;
+  if (items.length === 0) return;
+
+  items.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'parsed-card' + (item.isOrange ? ' orange' : '') + (item.isYesNo ? (item.detail.toLowerCase() === 'yes' ? ' yesno-yes' : ' yesno-no') : '');
+    card.dataset.idx = idx;
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = item.checked;
+    cb.onchange = () => {
+      item.checked = cb.checked;
+      updateDashboardCharts();
+    };
+
+    const content = document.createElement('div');
+    content.className = 'parsed-card-content';
+    const fieldEl = document.createElement('div');
+    fieldEl.className = 'parsed-card-field';
+    fieldEl.textContent = item.field;
+    const detailEl = document.createElement('div');
+    detailEl.className = 'parsed-card-detail';
+    detailEl.textContent = item.detail;
+    content.append(fieldEl, detailEl);
+
+    const actions = document.createElement('div');
+    actions.className = 'parsed-card-actions';
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copy';
+    copyBtn.onclick = () => { navigator.clipboard.writeText(item.detail).then(() => showToast('Copied!')); };
+    actions.appendChild(copyBtn);
+
+    card.append(cb, content, actions);
+    output.appendChild(card);
+  });
+}
+
+function filterInlineParsed(prefix) {
+  const val = document.getElementById(prefix + '_parserSearch').value.toLowerCase();
+  const output = document.getElementById(prefix + '_parsedOutput');
+  if (!output) return;
+  output.querySelectorAll('.parsed-card').forEach(card => {
+    card.style.display = card.textContent.toLowerCase().includes(val) ? '' : 'none';
+  });
+}
+
 // ===== SAVE CHECKLIST PDF =====
 function saveChecklistPDF(mode) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let y = 14;
-
   doc.setFontSize(18);
   doc.text(mode === 'newbuild' ? 'New Build Checklist' : 'Web Upgrade Checklist', 14, y); y += 10;
   doc.setFontSize(10); doc.setTextColor(100);
-
   doc.text('Developer Name: ' + appState.devName, 14, y); y += 6;
   doc.text('Business Name: ' + appState.bizName, 14, y); y += 6;
 
   const devNotesText = appState.devNotes.map(n => '• ' + n).join('\n');
-  if (devNotesText) {
-    doc.text('Dev Notes:', 14, y); y += 5;
-    const lines = doc.splitTextToSize(devNotesText, 180);
-    doc.text(lines, 14, y); y += lines.length * 5;
-  }
+  if (devNotesText) { doc.text('Dev Notes:', 14, y); y += 5; const lines = doc.splitTextToSize(devNotesText, 180); doc.text(lines, 14, y); y += lines.length * 5; }
 
   if (appState.siteComments.length > 0) {
     doc.text('Site Comments:', 14, y); y += 5;
-    appState.siteComments.forEach(sc => {
-      const scText = 'Site Comment #' + sc.no + ': ' + sc.text;
-      const scLines = doc.splitTextToSize(scText, 180);
-      doc.text(scLines, 14, y); y += scLines.length * 5;
-    });
+    appState.siteComments.forEach(sc => { const scText = 'Site Comment #' + sc.no + ': ' + sc.text; const scLines = doc.splitTextToSize(scText, 180); doc.text(scLines, 14, y); y += scLines.length * 5; });
   }
 
   const link = document.getElementById('previewLink').value.trim();
   if (link) { doc.text('Preview Link: ' + link, 14, y); y += 6; }
-
   doc.setTextColor(0); y += 6;
 
   const sections = [];
@@ -1441,23 +1710,13 @@ function parseDocument() {
     const tr = document.createElement('tr');
     const isOrange = parserOrangeFields.includes(field);
     if (isOrange) tr.className = 'orange';
-
-    const td1 = document.createElement('td');
-    td1.innerHTML = '<strong>' + field + '</strong>';
-    const td2 = document.createElement('td');
-    td2.textContent = detail;
-
-    if (parserYesNoFields.includes(field)) {
-      td2.style.background = detail.toLowerCase() === 'yes' ? '#1a6b1a' : '#6b1a1a';
-    }
-
-    const td3 = document.createElement('td');
-    td3.className = 'copy-cell';
-    const copyBtn = document.createElement('button');
-    copyBtn.textContent = 'Copy';
+    const td1 = document.createElement('td'); td1.innerHTML = '<strong>' + field + '</strong>';
+    const td2 = document.createElement('td'); td2.textContent = detail;
+    if (parserYesNoFields.includes(field)) { td2.style.background = detail.toLowerCase() === 'yes' ? '#1a6b1a' : '#6b1a1a'; }
+    const td3 = document.createElement('td'); td3.className = 'copy-cell';
+    const copyBtn = document.createElement('button'); copyBtn.textContent = 'Copy';
     copyBtn.onclick = () => { navigator.clipboard.writeText(detail).then(() => showToast('Copied: ' + detail.substring(0, 40))); };
     td3.appendChild(copyBtn);
-
     tr.append(td1, td2, td3);
     outputBody.appendChild(tr);
   }
@@ -1470,7 +1729,6 @@ function parseDocument() {
     newPagesContainer.innerHTML = '<h2>Pages / New Pages</h2>';
     newPagesContainer.appendChild(table);
 
-    // Add Date Updated column to main table
     const mainTable = document.getElementById('parserTable');
     const headerRow = mainTable.querySelector('thead tr');
     const alreadyExists = Array.from(headerRow.children).some(th => th.textContent === 'Date Updated');
@@ -1487,11 +1745,8 @@ function parseDocument() {
 
   if (outputBody.childNodes.length === 0) {
     const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.setAttribute('colspan', '3');
-    td.textContent = 'No important details found.';
-    tr.appendChild(td);
-    outputBody.appendChild(tr);
+    const td = document.createElement('td'); td.setAttribute('colspan', '3'); td.textContent = 'No important details found.';
+    tr.appendChild(td); outputBody.appendChild(tr);
   }
 }
 
@@ -1533,12 +1788,12 @@ function exportParserCSV() {
 function toggleMobileMenu(){
   document.querySelector('.sidebar').classList.toggle('open');
 }
-// Auto-close sidebar on nav click (mobile)
 const origSwitchPage = switchPage;
 switchPage = function(idx){
   origSwitchPage(idx);
   if(window.innerWidth <= 768) document.querySelector('.sidebar').classList.remove('open');
 };
+
 // ===== PARSE TIME & SEND FOR QC =====
 let ptTimerInterval = null;
 let ptSlaSeconds = 0;
@@ -1550,48 +1805,21 @@ let ptTimeTakenInterval = null;
 function ptParse() {
   const raw = document.getElementById('ptInput').value.trim();
   if (!raw) return;
-  
-  // Try to extract time patterns from pasted data
-  // Expected format includes times like: 03:12:59 pm, 03:45:00, 00:47:00
   const timePatterns = raw.match(/\d{1,2}:\d{2}:\d{2}(?:\s*[ap]m)?/gi);
-  
   if (timePatterns && timePatterns.length >= 3) {
-    // Look for the start time (with am/pm), SLA, and time taken
     let startTime = '', slaAgreed = '', timeTaken = '';
-    
-    for (const t of timePatterns) {
-      if (/[ap]m/i.test(t)) {
-        startTime = t.trim();
-      }
-    }
-    
-    // Get non-am/pm times for SLA and Time Taken
+    for (const t of timePatterns) { if (/[ap]m/i.test(t)) startTime = t.trim(); }
     const nonAmPm = timePatterns.filter(t => !/[ap]m/i.test(t));
-    if (nonAmPm.length >= 2) {
-      slaAgreed = nonAmPm[nonAmPm.length - 2].trim();
-      timeTaken = nonAmPm[nonAmPm.length - 1].trim();
-    } else if (nonAmPm.length === 1) {
-      slaAgreed = nonAmPm[0].trim();
-    }
-    
-    // If we didn't find a separate start time with am/pm, use last am/pm time
-    if (!startTime) {
-      const ampmTimes = timePatterns.filter(t => /[ap]m/i.test(t));
-      if (ampmTimes.length > 0) startTime = ampmTimes[ampmTimes.length - 1].trim();
-    }
-    
+    if (nonAmPm.length >= 2) { slaAgreed = nonAmPm[nonAmPm.length - 2].trim(); timeTaken = nonAmPm[nonAmPm.length - 1].trim(); }
+    else if (nonAmPm.length === 1) { slaAgreed = nonAmPm[0].trim(); }
+    if (!startTime) { const ampmTimes = timePatterns.filter(t => /[ap]m/i.test(t)); if (ampmTimes.length > 0) startTime = ampmTimes[ampmTimes.length - 1].trim(); }
     document.getElementById('ptStartTime').value = startTime;
     document.getElementById('ptSlaAgreed').value = slaAgreed;
     document.getElementById('ptTimeTaken').value = timeTaken;
-    
-    // Convert SLA to seconds
     ptSlaSeconds = parseTimeToSeconds(slaAgreed);
     ptStartTimeStr = startTime;
-    
     showToast('Time parsed!');
-  } else {
-    showToast('Could not parse time data');
-  }
+  } else { showToast('Could not parse time data'); }
 }
 
 function parseTimeToSeconds(t) {
@@ -1615,7 +1843,7 @@ function formatSecondsToFriendly(s) {
 }
 
 function isWorkingTime(d) {
-  const day = d.getDay(); // 0=Sun, 6=Sat
+  const day = d.getDay();
   if (day === 0 || day === 6) return false;
   const hour = d.getHours();
   if (hour >= 16 || hour < 7) return false;
@@ -1626,48 +1854,25 @@ function ptStart() {
   const sla = document.getElementById('ptSlaAgreed').value.trim();
   const timeTaken = document.getElementById('ptTimeTaken').value.trim();
   if (!sla) { showToast('No SLA time to start'); return; }
-  
   const slaSeconds = parseTimeToSeconds(sla);
   const takenSeconds = parseTimeToSeconds(timeTaken);
   ptTimeTakenSeconds = takenSeconds;
   ptRemainingSeconds = slaSeconds - takenSeconds;
-  
   if (ptRemainingSeconds <= 0) {
     ptRemainingSeconds = 0;
     document.getElementById('ptRemaining').value = '00:00:00 (Exceeded)';
-    document.getElementById('ptEndTime').value = 'N/A';
-    document.getElementById('ptResultRow').style.display = 'flex';
     updateSendQcOutput();
     return;
   }
-  
-  const endTime = calculateEndTime(new Date(), ptRemainingSeconds);
-  document.getElementById('ptEndTime').value = formatDateTo12h(endTime);
-  document.getElementById('ptResultRow').style.display = 'flex';
-  
-  // Start remaining time countdown
   if (ptTimerInterval) clearInterval(ptTimerInterval);
   ptTimerInterval = setInterval(() => {
     const now = new Date();
-    if (!isWorkingTime(now)) {
-      document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
-      updateSendQcOutput();
-      return;
-    }
+    if (!isWorkingTime(now)) { document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds); updateSendQcOutput(); return; }
     ptRemainingSeconds--;
-    if (ptRemainingSeconds <= 0) {
-      ptRemainingSeconds = 0;
-      document.getElementById('ptRemaining').value = '00:00:00';
-      clearInterval(ptTimerInterval);
-      ptTimerInterval = null;
-      updateSendQcOutput();
-      return;
-    }
+    if (ptRemainingSeconds <= 0) { ptRemainingSeconds = 0; document.getElementById('ptRemaining').value = '00:00:00'; clearInterval(ptTimerInterval); ptTimerInterval = null; updateSendQcOutput(); return; }
     document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
     updateSendQcOutput();
   }, 1000);
-  
-  // Start time taken counter (keeps running)
   if (ptTimeTakenInterval) clearInterval(ptTimeTakenInterval);
   ptTimeTakenInterval = setInterval(() => {
     const now = new Date();
@@ -1675,49 +1880,9 @@ function ptStart() {
     ptTimeTakenSeconds++;
     document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
   }, 1000);
-  
   document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
   updateSendQcOutput();
   showToast('Timer started!');
-}
-
-function calculateEndTime(startDate, remainingSeconds) {
-  let d = new Date(startDate);
-  let remaining = remainingSeconds;
-  
-  while (remaining > 0) {
-    const day = d.getDay();
-    // Skip weekends
-    if (day === 0) { d.setDate(d.getDate() + 1); d.setHours(7, 0, 0, 0); continue; }
-    if (day === 6) { d.setDate(d.getDate() + 2); d.setHours(7, 0, 0, 0); continue; }
-    
-    const hour = d.getHours();
-    if (hour >= 16) { d.setDate(d.getDate() + 1); d.setHours(7, 0, 0, 0); continue; }
-    if (hour < 7) { d.setHours(7, 0, 0, 0); continue; }
-    
-    const endOfDay = new Date(d);
-    endOfDay.setHours(16, 0, 0, 0);
-    const availableSeconds = Math.floor((endOfDay - d) / 1000);
-    
-    if (remaining <= availableSeconds) {
-      d = new Date(d.getTime() + remaining * 1000);
-      remaining = 0;
-    } else {
-      remaining -= availableSeconds;
-      d.setDate(d.getDate() + 1);
-      d.setHours(7, 0, 0, 0);
-    }
-  }
-  return d;
-}
-
-function formatDateTo12h(d) {
-  let h = d.getHours();
-  const m = String(d.getMinutes()).padStart(2, '0');
-  const s = String(d.getSeconds()).padStart(2, '0');
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  h = h % 12 || 12;
-  return String(h).padStart(2, '0') + ':' + m + ':' + s + ' ' + ampm;
 }
 
 function ptReset() {
@@ -1728,8 +1893,6 @@ function ptReset() {
   document.getElementById('ptSlaAgreed').value = '';
   document.getElementById('ptTimeTaken').value = '';
   document.getElementById('ptRemaining').value = '';
-  document.getElementById('ptEndTime').value = '';
-  document.getElementById('ptResultRow').style.display = 'none';
   ptSlaSeconds = 0;
   ptRemainingSeconds = 0;
   ptTimeTakenSeconds = 0;
@@ -1778,16 +1941,12 @@ function ptAddSLA() {
     ptRemainingSeconds = newTotal - takenSeconds;
     if (ptRemainingSeconds < 0) ptRemainingSeconds = 0;
     document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
-    document.getElementById('ptResultRow').style.display = 'flex';
-    const endTime = calculateEndTime(new Date(), ptRemainingSeconds);
-    document.getElementById('ptEndTime').value = formatDateTo12h(endTime);
     updateSendQcOutput();
     showToast('SLA updated: +' + formatSecondsToHHMMSS(addSeconds));
   };
   overlay.querySelector('#slaCancelBtn').onclick = () => { document.body.removeChild(overlay); };
   overlay.addEventListener('click', (e) => { if (e.target === overlay) document.body.removeChild(overlay); });
   document.body.appendChild(overlay);
-  // Focus hours input
   setTimeout(() => document.getElementById('slaHours').focus(), 100);
 }
 
@@ -1796,28 +1955,39 @@ function updateSendQcOutput() {
   const biz = appState.bizName || '';
   const wf = appState.workflow || '';
   const sentFor = 'Sent For QC';
-  
-  // Use friendly format for QC, no paused/done text
   let remainingText = '';
-  if (ptRemainingSeconds > 0) {
-    remainingText = formatSecondsToFriendly(ptRemainingSeconds);
-  }
-  
+  if (ptRemainingSeconds > 0) remainingText = formatSecondsToFriendly(ptRemainingSeconds);
+
   let text = '';
   if (biz) text += biz + '\n';
   if (wf) text += wf + '\n';
   if (remainingText) text += 'Remaining Time: ' + remainingText + '\n';
   text += sentFor;
-  
-  const el = document.getElementById('sendQcText');
-  if (el) el.textContent = text;
+
+  // Update QC info list on home page
+  const qcList = document.getElementById('qcInfoList');
+  if (qcList) {
+    qcList.innerHTML = '';
+    if (biz) { const d = document.createElement('div'); d.innerHTML = '<strong>Business Name:</strong> ' + biz; qcList.appendChild(d); }
+    if (wf) { const d = document.createElement('div'); d.innerHTML = '<strong>Workflow Type:</strong> ' + wf; qcList.appendChild(d); }
+    if (remainingText) { const d = document.createElement('div'); d.innerHTML = '<strong>Time Remaining:</strong> ' + remainingText; qcList.appendChild(d); }
+    const d = document.createElement('div'); d.innerHTML = '<strong>Sent For QC</strong>'; qcList.appendChild(d);
+  }
 }
 
 function copyQcOutput() {
-  const text = document.getElementById('sendQcText').textContent;
+  const biz = appState.bizName || '';
+  const wf = appState.workflow || '';
+  let remainingText = '';
+  if (ptRemainingSeconds > 0) remainingText = formatSecondsToFriendly(ptRemainingSeconds);
+  let lines = [];
+  if (biz) lines.push(biz);
+  if (wf) lines.push(wf);
+  if (remainingText) lines.push(remainingText);
+  lines.push('Sent for QC');
+  const text = lines.join('\n');
   navigator.clipboard.writeText(text).then(() => showToast('QC info copied!'));
 }
 </script>
 </body>
 </html>
-
