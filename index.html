@@ -910,11 +910,36 @@ function syncSiteCommentsFromDOM() {
   }
 }
 
+function syncDevNotesFromDOM() {
+  const el = document.getElementById('finalNoteBody');
+  if (!el) return;
+  const html = el.innerHTML;
+  // Extract bullet points after "Dev Notes:" heading
+  const dnSection = html.match(/<b>\s*Dev Notes:\s*<\/b>([\s\S]*?)(?=<br>\s*<b>|<br>\s*<br>\s*<b>|$)/i);
+  if (!dnSection) return;
+  const bullets = dnSection[1].match(/•\s*([^<•]*)/g);
+  if (bullets) {
+    appState.devNotes = bullets.map(b => b.replace(/^•\s*/, '').trim()).filter(b => b.length > 0);
+  }
+}
+
+function syncPreviewLinkFromDOM() {
+  const el = document.getElementById('finalNoteBody');
+  if (!el) return;
+  const html = el.innerHTML;
+  const match = html.match(/<b>\s*Preview Link:\s*<\/b>\s*([^<]*)/i);
+  if (match) {
+    const extractedLink = match[1].trim();
+    document.getElementById('previewLink').value = extractedLink;
+    appState.previewLink = extractedLink;
+  }
+}
+
 function addSiteComment() {
   const no = document.getElementById('scNo').value.trim();
   const text = document.getElementById('scText').value.trim();
   if (!no || !text) return;
-  if (finalNoteWasEdited) syncSiteCommentsFromDOM();
+  if (finalNoteWasEdited) { syncSiteCommentsFromDOM(); syncDevNotesFromDOM(); syncPreviewLinkFromDOM(); }
   appState.siteComments.push({ no, text });
   appState.siteComments.sort((a, b) => parseInt(a.no) - parseInt(b.no));
   document.getElementById('scNo').value = '';
@@ -945,10 +970,34 @@ function addSiteComment() {
 function addDevNote() {
   const text = document.getElementById('devNoteText').value.trim();
   if (!text) return;
+  if (finalNoteWasEdited) { syncDevNotesFromDOM(); syncSiteCommentsFromDOM(); syncPreviewLinkFromDOM(); }
   appState.devNotes.push(text);
   document.getElementById('devNoteText').value = '';
-  finalNoteWasEdited = false;
-  updateFinalNote();
+  if (finalNoteWasEdited) {
+    const el = document.getElementById('finalNoteBody');
+    let html = el.innerHTML;
+    // Remove existing dev notes block
+    html = html.replace(/<div>\s*<b>\s*Dev Notes:\s*<\/b>\s*<\/div>/gi, '');
+    html = html.replace(/<b>\s*Dev Notes:\s*<\/b>\s*(<br\s*\/?>)?/gi, '');
+    html = html.replace(/<div>\s*•\s*[^<]*<\/div>/gi, '');
+    html = html.replace(/•\s*[^<]*(<br\s*\/?>)/gi, '');
+    // Build dev notes block
+    let dnBlock = '<b>Dev Notes:</b><br>';
+    appState.devNotes.forEach(n => { dnBlock += '• ' + n + '<br>'; });
+    // Insert after the title line
+    const titleEnd = html.match(/<b>[^<]*<\/b>\s*(<br\s*\/?>){1,2}/i);
+    if (titleEnd) {
+      const idx = html.indexOf(titleEnd[0]) + titleEnd[0].length;
+      html = html.slice(0, idx) + dnBlock + html.slice(idx);
+    } else {
+      html = dnBlock + html;
+    }
+    el.innerHTML = html;
+    appState.finalNoteContent = el.textContent;
+    updateSendQcOutput();
+  } else {
+    updateFinalNote();
+  }
   showToast('Developer note added!');
 }
 
@@ -965,7 +1014,7 @@ async function translateAndFix() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
+        'Authorization': 'Bearer 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'
       },
       body: JSON.stringify({
         model: 'gpt-5-nano',
@@ -1042,6 +1091,8 @@ function toggleEditFinalNote() {
     fnContainer.classList.remove('editing');
     finalNoteWasEdited = true;
     syncSiteCommentsFromDOM();
+    syncDevNotesFromDOM();
+    syncPreviewLinkFromDOM();
     appState.finalNoteContent = el.textContent;
     showToast('Final note saved!');
   } else {
@@ -1070,8 +1121,26 @@ function copyFinalNote() {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('previewLink').addEventListener('input', function() {
-    finalNoteWasEdited = false;
-    updateFinalNote();
+    const newLink = this.value.trim();
+    appState.previewLink = newLink;
+    if (finalNoteWasEdited) {
+      // Update preview link in-place in the edited notes
+      const el = document.getElementById('finalNoteBody');
+      let html = el.innerHTML;
+      // Remove existing preview link line
+      html = html.replace(/<div>\s*<b>\s*Preview Link:\s*<\/b>[^<]*<\/div>/gi, '');
+      html = html.replace(/<b>\s*Preview Link:\s*<\/b>[^<]*(<br\s*\/?>)?/gi, '');
+      // Add updated preview link at the end
+      html = html.replace(/(<br\s*\/?>|\s)*$/, '');
+      if (newLink) {
+        html += '<br><b>Preview Link:</b> ' + newLink + '<br>';
+      }
+      el.innerHTML = html;
+      appState.finalNoteContent = el.textContent;
+      updateSendQcOutput();
+    } else {
+      updateFinalNote();
+    }
   });
 
   // Auto-sync: when the final note editor is edited, extract preview link back to input field
