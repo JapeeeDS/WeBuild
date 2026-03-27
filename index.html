@@ -1010,40 +1010,20 @@ async function translateAndFix() {
   if (!text) { showToast('Please paste some text first'); return; }
   btn.classList.add('loading');
   try {
-    const response = await fetch('https://api.openai.com/v1/responses', {
+    const response = await fetch('/api/translate', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
-      },
-      body: JSON.stringify({
-        model: 'gpt-5-nano',
-        input: 'Translate the following text to English (if it is already in English, keep it as is). Fix any grammar, spelling, and punctuation errors. Return ONLY the corrected English text, nothing else:\n\n' + text,
-        store: true
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
     });
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error?.message || 'API request failed (' + response.status + ')');
+      throw new Error(errData.error || 'API request failed (' + response.status + ')');
     }
 
     const data = await response.json();
-    // Extract the output text from the response
-    let result = '';
-    if (data.output && Array.isArray(data.output)) {
-      for (const item of data.output) {
-        if (item.type === 'message' && item.content) {
-          for (const c of item.content) {
-            if (c.type === 'output_text') result += c.text;
-          }
-        }
-      }
-    }
-    if (!result) result = data.output_text || data.choices?.[0]?.message?.content || '';
-
-    if (result.trim()) {
-      input.value = result.trim();
+    if (data.result && data.result.trim()) {
+      input.value = data.result.trim();
       showToast('Translated & grammar fixed!');
     } else {
       showToast('No result returned from AI');
