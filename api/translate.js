@@ -16,24 +16,22 @@ export default async function handler(req, res) {
   });
 
   try {
-    const response = await client.responses.create({
+    const response = await client.chat.completions.create({
       model: "gpt-4.1-mini",
-      input:
-        "Translate the following text to English (if it is already in English, keep it as is). Fix grammar, spelling, and punctuation. Return ONLY the corrected text:\n\n" +
-        text,
+      messages: [
+        {
+          role: "system",
+          content:
+            "Translate the following text to English (if it is already in English, keep it as is). Fix grammar, spelling, and punctuation. Return ONLY the corrected text.",
+        },
+        {
+          role: "user",
+          content: text,
+        },
+      ],
     });
 
-    let result = "";
-
-    if (response.output) {
-      for (const item of response.output) {
-        if (item.type === "message") {
-          for (const c of item.content) {
-            if (c.type === "output_text") result += c.text;
-          }
-        }
-      }
-    }
+    const result = response.choices?.[0]?.message?.content?.trim() || "";
 
     if (!result) {
       return res.status(500).json({ error: "No result from AI" });
