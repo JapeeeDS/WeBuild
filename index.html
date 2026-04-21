@@ -753,6 +753,8 @@ function saveToStorage() {
     ptTimerRunning: ptTimerInterval !== null,
     ptTimeTakenSeconds: ptTimeTakenSeconds,
     ptTimeTakenRunning: ptTimeTakenInterval !== null,
+    ptAnchorTs: ptAnchorTs,
+    ptBaselineTakenSeconds: ptBaselineTakenSeconds,
     parserInput: document.getElementById('parserInput') ? document.getElementById('parserInput').value : '',
     scNo: document.getElementById('scNo') ? document.getElementById('scNo').value : '',
     scText: document.getElementById('scText') ? document.getElementById('scText').value : '',
@@ -811,25 +813,17 @@ function loadFromStorage() {
     if (data.ptRemainingSeconds) ptRemainingSeconds = data.ptRemainingSeconds;
     if (data.ptStartTimeStr) ptStartTimeStr = data.ptStartTimeStr;
     if (data.ptTimeTakenSeconds) ptTimeTakenSeconds = data.ptTimeTakenSeconds;
-    if (data.ptTimerRunning && ptRemainingSeconds > 0) {
+    if (data.ptAnchorTs) ptAnchorTs = data.ptAnchorTs;
+    if (data.ptBaselineTakenSeconds) ptBaselineTakenSeconds = data.ptBaselineTakenSeconds;
+    // Resume the timer from the wall-clock anchor so any time that passed
+    // while the tab/laptop was off is counted (within working hours).
+    if (data.ptTimerRunning && ptAnchorTs && ptSlaSeconds > 0) {
       if (ptTimerInterval) clearInterval(ptTimerInterval);
-      ptTimerInterval = setInterval(() => {
-        const now = new Date();
-        if (!isWorkingTime(now)) { document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds); updateSendQcOutput(); return; }
-        ptRemainingSeconds--;
-        if (ptRemainingSeconds <= 0) { ptRemainingSeconds = 0; document.getElementById('ptRemaining').value = '00:00:00'; clearInterval(ptTimerInterval); ptTimerInterval = null; updateSendQcOutput(); return; }
-        document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
-        updateSendQcOutput();
-      }, 1000);
-    }
-    if (data.ptTimeTakenRunning) {
-      if (ptTimeTakenInterval) clearInterval(ptTimeTakenInterval);
-      ptTimeTakenInterval = setInterval(() => {
-        const now = new Date();
-        if (!isWorkingTime(now)) return;
-        ptTimeTakenSeconds++;
-        document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
-      }, 1000);
+      ptRecomputeFromAnchor();
+      if (ptRemainingSeconds > 0) {
+        ptTimerInterval = setInterval(ptRecomputeFromAnchor, 1000);
+        ptTimeTakenInterval = ptTimerInterval;
+      }
     }
     if (data.parserInput) document.getElementById('parserInput').value = data.parserInput;
     if (data.scNo) document.getElementById('scNo').value = data.scNo;
@@ -2345,6 +2339,46 @@ let ptStartTimeStr = '';
 let ptRemainingSeconds = 0;
 let ptTimeTakenSeconds = 0;
 let ptTimeTakenInterval = null;
+// Wall-clock anchor so the SLA keeps counting even if the tab was closed,
+// the laptop was shut down, or the user was idle. Only ptReset() clears it.
+let ptAnchorTs = 0;            // ms timestamp when the timer was (re)started
+let ptBaselineTakenSeconds = 0; // ptTimeTakenSeconds value at the anchor
+
+// Working-seconds elapsed between two timestamps, honoring isWorkingTime().
+// Walks the interval in <=10-min chunks and only counts chunks whose midpoint
+// falls inside working hours, which mirrors the per-second behavior of the
+// existing tick without iterating second-by-second across long idle gaps.
+function workingSecondsBetween(startMs, endMs) {
+  if (!startMs || endMs <= startMs) return 0;
+  let total = 0;
+  const STEP = 10 * 60 * 1000; // 10 minutes
+  let cursor = startMs;
+  while (cursor < endMs) {
+    const next = Math.min(cursor + STEP, endMs);
+    const mid = new Date((cursor + next) / 2);
+    if (isWorkingTime(mid)) total += Math.floor((next - cursor) / 1000);
+    cursor = next;
+  }
+  return total;
+}
+
+// Recompute taken/remaining from the wall-clock anchor and update the UI.
+function ptRecomputeFromAnchor() {
+  if (!ptAnchorTs) return;
+  const elapsed = workingSecondsBetween(ptAnchorTs, Date.now());
+  ptTimeTakenSeconds = ptBaselineTakenSeconds + elapsed;
+  ptRemainingSeconds = ptSlaSeconds - ptTimeTakenSeconds;
+  if (ptRemainingSeconds <= 0) {
+    ptRemainingSeconds = 0;
+    document.getElementById('ptRemaining').value = '00:00:00';
+    if (ptTimerInterval) { clearInterval(ptTimerInterval); ptTimerInterval = null; }
+    if (ptTimeTakenInterval) { clearInterval(ptTimeTakenInterval); ptTimeTakenInterval = null; }
+  } else {
+    document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+  }
+  document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
+  updateSendQcOutput();
+}
 
 function ptParse() {
   const raw = document.getElementById('ptInput').value.trim();
@@ -2400,8 +2434,12 @@ function ptStart() {
   if (!sla) { showToast('No SLA time to start'); return; }
   const slaSeconds = parseTimeToSeconds(sla);
   const takenSeconds = parseTimeToSeconds(timeTaken);
+  ptSlaSeconds = slaSeconds;
   ptTimeTakenSeconds = takenSeconds;
   ptRemainingSeconds = slaSeconds - takenSeconds;
+  // Anchor to wall-clock so elapsed time survives idle/closed/shutdown.
+  ptAnchorTs = Date.now();
+  ptBaselineTakenSeconds = takenSeconds;
   if (ptRemainingSeconds <= 0) {
     ptRemainingSeconds = 0;
     document.getElementById('ptRemaining').value = '00:00:00 (Exceeded)';
@@ -2409,23 +2447,10 @@ function ptStart() {
     return;
   }
   if (ptTimerInterval) clearInterval(ptTimerInterval);
-  ptTimerInterval = setInterval(() => {
-    const now = new Date();
-    if (!isWorkingTime(now)) { document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds); updateSendQcOutput(); return; }
-    ptRemainingSeconds--;
-    if (ptRemainingSeconds <= 0) { ptRemainingSeconds = 0; document.getElementById('ptRemaining').value = '00:00:00'; clearInterval(ptTimerInterval); ptTimerInterval = null; updateSendQcOutput(); return; }
-    document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
-    updateSendQcOutput();
-  }, 1000);
+  ptTimerInterval = setInterval(ptRecomputeFromAnchor, 1000);
   if (ptTimeTakenInterval) clearInterval(ptTimeTakenInterval);
-  ptTimeTakenInterval = setInterval(() => {
-    const now = new Date();
-    if (!isWorkingTime(now)) return;
-    ptTimeTakenSeconds++;
-    document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
-  }, 1000);
-  document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
-  updateSendQcOutput();
+  ptTimeTakenInterval = ptTimerInterval; // single tick handles both fields
+  ptRecomputeFromAnchor();
   showToast('Timer started!');
 }
 
@@ -2441,6 +2466,8 @@ function ptReset() {
   ptRemainingSeconds = 0;
   ptTimeTakenSeconds = 0;
   ptStartTimeStr = '';
+  ptAnchorTs = 0;
+  ptBaselineTakenSeconds = 0;
   showToast('Parse time reset!');
 }
 
