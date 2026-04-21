@@ -386,6 +386,34 @@ body.rebuild-blue .login-card button:hover{background:#00a00d}
 .page-tab-content{display:none}
 .page-tab-content.active{display:block}
 
+/* ===== CODES PAGE ===== */
+.codes-page{padding:8px 4px}
+.codes-header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.codes-sub{font-size:12px;color:#888;margin-top:6px}
+.codes-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.codes-actions input{background:#1a1a1a;border:1px solid #555;border-radius:8px;padding:10px 14px;color:#fff;font-size:13px;outline:none;min-width:240px}
+.codes-actions input:focus{border-color:#009C0C}
+.codes-refresh-btn{background:#009C0C;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
+.codes-refresh-btn:hover{background:#00a00d}
+.codes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px}
+.code-card{background:#1a1a1a;border:1px solid #555;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s, transform .2s}
+.code-card:hover{border-color:#009C0C}
+.code-card-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#222;border-bottom:1px solid #333;gap:8px}
+.code-card-head h3{font-size:13px;font-weight:800;color:#009C0C;letter-spacing:0.5px;text-transform:uppercase;margin:0;flex:1;word-break:break-word}
+.code-card-head .copy-btn{background:#009C0C;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s;white-space:nowrap}
+.code-card-head .copy-btn:hover{background:#00a00d;transform:scale(1.05)}
+.code-card-head .copy-btn.copied{background:#0a7d12}
+.code-card pre{margin:0;padding:14px;background:#0f0f0f;color:#d8e8d8;font-family:'Consolas','Monaco','Courier New',monospace;font-size:12px;line-height:1.5;max-height:280px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.codes-empty{grid-column:1/-1;text-align:center;color:#888;padding:40px;font-size:14px}
+body.light-mode .codes-actions input{background:#fff;border-color:#d8dde3;color:#1a1a1a}
+body.light-mode .code-card{background:#fff;border-color:#d8dde3}
+body.light-mode .code-card-head{background:#f4f5f7;border-bottom-color:#d8dde3}
+body.light-mode .code-card pre{background:#fafbfc;color:#1a1a1a;border-top:1px solid #eee}
+body.light-mode .codes-sub{color:#5a6470}
+body.rebuild-blue .code-card-head h3{color:#009C0C}
+body.rebuild-blue .code-card:hover{border-color:#009C0C}
+
+
 /* Toast */
 .toast{position:fixed;top:20px;right:20px;background:#009C0C;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
@@ -496,6 +524,7 @@ body.rebuild-blue .login-card button:hover{background:#00a00d}
         <button class="nav-icon" onclick="switchPage(2)" title="Website Upgrade Checklist" id="navBtn2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
         <button class="nav-icon" onclick="switchPage(4)" title="Rebuild Checklist" id="navBtn4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="3" x2="21" y2="21"/><line x1="12" y1="12" x2="18" y2="6"/><line x1="12" y1="12" x2="6" y2="18"/></svg></button>
         <button class="nav-icon" onclick="switchPage(3)" title="Parser" id="navBtn3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+        <button class="nav-icon" onclick="switchPage(5)" title="Codes" id="navBtn5"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg></button>
       </div>
       <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle light/dark mode" id="themeToggleBtn">
         <svg id="themeIconDark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -669,6 +698,21 @@ body.rebuild-blue .login-card button:hover{background:#00a00d}
 
       <!-- Page 4: Rebuild Checklist -->
       <div id="page4" style="display:none" class="checklist-page"></div>
+
+      <!-- Page 5: Codes (synced from Google Sheet) -->
+      <div id="page5" style="display:none" class="codes-page">
+        <div class="codes-header">
+          <div>
+            <h1 style="margin:0">Codes</h1>
+            <div class="codes-sub" id="codesStatus">Loading from Google Sheet…</div>
+          </div>
+          <div class="codes-actions">
+            <input type="text" id="codesSearch" placeholder="Search usage or code…" oninput="filterCodes()"/>
+            <button class="codes-refresh-btn" onclick="loadCodes(true)" title="Refresh now">⟳ Refresh</button>
+          </div>
+        </div>
+        <div class="codes-grid" id="codesGrid"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -919,7 +963,7 @@ function switchPage(idx) {
   const btn = document.getElementById('navBtn' + idx);
   if (btn.classList.contains('disabled')) return;
   currentPage = idx;
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     document.getElementById('page' + i).style.display = i === idx ? 'block' : 'none';
     document.getElementById('navBtn' + i).classList.toggle('active', i === idx);
   }
@@ -927,6 +971,7 @@ function switchPage(idx) {
   if (idx === 1 && !nb_rendered) renderNewBuildChecklist();
   if (idx === 2 && !up_rendered) renderUpgradeChecklist();
   if (idx === 4 && !rb_rendered) renderRebuildChecklist();
+  if (idx === 5) loadCodes(false);
 }
 
 // ===== WORKFLOW =====
@@ -2514,6 +2559,121 @@ document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('webuild_theme') || 'dark';
   applyTheme(saved);
 });
+
+// ===== CODES PAGE (Google Sheet sync) =====
+// Sheet: https://docs.google.com/spreadsheets/d/1Vq6OziXd5S-DlG2vUm5tLtTxkMK2ViAg_4URmeeFXmY
+const CODES_SHEET_ID = '1Vq6OziXd5S-DlG2vUm5tLtTxkMK2ViAg_4URmeeFXmY';
+const CODES_CSV_URL = 'https://docs.google.com/spreadsheets/d/' + CODES_SHEET_ID + '/gviz/tq?tqx=out:csv';
+let codesData = [];
+let codesLastSig = '';
+let codesPollTimer = null;
+
+function parseCodesCSV(text){
+  const rows = []; let row = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (inQ){
+      if (c === '"'){
+        if (text[i+1] === '"'){ cur += '"'; i++; } else { inQ = false; }
+      } else { cur += c; }
+    } else {
+      if (c === '"'){ inQ = true; }
+      else if (c === ','){ row.push(cur); cur = ''; }
+      else if (c === '\n'){ row.push(cur); rows.push(row); row = []; cur = ''; }
+      else if (c === '\r'){ /* skip */ }
+      else { cur += c; }
+    }
+  }
+  if (cur.length || row.length){ row.push(cur); rows.push(row); }
+  return rows;
+}
+
+async function loadCodes(force){
+  const status = document.getElementById('codesStatus');
+  if (!status) return;
+  try {
+    const url = CODES_CSV_URL + '&_=' + Date.now();
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const txt = await res.text();
+    const sig = txt.length + ':' + txt.slice(0, 64);
+    if (!force && sig === codesLastSig) {
+      status.textContent = 'Synced • ' + new Date().toLocaleTimeString();
+      return;
+    }
+    codesLastSig = sig;
+    const rows = parseCodesCSV(txt).filter(r => r.some(c => (c||'').trim() !== ''));
+    if (rows.length === 0){ codesData = []; renderCodes(); return; }
+    const header = rows[0].map(s => (s||'').trim().toLowerCase());
+    const startIdx = (header[0] === 'usage' || header[1] === 'code') ? 1 : 0;
+    codesData = rows.slice(startIdx).map(r => ({
+      usage: (r[0] || '').trim(),
+      code: (r[1] || '').replace(/\r/g,'').trim()
+    })).filter(x => x.usage || x.code);
+    renderCodes();
+    status.textContent = 'Synced with Google Sheet • Last updated ' + new Date().toLocaleTimeString();
+  } catch (e){
+    status.textContent = 'Could not load sheet (' + e.message + '). Make sure sharing is set to "Anyone with the link".';
+  }
+}
+
+function escapeHtmlCodes(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderCodes(){
+  const grid = document.getElementById('codesGrid');
+  if (!grid) return;
+  const q = (document.getElementById('codesSearch').value || '').toLowerCase().trim();
+  const items = codesData.filter(it =>
+    !q || it.usage.toLowerCase().includes(q) || it.code.toLowerCase().includes(q)
+  );
+  if (items.length === 0){
+    grid.innerHTML = '<div class="codes-empty">' + (codesData.length ? 'No matches.' : 'No code snippets found in the sheet yet.') + '</div>';
+    return;
+  }
+  grid.innerHTML = items.map((it, idx) => `
+    <div class="code-card">
+      <div class="code-card-head">
+        <h3>${escapeHtmlCodes(it.usage || 'Untitled')}</h3>
+        <button class="copy-btn" onclick="copyCodeSnippet(this, ${idx})">Copy</button>
+      </div>
+      <pre>${escapeHtmlCodes(it.code)}</pre>
+    </div>
+  `).join('');
+}
+
+function filterCodes(){ renderCodes(); }
+
+function copyCodeSnippet(btn, idx){
+  const q = (document.getElementById('codesSearch').value || '').toLowerCase().trim();
+  const items = codesData.filter(it =>
+    !q || it.usage.toLowerCase().includes(q) || it.code.toLowerCase().includes(q)
+  );
+  const txt = items[idx] ? items[idx].code : '';
+  const done = () => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1400);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done, () => codesFallbackCopy(txt, done));
+  } else { codesFallbackCopy(txt, done); }
+}
+function codesFallbackCopy(txt, cb){
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta); cb && cb();
+}
+
+// Poll the sheet every 15s while the Codes tab is open for near real-time sync.
+if (!window.__codesPollStarted){
+  window.__codesPollStarted = true;
+  setInterval(() => { if (typeof currentPage !== 'undefined' && currentPage === 5) loadCodes(false); }, 15000);
+}
 </script>
 </body>
 </html>
