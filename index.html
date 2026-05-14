@@ -488,6 +488,24 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
   .section-header{font-size:13px;padding:6px 12px}
   .dev-note-text,.sc-text{min-height:60px;font-size:13px}
 }
+#scNotepad:empty:before,.rich-notepad-area:empty:before{content:attr(data-placeholder);color:#777;pointer-events:none}
+/* Site Comments + Checklist Progress side-by-side layout */
+.sc-layout{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.sc-layout.single{grid-template-columns:1fr}
+.sc-left{display:flex;flex-direction:column;min-width:0}
+.sc-right{display:flex;flex-direction:column;min-width:0}
+@media (max-width:900px){.sc-layout{grid-template-columns:1fr}}
+#scNotepad ul,#scNotepad ol,.rich-notepad-area ul,.rich-notepad-area ol{padding-left:24px;margin:6px 0}
+#scNotepad li,.rich-notepad-area li{margin:2px 0}
+#scNotepad h2,.rich-notepad-area h2{font-size:20px;font-weight:800;margin:8px 0 4px}
+#scNotepad h3,.rich-notepad-area h3{font-size:16px;font-weight:700;margin:6px 0 3px}
+#scNotepad blockquote,.rich-notepad-area blockquote{border-left:3px solid #009C0C;margin:6px 0;padding:4px 10px;color:#ddd;background:#222}
+#scNotepad p,.rich-notepad-area p{margin:4px 0}
+.rich-notepad-wrap{margin-top:12px;border:1px solid #555;border-radius:10px;background:#1a1a1a;overflow:hidden}
+.rich-notepad-toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#222;border-bottom:1px solid #444}
+.rich-notepad-toolbar button,.rich-notepad-toolbar select{background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:13px}
+.rich-notepad-toolbar .sep{width:1px;background:#444;margin:0 4px}
+.rich-notepad-area{min-height:140px;max-height:300px;overflow-y:auto;padding:14px 16px;color:#fff;font-size:14px;line-height:1.55;outline:none}
 </style>
 </head>
 <body>
@@ -618,17 +636,17 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
           </div>
         </div>
 
-        <!-- Developer Notes Section -->
-        <div class="dev-notes-banner">Developers Notes:</div>
-        <div class="dev-notes-body">
+        <!-- Developer Notes Section (legacy — fully hidden, kept for state compatibility) -->
+        <div class="dev-notes-banner" id="devNotesBanner" style="display:none">Developers Notes:</div>
+        <div class="dev-notes-body" id="devNotesBody" style="display:none">
           <div class="dev-notes-layout">
             <!-- Left column -->
             <div style="display:flex;flex-direction:column;gap:16px">
-              <div>
+              <div style="display:none">
                 <div class="field-label">Preview Link:</div>
                 <input type="text" class="field-input" id="previewLink" placeholder="https://..."/>
               </div>
-              <div>
+              <div style="display:none">
                 <div class="field-label">Site Comments</div>
                 <div class="site-comment-row">
                   <input type="text" class="sc-no" id="scNo" placeholder="No."/>
@@ -638,7 +656,7 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
                   <button class="add-btn" onclick="addSiteComment()" title="Add to Final Note">+</button>
                 </div>
               </div>
-              <div>
+              <div style="display:none">
                 <div class="field-label">Dev Notes:</div>
                 <div class="dev-note-row">
                   <textarea class="dev-note-text" id="devNoteText" placeholder="Enter developer note..."></textarea>
@@ -647,20 +665,10 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
                   <button class="add-btn" onclick="addDevNote()" title="Add to Final Note">+</button>
                 </div>
               </div>
-              <div>
-                <div class="field-label">Checklist Progress</div>
-                <div class="progress-line-box">
-                  <div class="progress-line-header">
-                    <span id="progressLineTitle">Select a workflow</span>
-                    <span class="progress-line-pct" id="progressLinePct">0%</span>
-                  </div>
-                  <canvas id="progressLineCanvas" width="520" height="160"></canvas>
-                </div>
-              </div>
             </div>
 
-            <!-- Right column: Final Note -->
-            <div class="final-note">
+            <!-- Right column: Final Note (hidden — replaced by Site Comments + Notepad below) -->
+            <div class="final-note" style="display:none">
               <div class="final-note-header">
                 <span>Notes</span>
                 <div class="fn-actions">
@@ -670,6 +678,59 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
               </div>
               <div class="final-note-body" id="finalNoteBody"></div>
             </div>
+          </div>
+        </div>
+
+        <!-- Site Comments Section (shown for ALL workflows) -->
+        <div class="dev-notes-banner" id="siteCommentsBanner">Site Comments:</div>
+        <div class="dev-notes-body" id="siteCommentsBody">
+          <div class="sc-layout" id="scLayout">
+          <div class="sc-left">
+          <div class="cl-add-row">
+            <input type="number" id="scNoteNo" placeholder="No." style="max-width:90px"/>
+            <input type="text" id="scNoteText" placeholder="Add site comment..."/>
+            <button onclick="addSiteCommentNote()">Add +</button>
+            <button onclick="saveSiteCommentsPDF()" style="background:#009C0C;border-color:#009C0C">Save</button>
+          </div>
+          <div id="scNotesList" style="display:flex;flex-direction:column;gap:8px;margin-top:14px"></div>
+
+          <div id="scProgressCol" style="margin-top:18px">
+            <div class="field-label">Checklist Progress</div>
+            <div class="progress-line-box">
+              <div class="progress-line-header">
+                <span id="progressLineTitle">Select a workflow</span>
+                <span class="progress-line-pct" id="progressLinePct">0%</span>
+              </div>
+              <canvas id="progressLineCanvas" width="520" height="160"></canvas>
+            </div>
+          </div>
+          </div>
+          <div class="sc-right">
+            <!-- Rich-text notepad -->
+            <div style="border:1px solid #555;border-radius:10px;background:#1a1a1a;overflow:hidden">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#222;border-bottom:1px solid #444">
+                <button type="button" onclick="scNotepadCmd('bold')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;font-weight:700;cursor:pointer" title="Bold (Ctrl+B)">B</button>
+                <button type="button" onclick="scNotepadCmd('italic')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;font-style:italic;cursor:pointer" title="Italic (Ctrl+I)">I</button>
+                <button type="button" onclick="scNotepadCmd('underline')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;text-decoration:underline;cursor:pointer" title="Underline (Ctrl+U)">U</button>
+                <button type="button" onclick="scNotepadCmd('strikeThrough')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;text-decoration:line-through;cursor:pointer" title="Strikethrough">S</button>
+                <span style="width:1px;background:#444;margin:0 4px"></span>
+                <button type="button" onclick="scNotepadCmd('insertUnorderedList')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;cursor:pointer" title="Bullet list">• List</button>
+                <button type="button" onclick="scNotepadCmd('insertOrderedList')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;cursor:pointer" title="Numbered list">1. List</button>
+                <span style="width:1px;background:#444;margin:0 4px"></span>
+                <select onchange="scNotepadCmd('formatBlock', this.value); this.selectedIndex=0" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 8px;cursor:pointer">
+                  <option value="">Style…</option>
+                  <option value="H2">Heading</option>
+                  <option value="H3">Subheading</option>
+                  <option value="P">Paragraph</option>
+                  <option value="BLOCKQUOTE">Quote</option>
+                </select>
+              </div>
+              <div id="scNotepad" contenteditable="true" spellcheck="true"
+                   style="min-height:160px;max-height:340px;overflow-y:auto;padding:14px 16px;color:#fff;font-size:14px;line-height:1.55;outline:none"
+                   oninput="appState.siteCommentsNotepad = this.innerHTML"
+                   data-placeholder="Type your notes here. Use the toolbar for bold, italics, lists…"></div>
+            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -726,7 +787,8 @@ let appState = {
   previewLink: '',
   siteComments: [],
   devNotes: [],
-  finalNoteContent: ''
+  finalNoteContent: '',
+  siteCommentsNotepad: ''
 };
 let finalNoteWasEdited = false;
 
@@ -781,7 +843,10 @@ function saveToStorage() {
     rb_devNotes: rb_devNotes.map(i=>({name:i.name,status:i.status})),
     rb_blogsAnswer: rb_blogsAnswer,
     rb_dynamicAnswer: rb_dynamicAnswer,
-    rb_parsedItems: rb_parsedItems
+    rb_parsedItems: rb_parsedItems,
+    nb_devNotesRich: nb_devNotesRich,
+    up_devNotesRich: up_devNotesRich,
+    rb_devNotesRich: rb_devNotesRich
   };
   localStorage.setItem('webuild_data', JSON.stringify(data));
 }
@@ -864,13 +929,16 @@ function loadFromStorage() {
     if (data.rb_blogsAnswer !== undefined) rb_blogsAnswer = data.rb_blogsAnswer;
     if (data.rb_dynamicAnswer !== undefined) rb_dynamicAnswer = data.rb_dynamicAnswer;
     if (data.rb_parsedItems) rb_parsedItems = data.rb_parsedItems;
-    if (rb_blogsAnswer !== null || rb_dynamicAnswer !== null || rb_devNotes.length > 0 || Object.values(rb_data).some(c => c.items.some(i => i.status === 'Done'))) {
+    if (data.nb_devNotesRich) nb_devNotesRich = data.nb_devNotesRich;
+    if (data.up_devNotesRich) up_devNotesRich = data.up_devNotesRich;
+    if (data.rb_devNotesRich) rb_devNotesRich = data.rb_devNotesRich;
+    if (rb_blogsAnswer !== null || rb_dynamicAnswer !== null || rb_devNotes.length > 0 || rb_devNotesRich || Object.values(rb_data).some(c => c.items.some(i => i.status === 'Done'))) {
       renderRebuildChecklist();
     }
-    if (nb_blogsAnswer !== null || nb_dynamicAnswer !== null || nb_devNotes.length > 0 || Object.values(nb_data).some(c => c.items.some(i => i.status === 'Done'))) {
+    if (nb_blogsAnswer !== null || nb_dynamicAnswer !== null || nb_devNotes.length > 0 || nb_devNotesRich || Object.values(nb_data).some(c => c.items.some(i => i.status === 'Done'))) {
       renderNewBuildChecklist();
     }
-    if (up_manualAnswer !== null || up_devNotes.length > 0 || Object.values(up_data).some(c => c.items.some(i => i.status === 'Done'))) {
+    if (up_manualAnswer !== null || up_devNotes.length > 0 || up_devNotesRich || Object.values(up_data).some(c => c.items.some(i => i.status === 'Done'))) {
       renderUpgradeChecklist();
     }
     updateSendQcOutput();
@@ -897,7 +965,7 @@ function clearAllData() {
   const savedDevName = appState.devName;
   const savedBizName = appState.bizName;
   localStorage.removeItem('webuild_data');
-  appState = { devName: savedDevName, bizName: savedBizName, workflow: '', previewLink: '', siteComments: [], devNotes: [], finalNoteContent: '' };
+  appState = { devName: savedDevName, bizName: savedBizName, workflow: '', previewLink: '', siteComments: [], devNotes: [], finalNoteContent: '', siteCommentsNotepad: '' };
   finalNoteWasEdited = false;
   nb_parsedItems = [];
   up_parsedItems = [];
@@ -941,6 +1009,7 @@ function doLogin() {
   document.getElementById('appPage').style.display = 'block';
   updateFinalNote();
   updateDashboardCharts();
+  renderSiteCommentNotes();
 }
 
 // ===== TOAST =====
@@ -1011,9 +1080,347 @@ function selectWorkflow(wf) {
     btn4.classList.add('disabled');
     if (currentPage === 1 || currentPage === 2 || currentPage === 4) switchPage(0);
   }
+  toggleSiteCommentsContainer();
   updateFinalNote();
   updateSendQcOutput();
   updateDashboardCharts();
+}
+
+function toggleSiteCommentsContainer() {
+  // Site Comments + Notepad are now used for ALL workflows.
+  // The legacy Dev Notes / Preview Link / Final Note containers are hidden in markup.
+  renderSiteCommentNotes();
+  const np = document.getElementById('scNotepad');
+  if (np && (appState.siteCommentsNotepad || '') !== np.innerHTML) {
+    np.innerHTML = appState.siteCommentsNotepad || '';
+  }
+  // Show Checklist Progress column only for workflows that have a checklist
+  const wf = appState.workflow;
+  const hasChecklist = (wf === 'New Build' || wf === 'Rebuild' || wf === 'Website Upgrade');
+  const layout = document.getElementById('scLayout');
+  const progCol = document.getElementById('scProgressCol');
+  if (progCol) progCol.style.display = hasChecklist ? '' : 'none';
+  if (layout) layout.classList.remove('single');
+  if (hasChecklist) { try { drawProgressLine(); } catch(e){} }
+}
+
+function addSiteCommentNote() {
+  const noEl = document.getElementById('scNoteNo');
+  const txtEl = document.getElementById('scNoteText');
+  const no = (noEl.value || '').trim();
+  if (!no) { showToast('Please enter a number first'); noEl.focus(); return; }
+  const text = (txtEl.value || '').trim();
+  if (!text) { showToast('Please enter a comment'); txtEl.focus(); return; }
+  if (appState.siteComments.some(sc => String(sc.no) === String(no))) {
+    showToast('Site Comment #' + no + ' already exists'); noEl.focus(); return;
+  }
+  if (finalNoteWasEdited) { syncSiteCommentsFromDOM(); syncDevNotesFromDOM(); syncPreviewLinkFromDOM(); }
+  appState.siteComments.push({ no, text, status: 'Ongoing' });
+  appState.siteComments.sort((a, b) => parseInt(a.no) - parseInt(b.no));
+  noEl.value = ''; txtEl.value = '';
+  renderSiteCommentNotes();
+  updateFinalNote();
+  showToast('Site comment added!');
+}
+
+function removeSiteCommentNote(idx) {
+  appState.siteComments.splice(idx, 1);
+  renderSiteCommentNotes();
+  updateFinalNote();
+}
+
+function toggleSiteCommentStatus(idx) {
+  const sc = appState.siteComments[idx]; if (!sc) return;
+  sc.status = (sc.status === 'Done') ? 'Ongoing' : 'Done';
+  renderSiteCommentNotes();
+  updateFinalNote();
+}
+
+function editSiteCommentText(idx, newText) {
+  const sc = appState.siteComments[idx]; if (!sc) return;
+  sc.text = (newText || '').trim();
+  updateFinalNote();
+}
+
+function renderSiteCommentNotes() {
+  const list = document.getElementById('scNotesList');
+  if (!list) return;
+  // Always re-sort to keep numerical order
+  appState.siteComments.sort((a, b) => parseInt(a.no) - parseInt(b.no));
+  list.innerHTML = '';
+  appState.siteComments.forEach((sc, idx) => {
+    const div = document.createElement('div');
+    div.className = 'item item-note';
+    const sp = document.createElement('span');
+    const b = document.createElement('b');
+    b.textContent = 'Site Comment #' + sc.no + ': ';
+    sp.appendChild(b);
+    const txt = document.createElement('span');
+    txt.contentEditable = 'true';
+    txt.spellcheck = true;
+    txt.style.cssText = 'outline:none;border-bottom:1px dashed transparent;padding:0 2px;cursor:text';
+    txt.textContent = sc.text;
+    txt.addEventListener('focus', () => { txt.style.borderBottomColor = '#009C0C'; });
+    txt.addEventListener('blur', () => { txt.style.borderBottomColor = 'transparent'; editSiteCommentText(idx, txt.textContent); });
+    sp.appendChild(txt);
+
+    const status = (sc.status === 'Done') ? 'Done' : 'Ongoing';
+    const statusBtn = document.createElement('button');
+    statusBtn.className = 'status-btn ' + (status === 'Done' ? 'status-done' : 'status-ongoing');
+    statusBtn.textContent = status;
+    statusBtn.title = 'Toggle Done / Ongoing';
+    statusBtn.onclick = () => toggleSiteCommentStatus(idx);
+
+    const delBtn = document.createElement('button');
+    delBtn.title = 'Remove';
+    delBtn.style.cssText = 'background:transparent;border:none;color:#dc3545;font-size:18px;cursor:pointer;padding:2px 6px;flex-shrink:0';
+    delBtn.innerHTML = '🗑️';
+    delBtn.onclick = () => removeSiteCommentNote(idx);
+
+    div.append(sp, statusBtn, delBtn);
+    list.appendChild(div);
+  });
+}
+
+function saveSiteCommentsPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 14;
+  doc.setFontSize(18);
+  doc.text('Site Comments', 14, y); y += 10;
+  doc.setFontSize(10); doc.setTextColor(100);
+  if (appState.devName) { doc.text('Developer Name: ' + appState.devName, 14, y); y += 6; }
+  if (appState.bizName) { doc.text('Business Name: ' + appState.bizName, 14, y); y += 6; }
+  if (appState.workflow) { doc.text('Workflow: ' + appState.workflow, 14, y); y += 6; }
+  y += 4; doc.setTextColor(0); doc.setFontSize(11);
+  if (!appState.siteComments.length) {
+    doc.text('No site comments added.', 14, y);
+  } else {
+    appState.siteComments.forEach(sc => {
+      const t = 'Site Comment #' + sc.no + ': ' + sc.text;
+      const lines = doc.splitTextToSize(t, 180);
+      doc.text(lines, 14, y); y += lines.length * 6 + 2;
+      if (y > 280) { doc.addPage(); y = 14; }
+    });
+  }
+  // Sync notepad from DOM
+  const npEl = document.getElementById('scNotepad');
+  if (npEl) appState.siteCommentsNotepad = npEl.innerHTML;
+
+  const npHtml = (appState.siteCommentsNotepad || '').trim();
+  if (npHtml) {
+    y += 6;
+    if (y > 270) { doc.addPage(); y = 14; }
+    doc.setFontSize(13); doc.setFont(undefined, 'bold');
+    doc.text('Notes', 14, y); y += 6;
+    doc.setFont(undefined, 'normal'); doc.setFontSize(11);
+    y = renderRichTextToPDF(doc, npHtml, 14, y, 180);
+  }
+
+  // Filename matching the workflow checklist convention
+  const initials = appState.devName ? appState.devName.split(/\s+/).map(w => w[0]).join('').toUpperCase() : '';
+  const biz = appState.bizName || '';
+  const wfMap = { 'Change Request':'change-request', 'Reworks':'reworks', 'New Build':'new-build', 'Rebuild':'rebuild', 'Website Upgrade':'website-upgrade' };
+  const wfSlug = wfMap[appState.workflow] || 'site-comments';
+  let fileName = wfSlug + '-checklist';
+  if (initials || biz) fileName = (initials && biz ? initials + '-' + biz : initials || biz).replace(/[^a-zA-Z0-9\-_ ]/g, '');
+  doc.save(fileName + '.pdf');
+  showToast('Site comments saved!');
+}
+
+// Toolbar command for the rich-text notepad
+function scNotepadCmd(cmd, value) {
+  const np = document.getElementById('scNotepad');
+  if (!np) return;
+  np.focus();
+  try { document.execCommand(cmd, false, value || null); } catch (e) {}
+  appState.siteCommentsNotepad = np.innerHTML;
+}
+
+// Build a reusable rich-text notepad. onChange receives latest HTML.
+function buildRichNotepad(id, initialHTML, onChange, placeholder) {
+  const wrap = document.createElement('div'); wrap.className = 'rich-notepad-wrap';
+  const tb = document.createElement('div'); tb.className = 'rich-notepad-toolbar';
+  const area = document.createElement('div');
+  area.className = 'rich-notepad-area';
+  area.id = id;
+  area.contentEditable = 'true';
+  area.spellcheck = true;
+  area.setAttribute('data-placeholder', placeholder || 'Type your notes here. Use the toolbar for bold, italics, lists…');
+  area.innerHTML = initialHTML || '';
+  area.addEventListener('input', () => { onChange(area.innerHTML); });
+
+  const cmd = (c, v) => { area.focus(); try { document.execCommand(c, false, v || null); } catch (e) {} onChange(area.innerHTML); };
+  const mkBtn = (label, c, title, styleExtra) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.title = title || c;
+    if (styleExtra) b.style.cssText += styleExtra;
+    b.onclick = () => cmd(c);
+    return b;
+  };
+  tb.appendChild(mkBtn('B', 'bold', 'Bold (Ctrl+B)', 'font-weight:700'));
+  tb.appendChild(mkBtn('I', 'italic', 'Italic (Ctrl+I)', 'font-style:italic'));
+  tb.appendChild(mkBtn('U', 'underline', 'Underline (Ctrl+U)', 'text-decoration:underline'));
+  tb.appendChild(mkBtn('S', 'strikeThrough', 'Strikethrough', 'text-decoration:line-through'));
+  const sep1 = document.createElement('span'); sep1.className = 'sep'; tb.appendChild(sep1);
+  tb.appendChild(mkBtn('• List', 'insertUnorderedList', 'Bullet list'));
+  tb.appendChild(mkBtn('1. List', 'insertOrderedList', 'Numbered list'));
+  const sep2 = document.createElement('span'); sep2.className = 'sep'; tb.appendChild(sep2);
+  const sel = document.createElement('select');
+  ['Style…|','Heading|H2','Subheading|H3','Paragraph|P','Quote|BLOCKQUOTE'].forEach(opt => {
+    const [label, val] = opt.split('|');
+    const o = document.createElement('option'); o.value = val; o.textContent = label; sel.appendChild(o);
+  });
+  sel.onchange = () => { if (sel.value) { cmd('formatBlock', sel.value); } sel.selectedIndex = 0; };
+  tb.appendChild(sel);
+
+  wrap.appendChild(tb); wrap.appendChild(area);
+  return wrap;
+}
+
+// Render simple HTML (b/strong, i/em, u, s, ul/ol/li, h2/h3, p, br, blockquote) into jsPDF.
+// Returns the new y cursor.
+function renderRichTextToPDF(doc, html, x, y, maxWidth) {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html;
+  const lineH = 5.5;
+  const pageH = 285;
+
+  function newPageIfNeeded(extra) {
+    if (y + (extra || lineH) > pageH) { doc.addPage(); y = 14; }
+  }
+
+  function setFontFor(state) {
+    let style = '';
+    if (state.bold && state.italic) style = 'bolditalic';
+    else if (state.bold) style = 'bold';
+    else if (state.italic) style = 'italic';
+    else style = 'normal';
+    doc.setFont(undefined, style);
+    doc.setFontSize(state.size || 11);
+  }
+
+  // Renders an inline run of text honoring current style; wraps within maxWidth.
+  // Tracks an x-offset for the current line via state.cursorX.
+  function writeInline(text, state) {
+    if (!text) return;
+    text = text.replace(/\s+/g, ' ');
+    if (!text) return;
+    setFontFor(state);
+    const indent = state.indent || 0;
+    const availFirst = maxWidth - (state.cursorX - x);
+    // Break text into words and pack onto lines
+    const words = text.split(' ');
+    let buffer = '';
+    const flushLine = (str, isLastOnLine) => {
+      if (!str) return;
+      newPageIfNeeded();
+      doc.text(str, state.cursorX, y);
+      const w = doc.getTextWidth(str);
+      state.cursorX += w;
+      if (!isLastOnLine) {
+        y += lineH;
+        state.cursorX = x + indent;
+      }
+    };
+    for (let i = 0; i < words.length; i++) {
+      const word = (buffer ? ' ' : '') + words[i];
+      const test = buffer + word;
+      const testW = doc.getTextWidth(test);
+      const avail = (x + maxWidth) - state.cursorX;
+      if (testW <= avail) {
+        buffer = test;
+      } else {
+        flushLine(buffer, false);
+        buffer = words[i];
+      }
+    }
+    flushLine(buffer, true);
+  }
+
+  function endBlock(state) {
+    if (state.cursorX > x + (state.indent || 0)) {
+      y += lineH;
+    }
+    state.cursorX = x + (state.indent || 0);
+  }
+
+  function walk(node, state) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      writeInline(node.nodeValue, state);
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    const tag = node.tagName.toUpperCase();
+
+    if (tag === 'BR') {
+      y += lineH;
+      state.cursorX = x + (state.indent || 0);
+      return;
+    }
+
+    if (tag === 'UL' || tag === 'OL') {
+      const ordered = tag === 'OL';
+      let idx = 1;
+      const childIndent = (state.indent || 0) + 6;
+      Array.from(node.children).forEach(li => {
+        if (li.tagName.toUpperCase() !== 'LI') return;
+        endBlock(state);
+        newPageIfNeeded();
+        const marker = ordered ? (idx++) + '. ' : '\u2022 ';
+        setFontFor(state);
+        doc.text(marker, x + (state.indent || 0), y);
+        const markerW = doc.getTextWidth(marker);
+        const liState = Object.assign({}, state, { indent: childIndent, cursorX: x + (state.indent || 0) + markerW });
+        Array.from(li.childNodes).forEach(c => walk(c, liState));
+        // sync y from liState (same reference for y? no — y is closure variable, already updated)
+        state.cursorX = x + (state.indent || 0);
+      });
+      endBlock(state);
+      return;
+    }
+
+    if (tag === 'LI') {
+      Array.from(node.childNodes).forEach(c => walk(c, state));
+      return;
+    }
+
+    if (tag === 'P' || tag === 'DIV') {
+      if (state.cursorX > x + (state.indent || 0)) endBlock(state);
+      Array.from(node.childNodes).forEach(c => walk(c, state));
+      endBlock(state);
+      return;
+    }
+
+    if (tag === 'H2' || tag === 'H3') {
+      endBlock(state);
+      const sub = Object.assign({}, state, { bold: true, size: tag === 'H2' ? 14 : 12 });
+      Array.from(node.childNodes).forEach(c => walk(c, sub));
+      endBlock(sub);
+      state.cursorX = sub.cursorX;
+      return;
+    }
+
+    if (tag === 'BLOCKQUOTE') {
+      endBlock(state);
+      const sub = Object.assign({}, state, { italic: true, indent: (state.indent || 0) + 6, cursorX: x + (state.indent || 0) + 6 });
+      Array.from(node.childNodes).forEach(c => walk(c, sub));
+      endBlock(sub);
+      return;
+    }
+
+    let sub = state;
+    if (tag === 'B' || tag === 'STRONG') sub = Object.assign({}, state, { bold: true });
+    else if (tag === 'I' || tag === 'EM') sub = Object.assign({}, state, { italic: true });
+    else if (tag === 'U' || tag === 'S' || tag === 'STRIKE' || tag === 'DEL') sub = state; // jsPDF lacks underline/strike inline; render plain
+
+    Array.from(node.childNodes).forEach(c => walk(c, sub));
+    state.cursorX = sub.cursorX;
+  }
+
+  const rootState = { bold: false, italic: false, size: 11, indent: 0, cursorX: x };
+  Array.from(wrapper.childNodes).forEach(c => walk(c, rootState));
+  if (rootState.cursorX > x) y += lineH;
+  return y + 2;
 }
 
 // ===== DASHBOARD CHARTS =====
@@ -1477,6 +1884,7 @@ const nb_blogsNo=[{name:"Remove templated Blogs",status:"Ongoing"}];
 const nb_dynamicYes=[{name:"Checked Added Collections",status:"Ongoing"},{name:"Lorem Ipsum2",status:"Ongoing"}];
 const nb_dynamicNo=[{name:"Remove templated Collection",status:"Ongoing"}];
 let nb_devNotes=[];
+let nb_devNotesRich = '';
 let nb_blogsAnswer=null, nb_dynamicAnswer=null;
 
 function renderNewBuildChecklist() {
@@ -1619,6 +2027,7 @@ const up_data = {
 };
 const up_manualNo = [{name:"Checked existing pages as reference",status:"Ongoing"}];
 let up_devNotes = [];
+let up_devNotesRich = '';
 let up_manualAnswer = null;
 
 function renderUpgradeChecklist() {
@@ -1748,6 +2157,7 @@ const rb_blogsNo=[{name:"Remove templated Blogs",status:"Ongoing"}];
 const rb_dynamicYes=[{name:"Checked Added Collections",status:"Ongoing"},{name:"Lorem Ipsum2",status:"Ongoing"}];
 const rb_dynamicNo=[{name:"Remove templated Collection",status:"Ongoing"}];
 let rb_devNotes=[];
+let rb_devNotesRich = '';
 let rb_blogsAnswer=null, rb_dynamicAnswer=null;
 
 function renderRebuildChecklist() {
@@ -2110,16 +2520,13 @@ function saveChecklistPDF(mode) {
     ['onboarding','website','contact','mobile'].forEach(k => sections.push({ category: nb_data[k].label, items: nb_data[k].items }));
     if (nb_blogsAnswer) sections.push({ category: 'Blogs', items: nb_blogsAnswer === 'yes' ? nb_blogsYes : nb_blogsNo });
     if (nb_dynamicAnswer) sections.push({ category: 'Dynamic Pages', items: nb_dynamicAnswer === 'yes' ? nb_dynamicYes : nb_dynamicNo });
-    if (nb_devNotes.length) sections.push({ category: 'Notes for Developer', items: nb_devNotes });
   } else if (mode === 'rebuild') {
     ['onboarding','website','mobile'].forEach(k => sections.push({ category: rb_data[k].label, items: rb_data[k].items }));
     if (rb_blogsAnswer) sections.push({ category: 'Blogs', items: rb_blogsAnswer === 'yes' ? rb_blogsYes : rb_blogsNo });
     if (rb_dynamicAnswer) sections.push({ category: 'Dynamic Pages', items: rb_dynamicAnswer === 'yes' ? rb_dynamicYes : rb_dynamicNo });
-    if (rb_devNotes.length) sections.push({ category: 'Notes for Developer', items: rb_devNotes });
   } else {
     ['onboarding','website','mobile'].forEach(k => sections.push({ category: up_data[k].label, items: up_data[k].items }));
     if (up_manualAnswer) sections.push({ category: 'Manual Upgrade', items: up_manualAnswer === 'yes' ? up_data.manual.items : up_manualNo });
-    if (up_devNotes.length) sections.push({ category: 'Notes for Developer', items: up_devNotes });
   }
 
   sections.forEach(s => {
@@ -2131,6 +2538,19 @@ function saveChecklistPDF(mode) {
     });
     y = doc.lastAutoTable.finalY + 10;
   });
+
+  // "Notes for Developer" bullet list
+  const notesArr = mode === 'newbuild' ? nb_devNotes : mode === 'rebuild' ? rb_devNotes : up_devNotes;
+  if (notesArr && notesArr.length) {
+    if (y > 260) { doc.addPage(); y = 14; }
+    doc.setFontSize(13); doc.text('Notes for Developer', 14, y); y += 4;
+    doc.autoTable({
+      startY: y, head: [['Item', 'Status']], body: notesArr.map(i => [i.name, i.status]),
+      theme: 'grid', headStyles: { fillColor: [40, 40, 40] }, styles: { fontSize: 10 },
+      didParseCell(d) { if (d.column.index === 1 && d.section === 'body') { d.cell.styles.textColor = d.cell.raw === 'Done' ? [0, 195, 16] : [220, 50, 50]; d.cell.styles.fontStyle = 'bold'; } }
+    });
+    y = doc.lastAutoTable.finalY + 10;
+  }
 
   const initials = appState.devName ? appState.devName.split(/\s+/).map(w => w[0]).join('').toUpperCase() : '';
   const biz = appState.bizName || '';
