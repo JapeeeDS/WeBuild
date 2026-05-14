@@ -118,6 +118,15 @@ body.light-mode .workflow-menu button{color:#1a1a1a}
 body.light-mode .workflow-menu button:hover{background:#f4f5f7}
 body.light-mode .workflow-btn{background:#ffffff;color:#1a1a1a;border-color:#c8cfd8}
 body.light-mode #toast{background:#1a1a1a;color:#fff}
+/* Notepad: white background with black text in light mode */
+body.light-mode .sc-right > div{background:#ffffff !important;border-color:#d8dde3 !important}
+body.light-mode .sc-right > div > div:first-child{background:#f4f5f7 !important;border-bottom-color:#d8dde3 !important}
+body.light-mode .sc-right .rich-notepad-toolbar,
+body.light-mode .sc-right > div > div:first-child button,
+body.light-mode .sc-right > div > div:first-child select,
+body.light-mode .sc-right .np-color-label{background:#ffffff !important;color:#1a1a1a !important;border-color:#c8cfd8 !important}
+body.light-mode #scNotepad{background:#ffffff !important;color:#000000 !important}
+body.light-mode #scNotepad:empty:before{color:#888 !important}
 
 /* Main content */
 .main-content{flex:1;overflow-y:auto;padding:24px 32px;background:#3a3a3a}
@@ -605,6 +614,7 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
               <div class="time-field"><label>SLA Agreed</label><input type="text" id="ptSlaAgreed" readonly/></div>
               <div class="time-field"><label>Time Taken</label><input type="text" id="ptTimeTaken" readonly/></div>
               <div class="time-field"><label>Remaining Time</label><input type="text" id="ptRemaining" readonly/></div>
+              <div class="time-field"><label>Estimated Time to End</label><input type="text" id="ptEstimatedEnd" readonly/></div>
             </div>
             <div style="display:flex;gap:6px;justify-content:flex-end">
               <button class="pt-add-sla-btn2" onclick="ptAddSLA()">Add SLA</button>
@@ -690,7 +700,6 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
             <input type="number" id="scNoteNo" placeholder="No." style="max-width:90px"/>
             <input type="text" id="scNoteText" placeholder="Add site comment..."/>
             <button onclick="addSiteCommentNote()">Add +</button>
-            <button onclick="saveSiteCommentsPDF()" style="background:#009C0C;border-color:#009C0C">Save</button>
           </div>
           <div id="scNotesList" style="display:flex;flex-direction:column;gap:8px;margin-top:14px"></div>
 
@@ -714,16 +723,16 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
                 <button type="button" onclick="scNotepadCmd('underline')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;text-decoration:underline;cursor:pointer" title="Underline (Ctrl+U)">U</button>
                 <button type="button" onclick="scNotepadCmd('strikeThrough')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;text-decoration:line-through;cursor:pointer" title="Strikethrough">S</button>
                 <span style="width:1px;background:#444;margin:0 4px"></span>
-                <button type="button" onclick="scNotepadCmd('insertUnorderedList')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;cursor:pointer" title="Bullet list">• List</button>
-                <button type="button" onclick="scNotepadCmd('insertOrderedList')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;cursor:pointer" title="Numbered list">1. List</button>
+                <button type="button" onclick="scNotepadCmd('insertUnorderedList')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 8px;cursor:pointer;display:inline-flex;align-items:center" title="Bullet list"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/></svg></button>
+                <button type="button" onclick="scNotepadCmd('insertOrderedList')" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 8px;cursor:pointer;display:inline-flex;align-items:center" title="Numbered list"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button>
                 <span style="width:1px;background:#444;margin:0 4px"></span>
-                <select onchange="scNotepadCmd('formatBlock', this.value); this.selectedIndex=0" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 8px;cursor:pointer">
-                  <option value="">Style…</option>
-                  <option value="H2">Heading</option>
-                  <option value="H3">Subheading</option>
-                  <option value="P">Paragraph</option>
-                  <option value="BLOCKQUOTE">Quote</option>
-                </select>
+                <label class="np-color-label" title="Font color" style="display:inline-flex;align-items:center;gap:4px;background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:13px">
+                  <span style="font-weight:700">A</span>
+                  <input type="color" value="#ffffff" oninput="scNotepadCmd('foreColor', this.value)" style="width:20px;height:20px;border:none;background:transparent;cursor:pointer;padding:0"/>
+                </label>
+                <span style="flex:1"></span>
+                <button type="button" onclick="copyNotepad()" title="Copy notepad contents" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;cursor:pointer">📋 Copy</button>
+                <button type="button" onclick="saveNotepadPDF()" title="Save notepad to PDF" style="background:#009C0C;color:#fff;border:1px solid #009C0C;border-radius:6px;padding:4px 14px;font-weight:700;cursor:pointer">Save</button>
               </div>
               <div id="scNotepad" contenteditable="true" spellcheck="true"
                    style="min-height:160px;max-height:340px;overflow-y:auto;padding:14px 16px;color:#fff;font-size:14px;line-height:1.55;outline:none"
@@ -769,6 +778,7 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
           </div>
           <div class="codes-actions">
             <input type="text" id="codesSearch" placeholder="Search usage or code…" oninput="filterCodes()"/>
+            <a href="https://docs.google.com/spreadsheets/d/1Vq6OziXd5S-DlG2vUm5tLtTxkMK2ViAg_4URmeeFXmY/edit?gid=0#gid=0" target="_blank" rel="noopener" title="Open shared Google Sheet to contribute codes" style="display:inline-flex;align-items:center;gap:6px;background:#0F9D58;color:#fff;text-decoration:none;padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>Add Code</a>
             <button class="codes-refresh-btn" onclick="loadCodes(true)" title="Refresh now">⟳ Refresh</button>
           </div>
         </div>
@@ -1237,7 +1247,38 @@ function scNotepadCmd(cmd, value) {
   appState.siteCommentsNotepad = np.innerHTML;
 }
 
-// Build a reusable rich-text notepad. onChange receives latest HTML.
+// Copy plain-text contents of the notepad to clipboard.
+function copyNotepad() {
+  const np = document.getElementById('scNotepad');
+  if (!np) return;
+  const text = np.innerText || '';
+  if (!text.trim()) { showToast('Notepad is empty'); return; }
+  navigator.clipboard.writeText(text).then(
+    () => showToast('Notepad copied!'),
+    () => showToast('Copy failed')
+  );
+}
+
+// Save ONLY the notepad contents to a PDF.
+function saveNotepadPDF() {
+  const np = document.getElementById('scNotepad');
+  if (np) appState.siteCommentsNotepad = np.innerHTML;
+  const html = (appState.siteCommentsNotepad || '').trim();
+  if (!html) { showToast('Notepad is empty'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 14;
+  doc.setFontSize(16); doc.setFont(undefined, 'bold');
+  doc.text('Notepad', 14, y); y += 8;
+  doc.setFont(undefined, 'normal'); doc.setFontSize(11);
+  y = renderRichTextToPDF(doc, html, 14, y, 180);
+  const initials = appState.devName ? appState.devName.split(/\s+/).map(w => w[0]).join('').toUpperCase() : '';
+  const biz = appState.bizName || '';
+  let fileName = 'notepad';
+  if (initials || biz) fileName = (initials && biz ? initials + '-' + biz : initials || biz).replace(/[^a-zA-Z0-9\-_ ]/g, '') + '-notepad';
+  doc.save(fileName + '.pdf');
+  showToast('Notepad saved!');
+}
 function buildRichNotepad(id, initialHTML, onChange, placeholder) {
   const wrap = document.createElement('div'); wrap.className = 'rich-notepad-wrap';
   const tb = document.createElement('div'); tb.className = 'rich-notepad-toolbar';
@@ -1262,16 +1303,16 @@ function buildRichNotepad(id, initialHTML, onChange, placeholder) {
   tb.appendChild(mkBtn('U', 'underline', 'Underline (Ctrl+U)', 'text-decoration:underline'));
   tb.appendChild(mkBtn('S', 'strikeThrough', 'Strikethrough', 'text-decoration:line-through'));
   const sep1 = document.createElement('span'); sep1.className = 'sep'; tb.appendChild(sep1);
-  tb.appendChild(mkBtn('• List', 'insertUnorderedList', 'Bullet list'));
-  tb.appendChild(mkBtn('1. List', 'insertOrderedList', 'Numbered list'));
-  const sep2 = document.createElement('span'); sep2.className = 'sep'; tb.appendChild(sep2);
-  const sel = document.createElement('select');
-  ['Style…|','Heading|H2','Subheading|H3','Paragraph|P','Quote|BLOCKQUOTE'].forEach(opt => {
-    const [label, val] = opt.split('|');
-    const o = document.createElement('option'); o.value = val; o.textContent = label; sel.appendChild(o);
-  });
-  sel.onchange = () => { if (sel.value) { cmd('formatBlock', sel.value); } sel.selectedIndex = 0; };
-  tb.appendChild(sel);
+  const mkIconBtn = (svg, c, title) => {
+    const b = document.createElement('button'); b.type = 'button'; b.title = title || c;
+    b.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;padding:4px 8px';
+    b.innerHTML = svg;
+    b.onclick = () => cmd(c);
+    return b;
+  };
+  tb.appendChild(mkIconBtn('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/></svg>', 'insertUnorderedList', 'Bullet list'));
+  tb.appendChild(mkIconBtn('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>', 'insertOrderedList', 'Numbered list'));
+
 
   wrap.appendChild(tb); wrap.appendChild(area);
   return wrap;
@@ -2797,7 +2838,44 @@ function ptRecomputeFromAnchor() {
     document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
   }
   document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
+  updateEstimatedEnd();
   updateSendQcOutput();
+}
+
+// Project an end timestamp by walking forward only through working hours.
+function addWorkingSeconds(startTs, secs) {
+  let cursor = new Date(startTs);
+  let remaining = secs;
+  let guard = 0;
+  while (remaining > 0 && guard++ < 5000) {
+    if (isWorkingTime(cursor)) {
+      const endOfWindow = new Date(cursor); endOfWindow.setHours(16, 0, 0, 0);
+      const available = Math.floor((endOfWindow - cursor) / 1000);
+      if (available >= remaining) {
+        cursor = new Date(cursor.getTime() + remaining * 1000);
+        remaining = 0;
+      } else {
+        cursor = endOfWindow;
+        remaining -= available;
+      }
+    } else {
+      const next = new Date(cursor);
+      if (next.getHours() >= 16) { next.setDate(next.getDate() + 1); }
+      next.setHours(7, 0, 0, 0);
+      while (next.getDay() === 0 || next.getDay() === 6) { next.setDate(next.getDate() + 1); }
+      cursor = next;
+    }
+  }
+  return cursor;
+}
+
+function updateEstimatedEnd() {
+  const el = document.getElementById('ptEstimatedEnd');
+  if (!el) return;
+  if (ptRemainingSeconds <= 0) { el.value = ''; return; }
+  const end = addWorkingSeconds(Date.now(), ptRemainingSeconds);
+  const opts = { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true };
+  el.value = end.toLocaleString([], opts);
 }
 
 function ptParse() {
@@ -2882,6 +2960,7 @@ function ptReset() {
   document.getElementById('ptSlaAgreed').value = '';
   document.getElementById('ptTimeTaken').value = '';
   document.getElementById('ptRemaining').value = '';
+  const eEnd = document.getElementById('ptEstimatedEnd'); if (eEnd) eEnd.value = '';
   ptSlaSeconds = 0;
   ptRemainingSeconds = 0;
   ptTimeTakenSeconds = 0;
