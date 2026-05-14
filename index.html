@@ -1413,7 +1413,7 @@ function renderRichTextToPDF(doc, html, x, y, maxWidth) {
         const markerW = doc.getTextWidth(marker);
         const liState = Object.assign({}, state, { indent: childIndent, cursorX: x + (state.indent || 0) + markerW });
         Array.from(li.childNodes).forEach(c => walk(c, liState));
-        // sync y from liState (same reference for y? no — y is closure variable, already updated)
+        endBlock(liState);
         state.cursorX = x + (state.indent || 0);
       });
       endBlock(state);
