@@ -732,6 +732,7 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
                 </label>
                 <span style="flex:1"></span>
                 <button type="button" onclick="copyNotepad()" title="Copy notepad contents" style="background:#2a2a2a;color:#fff;border:1px solid #555;border-radius:6px;padding:4px 10px;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>
+                <button type="button" onclick="clearNotepad()" title="Clear notepad contents" style="background:#dc3545;color:#fff;border:1px solid #dc3545;border-radius:6px;padding:4px 14px;font-weight:700;cursor:pointer">Clear</button>
                 <button type="button" onclick="saveNotepadPDF()" title="Save notepad to PDF" style="background:#009C0C;color:#fff;border:1px solid #009C0C;border-radius:6px;padding:4px 14px;font-weight:700;cursor:pointer">Save</button>
               </div>
               <div id="scNotepad" contenteditable="true" spellcheck="true"
@@ -1257,6 +1258,19 @@ function copyNotepad() {
     () => showToast('Notepad copied!'),
     () => showToast('Copy failed')
   );
+}
+
+// Clear all contents of the notepad.
+function clearNotepad() {
+  const np = document.getElementById('scNotepad');
+  if (!np) return;
+  const html = (np.innerHTML || '').trim();
+  if (!html) { showToast('Notepad is already empty'); return; }
+  showConfirmModal('Clear all notepad contents? This cannot be undone.', function() {
+    np.innerHTML = '';
+    appState.siteCommentsNotepad = '';
+    showToast('Notepad cleared!');
+  }, 'Yes, Clear');
 }
 
 // Save ONLY the notepad contents to a PDF.
@@ -2609,6 +2623,18 @@ function saveChecklistPDF(mode) {
       didParseCell(d) { if (d.column.index === 1 && d.section === 'body') { d.cell.styles.textColor = d.cell.raw === 'Done' ? [0, 195, 16] : [220, 50, 50]; d.cell.styles.fontStyle = 'bold'; } }
     });
     y = doc.lastAutoTable.finalY + 10;
+  }
+
+  // Append notepad contents from the Home page (if any)
+  const npEl = document.getElementById('scNotepad');
+  if (npEl) appState.siteCommentsNotepad = npEl.innerHTML;
+  const npHtml = (appState.siteCommentsNotepad || '').trim();
+  if (npHtml) {
+    if (y > 260) { doc.addPage(); y = 14; }
+    doc.setFontSize(13); doc.setFont(undefined, 'bold');
+    doc.text('Notepad', 14, y); y += 6;
+    doc.setFont(undefined, 'normal'); doc.setFontSize(11);
+    y = renderRichTextToPDF(doc, npHtml, 14, y, 180);
   }
 
   const initials = appState.devName ? appState.devName.split(/\s+/).map(w => w[0]).join('').toUpperCase() : '';
