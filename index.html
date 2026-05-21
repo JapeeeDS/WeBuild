@@ -981,12 +981,41 @@ function clearAllData() {
   finalNoteWasEdited = false;
   nb_parsedItems = [];
   up_parsedItems = [];
+  rb_parsedItems = [];
+  // Reset all checklist item statuses back to 'Ongoing'
+  try {
+    Object.values(nb_data).forEach(c => c.items.forEach(i => i.status = 'Ongoing'));
+    nb_blogsYes.forEach(i => i.status = 'Ongoing');
+    nb_blogsNo.forEach(i => i.status = 'Ongoing');
+    nb_dynamicYes.forEach(i => i.status = 'Ongoing');
+    nb_dynamicNo.forEach(i => i.status = 'Ongoing');
+    nb_devNotes = []; nb_devNotesRich = '';
+    nb_blogsAnswer = null; nb_dynamicAnswer = null;
+    Object.values(up_data).forEach(c => c.items.forEach(i => i.status = 'Ongoing'));
+    up_manualNo.forEach(i => i.status = 'Ongoing');
+    up_devNotes = []; up_devNotesRich = '';
+    up_manualAnswer = null;
+    Object.values(rb_data).forEach(c => c.items.forEach(i => i.status = 'Ongoing'));
+    rb_blogsYes.forEach(i => i.status = 'Ongoing');
+    rb_blogsNo.forEach(i => i.status = 'Ongoing');
+    rb_dynamicYes.forEach(i => i.status = 'Ongoing');
+    rb_dynamicNo.forEach(i => i.status = 'Ongoing');
+    rb_devNotes = []; rb_devNotesRich = '';
+    rb_blogsAnswer = null; rb_dynamicAnswer = null;
+  } catch(e) {}
+  // Clear parser input field
+  const parserInputEl = document.getElementById('parserInput');
+  if (parserInputEl) parserInputEl.value = '';
   document.getElementById('previewLink').value = '';
   document.getElementById('finalNoteBody').innerHTML = '';
   document.getElementById('workflowBtn').textContent = 'Select Workflow';
   document.getElementById('scNo').value = '';
   document.getElementById('scText').value = '';
   document.getElementById('devNoteText').value = '';
+  // Re-render checklists if their render functions exist
+  try { if (typeof renderNewBuildChecklist === 'function') renderNewBuildChecklist(); } catch(e) {}
+  try { if (typeof renderUpgradeChecklist === 'function') renderUpgradeChecklist(); } catch(e) {}
+  try { if (typeof renderRebuildChecklist === 'function') renderRebuildChecklist(); } catch(e) {}
   // line graph reflects state automatically
   ptReset();
   updateFinalNote();
