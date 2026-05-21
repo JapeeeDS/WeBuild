@@ -2580,10 +2580,7 @@ function saveChecklistPDF(mode) {
   const devNotesText = appState.devNotes.map(n => '• ' + n).join('\n');
   if (devNotesText) { doc.text('Dev Notes:', 14, y); y += 5; const lines = doc.splitTextToSize(devNotesText, 180); doc.text(lines, 14, y); y += lines.length * 5; }
 
-  if (appState.siteComments.length > 0) {
-    doc.text('Site Comments:', 14, y); y += 5;
-    appState.siteComments.forEach(sc => { const scText = 'Site Comment #' + sc.no + ': ' + sc.text; const scLines = doc.splitTextToSize(scText, 180); doc.text(scLines, 14, y); y += scLines.length * 5; });
-  }
+  // Site Comments intentionally omitted from saved checklist PDF (per user request)
 
   const link = document.getElementById('previewLink').value.trim();
   if (link) { doc.text('Preview Link: ' + link, 14, y); y += 6; }
