@@ -416,7 +416,35 @@ body.rebuild-blue .login-card button:hover{background:#00a00d}
 .code-card-head .copy-btn{background:#009C0C;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s;white-space:nowrap}
 .code-card-head .copy-btn:hover{background:#00a00d;transform:scale(1.05)}
 .code-card-head .copy-btn.copied{background:#0a7d12}
-.code-card pre{margin:0;padding:14px;background:#0f0f0f;color:#d8e8d8;font-family:'Consolas','Monaco','Courier New',monospace;font-size:12px;line-height:1.5;max-height:280px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.code-card pre{margin:0;padding:14px;background:#1e1e1e;color:#d4d4d4;font-family:'Consolas','Monaco','Courier New',monospace;font-size:12px;line-height:1.5;max-height:280px;overflow:auto;white-space:pre;word-break:normal;tab-size:2}
+.code-card pre .tok-com{color:#6A9955;font-style:italic}
+.code-card pre .tok-str{color:#CE9178}
+.code-card pre .tok-num{color:#B5CEA8}
+.code-card pre .tok-kw{color:#569CD6}
+.code-card pre .tok-fn{color:#DCDCAA}
+.code-card pre .tok-type{color:#4EC9B0}
+.code-card pre .tok-tag{color:#569CD6}
+.code-card pre .tok-attr{color:#9CDCFE}
+.code-card pre .tok-prop{color:#9CDCFE}
+.code-card pre .tok-sel{color:#D7BA7D}
+.code-card pre .tok-punc{color:#d4d4d4}
+.code-card pre .tok-bool{color:#569CD6}
+.code-card pre .tok-var{color:#9CDCFE}
+.code-card pre .tok-regex{color:#D16969}
+body.light-mode .code-card pre{background:#ffffff;color:#1a1a1a}
+body.light-mode .code-card pre .tok-com{color:#008000}
+body.light-mode .code-card pre .tok-str{color:#a31515}
+body.light-mode .code-card pre .tok-num{color:#098658}
+body.light-mode .code-card pre .tok-kw{color:#0000ff}
+body.light-mode .code-card pre .tok-fn{color:#795e26}
+body.light-mode .code-card pre .tok-type{color:#267f99}
+body.light-mode .code-card pre .tok-tag{color:#800000}
+body.light-mode .code-card pre .tok-attr{color:#e50000}
+body.light-mode .code-card pre .tok-prop{color:#ff0000}
+body.light-mode .code-card pre .tok-sel{color:#800000}
+body.light-mode .code-card pre .tok-bool{color:#0000ff}
+body.light-mode .code-card pre .tok-var{color:#001080}
+body.light-mode .code-card pre .tok-regex{color:#811f3f}
 .codes-empty{grid-column:1/-1;text-align:center;color:#888;padding:40px;font-size:14px}
 body.light-mode .codes-actions input{background:#fff;border-color:#d8dde3;color:#1a1a1a}
 body.light-mode .code-card{background:#fff;border-color:#d8dde3}
@@ -1421,12 +1449,24 @@ function clearAllData() {
   // Clear parser input field
   const parserInputEl = document.getElementById('parserInput');
   if (parserInputEl) parserInputEl.value = '';
+  // Clear per-page inline parser textareas/searches if present
+  ['nb','up','rb'].forEach(p => {
+    const t = document.getElementById(p + '_parserInput'); if (t) t.value = '';
+    const s = document.getElementById(p + '_parserSearch'); if (s) s.value = '';
+    const o = document.getElementById(p + '_parsedOutput'); if (o) o.innerHTML = '';
+    const np = document.getElementById(p + '_parsedNewPages'); if (np) np.innerHTML = '';
+  });
   document.getElementById('previewLink').value = '';
   document.getElementById('finalNoteBody').innerHTML = '';
   document.getElementById('workflowBtn').textContent = 'Select Workflow';
   document.getElementById('scNo').value = '';
   document.getElementById('scText').value = '';
   document.getElementById('devNoteText').value = '';
+  // Clear the rich-text Site Comments notepad
+  const scNotepadEl = document.getElementById('scNotepad');
+  if (scNotepadEl) scNotepadEl.innerHTML = '';
+  // Re-render site comments / dev notes list
+  try { if (typeof renderSiteCommentNotes === 'function') renderSiteCommentNotes(); } catch(e) {}
   // Re-render checklists if their render functions exist
   try { if (typeof renderNewBuildChecklist === 'function') renderNewBuildChecklist(); } catch(e) {}
   try { if (typeof renderUpgradeChecklist === 'function') renderUpgradeChecklist(); } catch(e) {}
@@ -3636,6 +3676,163 @@ function escapeHtmlCodes(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+// ===== VS Code-style syntax highlighter for HTML / CSS / JS =====
+function detectCodeLang(src){
+  const s = src.trim();
+  if (/^</.test(s) || /<\/?[a-zA-Z][\s\S]*?>/.test(s.slice(0, 200))) return 'html';
+  if (/^[.#@:a-zA-Z*\[][^\n{};]*\{[\s\S]*?\}/.test(s) && !/\bfunction\b|=>|\bvar\b|\blet\b|\bconst\b/.test(s.slice(0,200))) return 'css';
+  return 'js';
+}
+
+const JS_KEYWORDS = new Set(['var','let','const','function','return','if','else','for','while','do','switch','case','break','continue','default','new','delete','typeof','instanceof','in','of','this','class','extends','super','import','export','from','as','async','await','yield','try','catch','finally','throw','void','null','undefined','true','false']);
+const JS_TYPES = new Set(['Array','Object','String','Number','Boolean','Date','Math','JSON','Promise','Map','Set','RegExp','Error','Symbol','document','window','console']);
+
+function highlightJs(src){
+  const tokens = [];
+  let i = 0;
+  const n = src.length;
+  while (i < n){
+    const ch = src[i];
+    const rest = src.slice(i);
+    let m;
+    if ((m = rest.match(/^\/\/[^\n]*/))){ tokens.push(['com', m[0]]); i += m[0].length; continue; }
+    if ((m = rest.match(/^\/\*[\s\S]*?\*\//))){ tokens.push(['com', m[0]]); i += m[0].length; continue; }
+    if (ch === '"' || ch === "'" || ch === '`'){
+      const q = ch; let j = i + 1;
+      while (j < n){ if (src[j] === '\\'){ j += 2; continue; } if (src[j] === q){ j++; break; } j++; }
+      tokens.push(['str', src.slice(i, j)]); i = j; continue;
+    }
+    if ((m = rest.match(/^\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/))){ tokens.push(['num', m[0]]); i += m[0].length; continue; }
+    if ((m = rest.match(/^[A-Za-z_$][\w$]*/))){
+      const w = m[0];
+      let cls = null;
+      if (JS_KEYWORDS.has(w)) cls = (w === 'true' || w === 'false' || w === 'null' || w === 'undefined') ? 'bool' : 'kw';
+      else if (JS_TYPES.has(w)) cls = 'type';
+      else if (/^[A-Z]/.test(w)) cls = 'type';
+      else if (src[i + w.length] === '(') cls = 'fn';
+      else cls = 'var';
+      tokens.push([cls, w]); i += w.length; continue;
+    }
+    if ((m = rest.match(/^[{}()\[\];,.:?]/))){ tokens.push(['punc', m[0]]); i++; continue; }
+    if ((m = rest.match(/^[+\-*/%=<>!&|^~]+/))){ tokens.push(['punc', m[0]]); i += m[0].length; continue; }
+    tokens.push(['', ch]); i++;
+  }
+  return tokens.map(([c, t]) => c ? `<span class="tok-${c}">${escapeHtmlCodes(t)}</span>` : escapeHtmlCodes(t)).join('');
+}
+
+function highlightCss(src){
+  let out = ''; let i = 0; const n = src.length;
+  while (i < n){
+    const rest = src.slice(i);
+    let m;
+    if ((m = rest.match(/^\/\*[\s\S]*?\*\//))){ out += `<span class="tok-com">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    // selector block up to {
+    const braceIdx = rest.indexOf('{');
+    const semiIdx = rest.indexOf(';');
+    if (braceIdx !== -1 && (semiIdx === -1 || braceIdx < semiIdx)){
+      const sel = rest.slice(0, braceIdx);
+      out += `<span class="tok-sel">${escapeHtmlCodes(sel)}</span><span class="tok-punc">{</span>`;
+      i += braceIdx + 1;
+      // declarations until matching }
+      while (i < n && src[i] !== '}'){
+        const sub = src.slice(i);
+        let mm;
+        if ((mm = sub.match(/^\s+/))){ out += escapeHtmlCodes(mm[0]); i += mm[0].length; continue; }
+        if ((mm = sub.match(/^\/\*[\s\S]*?\*\//))){ out += `<span class="tok-com">${escapeHtmlCodes(mm[0])}</span>`; i += mm[0].length; continue; }
+        if ((mm = sub.match(/^([\w-]+)(\s*):/))){
+          out += `<span class="tok-prop">${escapeHtmlCodes(mm[1])}</span>${escapeHtmlCodes(mm[2])}<span class="tok-punc">:</span>`;
+          i += mm[0].length;
+          // value until ; or }
+          let v = '';
+          while (i < n && src[i] !== ';' && src[i] !== '}'){ v += src[i]; i++; }
+          out += highlightCssValue(v);
+          if (src[i] === ';'){ out += `<span class="tok-punc">;</span>`; i++; }
+          continue;
+        }
+        out += escapeHtmlCodes(src[i]); i++;
+      }
+      if (src[i] === '}'){ out += `<span class="tok-punc">}</span>`; i++; }
+      continue;
+    }
+    out += escapeHtmlCodes(src[i]); i++;
+  }
+  return out;
+}
+
+function highlightCssValue(v){
+  let out = ''; let i = 0; const n = v.length;
+  while (i < n){
+    const rest = v.slice(i);
+    let m;
+    if ((m = rest.match(/^"[^"]*"|^'[^']*'/))){ out += `<span class="tok-str">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    if ((m = rest.match(/^#[0-9a-fA-F]{3,8}\b/))){ out += `<span class="tok-num">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    if ((m = rest.match(/^-?\d+(?:\.\d+)?(?:px|em|rem|%|vh|vw|s|ms|deg|fr)?/))){ out += `<span class="tok-num">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    if ((m = rest.match(/^[a-zA-Z-]+(?=\()/))){ out += `<span class="tok-fn">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    if ((m = rest.match(/^[a-zA-Z-]+/))){ out += `<span class="tok-var">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    out += escapeHtmlCodes(v[i]); i++;
+  }
+  return out;
+}
+
+function highlightHtml(src){
+  let out = ''; let i = 0; const n = src.length;
+  while (i < n){
+    const rest = src.slice(i);
+    let m;
+    if ((m = rest.match(/^<!--[\s\S]*?-->/))){ out += `<span class="tok-com">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    if ((m = rest.match(/^<!DOCTYPE[^>]*>/i))){ out += `<span class="tok-com">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    // script/style blocks
+    if ((m = rest.match(/^<(script|style)\b([^>]*)>([\s\S]*?)<\/\1>/i))){
+      const tag = m[1]; const attrs = m[2]; const body = m[3];
+      out += `<span class="tok-punc">&lt;</span><span class="tok-tag">${tag}</span>${highlightTagAttrs(attrs)}<span class="tok-punc">&gt;</span>`;
+      out += tag.toLowerCase() === 'style' ? highlightCss(body) : highlightJs(body);
+      out += `<span class="tok-punc">&lt;/</span><span class="tok-tag">${tag}</span><span class="tok-punc">&gt;</span>`;
+      i += m[0].length; continue;
+    }
+    if ((m = rest.match(/^<\/([a-zA-Z][\w-]*)\s*>/))){
+      out += `<span class="tok-punc">&lt;/</span><span class="tok-tag">${m[1]}</span><span class="tok-punc">&gt;</span>`;
+      i += m[0].length; continue;
+    }
+    if ((m = rest.match(/^<([a-zA-Z][\w-]*)((?:\s+[^<>]*?)?)\s*(\/?)>/))){
+      out += `<span class="tok-punc">&lt;</span><span class="tok-tag">${m[1]}</span>${highlightTagAttrs(m[2])}<span class="tok-punc">${m[3]?'/&gt;':'&gt;'}</span>`;
+      i += m[0].length; continue;
+    }
+    // text up to next <
+    const next = rest.indexOf('<');
+    const chunk = next === -1 ? rest : rest.slice(0, next);
+    out += escapeHtmlCodes(chunk);
+    i += chunk.length;
+    if (next === -1) break;
+  }
+  return out;
+}
+
+function highlightTagAttrs(s){
+  if (!s) return '';
+  let out = ''; let i = 0; const n = s.length;
+  while (i < n){
+    const rest = s.slice(i);
+    let m;
+    if ((m = rest.match(/^\s+/))){ out += escapeHtmlCodes(m[0]); i += m[0].length; continue; }
+    if ((m = rest.match(/^([\w:-]+)(\s*=\s*)("([^"]*)"|'([^']*)'|[^\s>]+)/))){
+      out += `<span class="tok-attr">${escapeHtmlCodes(m[1])}</span><span class="tok-punc">${escapeHtmlCodes(m[2])}</span><span class="tok-str">${escapeHtmlCodes(m[3])}</span>`;
+      i += m[0].length; continue;
+    }
+    if ((m = rest.match(/^[\w:-]+/))){ out += `<span class="tok-attr">${escapeHtmlCodes(m[0])}</span>`; i += m[0].length; continue; }
+    out += escapeHtmlCodes(s[i]); i++;
+  }
+  return out;
+}
+
+function highlightCode(src){
+  try {
+    const lang = detectCodeLang(src);
+    if (lang === 'html') return highlightHtml(src);
+    if (lang === 'css') return highlightCss(src);
+    return highlightJs(src);
+  } catch(e){ return escapeHtmlCodes(src); }
+}
+
 function renderCodes(){
   const grid = document.getElementById('codesGrid');
   if (!grid) return;
@@ -3653,7 +3850,7 @@ function renderCodes(){
         <h3>${escapeHtmlCodes(it.usage || 'Untitled')}</h3>
         <button class="copy-btn" onclick="copyCodeSnippet(this, ${idx})">Copy</button>
       </div>
-      <pre>${escapeHtmlCodes(it.code)}</pre>
+      <pre>${highlightCode(it.code)}</pre>
     </div>
   `).join('');
 }
