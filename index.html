@@ -121,7 +121,9 @@ body.light-mode .workflow-menu{background:#ffffff;border-color:#d8dde3}
 body.light-mode .workflow-menu button{color:#1a1a1a}
 body.light-mode .workflow-menu button:hover{background:#f4f5f7}
 body.light-mode .workflow-btn{background:#ffffff;color:#1a1a1a;border-color:#c8cfd8}
-body.light-mode #toast{background:#1a1a1a;color:#fff}
+body.light-mode #toast{background:rgba(255,255,255,.85);color:#1a1a1a;border-color:rgba(0,0,0,.08);box-shadow:0 20px 50px -12px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.04)}
+body.light-mode #toast .toast-icon{background:rgba(0,156,12,.12);color:#009C0C}
+body.light-mode #toast .toast-bar{background:linear-gradient(90deg,#009C0C,#00c853)}
 /* Notepad: white background with black text in light mode */
 body.light-mode .sc-right > div{background:#ffffff !important;border-color:#d8dde3 !important}
 body.light-mode .sc-right > div > div:first-child{background:#f4f5f7 !important;border-bottom-color:#d8dde3 !important}
@@ -456,9 +458,13 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
 
 
 /* Toast */
-.toast{position:fixed;top:20px;right:20px;background:#009C0C;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
-.toast.show{opacity:1}
-.toast.warning{background:#dc3545}
+.toast{position:fixed;top:24px;left:50%;transform:translate(-50%,-120%) scale(.96);background:rgba(20,22,26,.78);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);color:#fff;padding:14px 22px 14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.08);font-weight:600;font-size:14px;letter-spacing:.1px;z-index:9999;opacity:0;display:flex;align-items:center;gap:12px;min-width:260px;max-width:min(440px,92vw);box-shadow:0 24px 60px -15px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04);transition:opacity .35s cubic-bezier(.2,.8,.2,1),transform .45s cubic-bezier(.2,.8,.2,1);pointer-events:none;overflow:hidden}
+.toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
+.toast .toast-icon{flex:0 0 28px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(0,200,80,.18);color:#4ade80;font-size:15px;font-weight:800}
+.toast .toast-msg{flex:1;line-height:1.35}
+.toast .toast-bar{position:absolute;left:0;bottom:0;height:2px;width:100%;background:linear-gradient(90deg,#00c853,#4ade80);transform-origin:left center;transform:scaleX(1)}
+.toast.show .toast-bar{animation:toastBar 2s linear forwards}
+@keyframes toastBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 
 .clear-all-btn{background:#dc3545;color:#fff;border:none;border-radius:24px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
 .clear-all-btn:hover{background:#b02a37}
@@ -510,7 +516,8 @@ body.rebuild-blue .code-card:hover{border-color:#009C0C}
   .item span{white-space:normal;font-size:12px}
   .status-btn{font-size:10px;padding:4px 8px}
   .confirm-box{min-width:auto;width:90vw;max-width:380px;padding:20px}
-  .toast{top:auto;bottom:20px;right:12px;left:12px;text-align:center;border-radius:12px}
+  .toast{top:auto;bottom:20px;left:50%;right:auto;transform:translate(-50%,120%) scale(.96);width:calc(100vw - 24px);min-width:0;border-radius:14px}
+  .toast.show{transform:translate(-50%,0) scale(1)}
   .workflow-btn{font-size:14px;padding:8px 18px}
   .clear-all-btn{padding:8px 16px;font-size:13px}
   .parsed-cards{grid-template-columns:1fr}
@@ -1513,12 +1520,23 @@ function doLogin() {
 }
 
 // ===== TOAST =====
-function showToast(msg, type) {
+function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  if (type) t.classList.add(type);
+  const isWarn = /^[⚠!]|warning|error|fail|invalid|empty|please|already/i.test(msg);
+  const icon = isWarn ? '!' : '✓';
+  t.innerHTML = '<span class="toast-icon">' + icon + '</span><span class="toast-msg"></span><span class="toast-bar"></span>';
+  t.querySelector('.toast-msg').textContent = msg;
+  if (isWarn) {
+    t.querySelector('.toast-icon').style.background = 'rgba(245,158,11,.2)';
+    t.querySelector('.toast-icon').style.color = '#fbbf24';
+    t.querySelector('.toast-bar').style.background = 'linear-gradient(90deg,#f59e0b,#fbbf24)';
+  }
+  t.classList.remove('show');
+  // restart animation
+  void t.offsetWidth;
   t.classList.add('show');
-  setTimeout(() => { t.classList.remove('show'); if (type) t.classList.remove(type); }, 2000);
+  clearTimeout(t._hideTimer);
+  t._hideTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
 // ===== SIDEBAR NAV =====
@@ -3376,7 +3394,20 @@ function ptRecomputeFromAnchor() {
       ptRemEl.style.fontWeight = 'bold';
       if (!ptOneHourAlerted) {
         ptOneHourAlerted = true;
-        try { showToast('⚠ Only 1 hour remaining!', 'warning'); } catch(e) {}
+        setTimeout(() => {
+          const overlay = document.createElement('div');
+          overlay.className = 'confirm-overlay';
+          overlay.innerHTML = `<div class="confirm-box" style="border-color:#f59e0b">
+            <div style="font-size:38px;line-height:1;margin-bottom:10px">⚠️</div>
+            <p style="font-weight:700;margin-bottom:6px">Only 1 hour remaining!</p>
+            <p style="font-size:13px;opacity:.75;margin-bottom:20px">SLA time is about to run out.</p>
+            <div class="confirm-btns"><button class="btn-confirm-yes" style="background:#f59e0b">Got it</button></div>
+          </div>`;
+          const close = () => { if (overlay.parentNode) document.body.removeChild(overlay); };
+          overlay.querySelector('.btn-confirm-yes').onclick = close;
+          overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+          document.body.appendChild(overlay);
+        }, 0);
       }
     } else {
       ptRemEl.style.color = '';
