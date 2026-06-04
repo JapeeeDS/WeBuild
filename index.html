@@ -1070,6 +1070,7 @@ body.light-mode .time-fields-row{background:#ffffff !important;border-color:#d8d
             </div>
             <div style="display:flex;gap:6px;justify-content:flex-end">
               <button class="pt-add-sla-btn2" onclick="ptAddSLA()">Add SLA</button>
+              <button class="pt-add-sla-btn2" style="background:#1E88E5" onclick="ptRemindMe()">Remind Me</button>
             </div>
           </div>
 
@@ -3418,6 +3419,7 @@ function ptRecomputeFromAnchor() {
   document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
   updateEstimatedEnd();
   updateSendQcOutput();
+  ptCheckReminders();
 }
 
 // Project an end timestamp by walking forward only through working hours.
@@ -3549,6 +3551,7 @@ function ptReset() {
   ptStartTimeStr = '';
   ptAnchorTs = 0;
   ptBaselineTakenSeconds = 0;
+  ptReminders = [];
   showToast('Parse time reset!');
 }
 
@@ -3601,6 +3604,105 @@ function ptAddSLA() {
   document.body.appendChild(overlay);
   setTimeout(() => document.getElementById('slaHours').focus(), 100);
 }
+
+// ===== REMIND ME =====
+let ptReminders = []; // {id, thresholdSeconds, note, triggered}
+
+function ptRenderReminderList() {
+  const listEl = document.getElementById('reminderList');
+  if (!listEl) return;
+  if (!ptReminders.length) {
+    listEl.innerHTML = '<p style="font-size:12px;color:#888;text-align:center;margin:8px 0">No reminders yet.</p>';
+    return;
+  }
+  listEl.innerHTML = ptReminders.map(r => `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;background:#2a2a2a;border:1px solid #444;border-radius:6px;padding:8px 10px;margin-bottom:6px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:700;color:#1E88E5">At ${(r.thresholdSeconds/3600).toFixed(2)}h remaining ${r.triggered ? '<span style="color:#888;font-weight:400">(triggered)</span>' : ''}</div>
+        <div style="font-size:12px;color:#ddd;word-break:break-word">${(r.note||'').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) || '<em style="color:#888">No note</em>'}</div>
+      </div>
+      <button data-rid="${r.id}" class="reminder-del-btn" style="background:#dc3545;border:none;color:#fff;border-radius:4px;padding:4px 8px;font-size:11px;cursor:pointer">Delete</button>
+    </div>
+  `).join('');
+  listEl.querySelectorAll('.reminder-del-btn').forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.getAttribute('data-rid');
+      ptReminders = ptReminders.filter(r => String(r.id) !== String(id));
+      ptRenderReminderList();
+      showToast('Reminder deleted');
+    };
+  });
+}
+
+function ptRemindMe() {
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.innerHTML = `<div class="confirm-box" style="text-align:left;max-width:440px;width:92%">
+    <p style="font-size:18px;font-weight:800;margin-bottom:14px;text-align:center;color:#1E88E5">Set a Reminder</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:12px;color:#888;font-weight:700">Remind me when remaining time reaches (hours)</label>
+        <input type="number" id="reminderHours" min="0" step="0.25" value="1" style="background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:10px;color:#fff;font-size:16px;outline:none"/>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:12px;color:#888;font-weight:700">Note</label>
+        <textarea id="reminderNote" rows="3" placeholder="What should you do when this triggers?" style="background:#2a2a2a;border:1px solid #555;border-radius:8px;padding:10px;color:#fff;font-size:14px;outline:none;resize:vertical"></textarea>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <p style="font-size:12px;color:#888;font-weight:700;margin-bottom:6px">Existing reminders</p>
+      <div id="reminderList" style="max-height:180px;overflow:auto"></div>
+    </div>
+    <div class="confirm-btns">
+      <button class="btn-confirm-yes" style="background:#1E88E5" id="reminderAddBtn">Add Reminder</button>
+      <button class="btn-confirm-no" id="reminderCloseBtn">Close</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  ptRenderReminderList();
+  overlay.querySelector('#reminderAddBtn').onclick = () => {
+    const hours = parseFloat(document.getElementById('reminderHours').value);
+    const note = document.getElementById('reminderNote').value.trim();
+    if (isNaN(hours) || hours < 0) { showToast('Please enter a valid number of hours'); return; }
+    const thresholdSeconds = Math.round(hours * 3600);
+    ptReminders.push({
+      id: Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+      thresholdSeconds,
+      note,
+      triggered: ptRemainingSeconds > 0 && ptRemainingSeconds <= thresholdSeconds
+    });
+    document.getElementById('reminderNote').value = '';
+    ptRenderReminderList();
+    showToast('Reminder added');
+  };
+  const close = () => { if (overlay.parentNode) document.body.removeChild(overlay); };
+  overlay.querySelector('#reminderCloseBtn').onclick = close;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+}
+
+function ptCheckReminders() {
+  if (!ptReminders.length || ptRemainingSeconds <= 0) return;
+  ptReminders.forEach(r => {
+    if (!r.triggered && ptRemainingSeconds <= r.thresholdSeconds) {
+      r.triggered = true;
+      const overlay = document.createElement('div');
+      overlay.className = 'confirm-overlay';
+      const safeNote = (r.note || 'No note provided.').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+      overlay.innerHTML = `<div class="confirm-box" style="border-color:#1E88E5;max-width:420px;width:92%">
+        <div style="font-size:38px;line-height:1;margin-bottom:10px;text-align:center">⏰</div>
+        <p style="font-weight:700;margin-bottom:6px;text-align:center;color:#1E88E5">Reminder</p>
+        <p style="font-size:13px;opacity:.85;margin-bottom:10px;text-align:center">Remaining time reached ${(r.thresholdSeconds/3600).toFixed(2)} hour(s).</p>
+        <div style="background:#2a2a2a;border:1px solid #444;border-radius:6px;padding:10px;margin-bottom:16px;font-size:14px;color:#fff;white-space:pre-wrap;word-break:break-word">${safeNote}</div>
+        <div class="confirm-btns"><button class="btn-confirm-yes" style="background:#1E88E5">Got it</button></div>
+      </div>`;
+      const close = () => { if (overlay.parentNode) document.body.removeChild(overlay); };
+      overlay.querySelector('.btn-confirm-yes').onclick = close;
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+      document.body.appendChild(overlay);
+    }
+  });
+}
+
 
 // ===== SEND FOR QC =====
 function updateSendQcOutput() {
