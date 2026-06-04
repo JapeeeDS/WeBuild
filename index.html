@@ -3333,6 +3333,7 @@ let ptTimeTakenInterval = null;
 // the laptop was shut down, or the user was idle. Only ptReset() clears it.
 let ptAnchorTs = 0;            // ms timestamp when the timer was (re)started
 let ptBaselineTakenSeconds = 0; // ptTimeTakenSeconds value at the anchor
+let ptOneHourAlerted = false;   // ensures the 1-hour-left alert fires only once
 
 // Working-seconds elapsed between two timestamps, honoring isWorkingTime().
 // Walks the interval in <=10-min chunks and only counts chunks whose midpoint
@@ -3358,13 +3359,29 @@ function ptRecomputeFromAnchor() {
   const elapsed = workingSecondsBetween(ptAnchorTs, Date.now());
   ptTimeTakenSeconds = ptBaselineTakenSeconds + elapsed;
   ptRemainingSeconds = ptSlaSeconds - ptTimeTakenSeconds;
+  const ptRemEl = document.getElementById('ptRemaining');
   if (ptRemainingSeconds <= 0) {
     ptRemainingSeconds = 0;
-    document.getElementById('ptRemaining').value = '00:00:00';
+    ptRemEl.value = '00:00:00';
+    ptRemEl.style.color = 'red';
+    ptRemEl.style.fontWeight = 'bold';
     if (ptTimerInterval) { clearInterval(ptTimerInterval); ptTimerInterval = null; }
     if (ptTimeTakenInterval) { clearInterval(ptTimeTakenInterval); ptTimeTakenInterval = null; }
   } else {
-    document.getElementById('ptRemaining').value = formatSecondsToHHMMSS(ptRemainingSeconds);
+    ptRemEl.value = formatSecondsToHHMMSS(ptRemainingSeconds);
+    if (ptRemainingSeconds <= 3600) {
+      ptRemEl.style.color = 'red';
+      ptRemEl.style.fontWeight = 'bold';
+      if (!ptOneHourAlerted) {
+        ptOneHourAlerted = true;
+        try { showToast('⚠ Only 1 hour remaining!'); } catch(e) {}
+        setTimeout(() => { alert('⚠ Warning: Only 1 hour of SLA time remaining!'); }, 0);
+      }
+    } else {
+      ptRemEl.style.color = '';
+      ptRemEl.style.fontWeight = '';
+      ptOneHourAlerted = false;
+    }
   }
   document.getElementById('ptTimeTaken').value = formatSecondsToHHMMSS(ptTimeTakenSeconds);
   updateEstimatedEnd();
@@ -3488,7 +3505,11 @@ function ptReset() {
   document.getElementById('ptStartTime').value = '';
   document.getElementById('ptSlaAgreed').value = '';
   document.getElementById('ptTimeTaken').value = '';
-  document.getElementById('ptRemaining').value = '';
+  const _ptRemEl = document.getElementById('ptRemaining');
+  _ptRemEl.value = '';
+  _ptRemEl.style.color = '';
+  _ptRemEl.style.fontWeight = '';
+  ptOneHourAlerted = false;
   const eEnd = document.getElementById('ptEstimatedEnd'); if (eEnd) eEnd.value = '';
   ptSlaSeconds = 0;
   ptRemainingSeconds = 0;
