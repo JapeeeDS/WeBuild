@@ -3552,6 +3552,7 @@ function ptReset() {
   ptAnchorTs = 0;
   ptBaselineTakenSeconds = 0;
   ptReminders = [];
+  ptSaveReminders();
   showToast('Parse time reset!');
 }
 
@@ -3620,7 +3621,19 @@ function formatSecondsToHHMM(seconds) {
   const m = Math.floor((seconds % 3600) / 60);
   return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
 }
-let ptReminders = []; // {id, thresholdSeconds, note, triggered}
+const PT_REMINDERS_KEY = 'ptReminders_v1';
+function ptLoadReminders() {
+  try {
+    const raw = localStorage.getItem(PT_REMINDERS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) { return []; }
+}
+function ptSaveReminders() {
+  try { localStorage.setItem(PT_REMINDERS_KEY, JSON.stringify(ptReminders)); } catch (e) {}
+}
+let ptReminders = ptLoadReminders(); // {id, thresholdSeconds, note, triggered}
 
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
@@ -3651,6 +3664,7 @@ function ptRenderReminderList() {
     btn.onclick = () => {
       const id = btn.getAttribute('data-rid');
       ptReminders = ptReminders.filter(r => String(r.id) !== String(id));
+      ptSaveReminders();
       ptRenderReminderList();
       showToast('Reminder deleted');
     };
@@ -3731,6 +3745,7 @@ function ptRemindMe() {
       });
       showToast('Reminder added');
     }
+    ptSaveReminders();
     document.getElementById('reminderNote').value = '';
     ptRenderReminderList();
   };
@@ -3746,6 +3761,7 @@ function ptCheckReminders() {
     if (ptRemainingSeconds <= r.thresholdSeconds) { toFire.push(r); return false; }
     return true;
   });
+  if (toFire.length) ptSaveReminders();
   // Refresh open list if modal is open
   if (document.getElementById('reminderList')) ptRenderReminderList();
   toFire.forEach(r => {
